@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import StoreCard from "../pages/childComponents/StoreCard.";
 import "./MainPage.scss";
 import { API } from "../config";
+import Slider from "react-slick";
 
 interface Props {
   top: string;
@@ -12,6 +13,14 @@ interface Props {
 }
 export default function MainPage({ top, image, title, heart }: Props) {
   const [storeData, setStoreData] = useState([]);
+
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1
+  };
 
   useEffect(() => {
     axios.get(`${API}`).then((response) => {
@@ -26,6 +35,7 @@ export default function MainPage({ top, image, title, heart }: Props) {
       <div className="mainTop5">
         <h1>E Ranking</h1>
         <div className="rankingDiv">
+          {/* <Slider {...settings}> */}
           {storeData?.map((store: any) => {
             return (
               <StoreCard
@@ -36,6 +46,7 @@ export default function MainPage({ top, image, title, heart }: Props) {
               />
             );
           })}
+          {/* </Slider> */}
         </div>
       </div>
     </>
