@@ -1,10 +1,7 @@
-.mainNav {
-  background-color: yellow;
-  height: 80px;
-}
-
 .mainTop5 {
-  margin: 50px auto;
+  margin-top: 150px;
+  margin-left: auto;
+  margin-right: auto;
   height: 700px;
   width: 90vw;
 
@@ -14,17 +11,46 @@
   .rankingDiv {
     display: flex;
     .storeCardDiv {
-      width: 100%;
+      width: 102%;
       height: 100%;
       margin-top: 50px;
       margin-right: 20px;
+      .slides {
+        .slick-prev {
+          left: -27px !important;
+        }
+
+        .slick-prev {
+          right: -37px !important;
+        }
+
+        .slick-next:before,
+        .slick-prev:before {
+          content: "" !important;
+        }
+
+        .next-slick-arrow,
+        .prev-slick-arrow {
+          color: red;
+          font-size: 20px;
+        }
+
+        img {
+          width: 20px;
+        }
+      }
 
       .storeCard {
         width: 330px;
         height: auto;
-
+        margin: 0px 50px;
+        cursor: pointer;
         .ranking {
           text-align: center;
+          img {
+            display: block;
+            margin: auto;
+          }
           .iconCrown {
             width: 40px;
             height: 40px;
@@ -67,6 +93,11 @@
             }
           }
         }
+      }
+      .storeCard:hover {
+        transition: transform 0.2s;
+        transform: scale(1.1);
+        z-index: 2;
       }
     }
   }

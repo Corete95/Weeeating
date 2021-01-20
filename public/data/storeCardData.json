@@ -26,5 +26,12 @@
     "image": "./images/food1.jpeg",
     "title": "소고기 존맛탱3",
     "heart": 12
+  },
+  {
+    "id": 4,
+    "top": "TOP5",
+    "image": "./images/food1.jpeg",
+    "title": "소고기 존맛탱4",
+    "heart": 1
   }
 ]

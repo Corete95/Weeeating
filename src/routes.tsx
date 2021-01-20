@@ -27,7 +27,7 @@ class Routes extends React.Component {
         <ThemeProvider theme={COLORS}>
           <GlobalStyle />
           <Router>
-            {/* <Nav /> */}
+            <Nav />
             <Switch>
               <Route exact path="/" component={MainPage} />
               <Route exact path="/about" component={AboutPage} />

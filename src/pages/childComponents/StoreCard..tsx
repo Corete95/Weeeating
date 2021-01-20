@@ -9,7 +9,7 @@ interface Props {
 
 export default function StoreCard({ top, image, title, heart }: Props) {
   return (
-    <div className="storeCardDiv">
+    <>
       <div className="storeCard">
         <div className="ranking">
           <img className="iconCrown" src="./images/crown.png"></img>
@@ -27,6 +27,6 @@ export default function StoreCard({ top, image, title, heart }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
