@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { mixin } from "../styles";
+import { Signup, Login } from "./index";
 
 interface IProps {
   weight: {
@@ -78,7 +79,7 @@ export default function Nav({
       >
         <ModalInner tabIndex={0}>
           <CloseBtn onClick={closeModal}>삭제</CloseBtn>
-          회원가입 or 로그인 모달창
+          {modalActive.signup || !modalActive.login ? <Signup /> : <Login />}
         </ModalInner>
       </ModalWrapper>
     </Container>
