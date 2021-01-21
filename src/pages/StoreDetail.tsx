@@ -4,6 +4,17 @@ import { mixin } from "../styles";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 
 export default function StoreDetail() {
+  var container = document.getElementById("map");
+
+  let kakao: any = window["kakao"];
+
+  var options = {
+    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    level: 3
+  };
+
+  var map = new kakao.maps.Map(container, options);
+
   return (
     <Container>
       <DescSection>
@@ -30,7 +41,7 @@ export default function StoreDetail() {
         </StoreDesc>
       </DescSection>
       <MapSection>
-        <Map></Map>
+        <Map id="map"></Map>
         카카오맵 등록 예정
       </MapSection>
       <CommentSection>댓글</CommentSection>
