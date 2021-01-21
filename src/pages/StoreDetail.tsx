@@ -1,19 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { mixin } from "../styles";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 export default function StoreDetail() {
-  var container = document.getElementById("map");
+  useEffect(() => {
+    let container = document.getElementById("map");
+    let options = {
+      center: new window.kakao.maps.LatLng(
+        37.506505288645876,
+        127.05406759771054
+      ),
+      level: 3
+    };
 
-  let kakao: any = window["kakao"];
-
-  var options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),
-    level: 3
-  };
-
-  var map = new kakao.maps.Map(container, options);
+    let map = new window.kakao.maps.Map(container, options);
+  }, []);
 
   return (
     <Container>
@@ -41,8 +49,7 @@ export default function StoreDetail() {
         </StoreDesc>
       </DescSection>
       <MapSection>
-        <Map id="map"></Map>
-        카카오맵 등록 예정
+        <Map id="map" style={{ width: "43.52rem", height: "25rem" }}></Map>
       </MapSection>
       <CommentSection>댓글</CommentSection>
     </Container>
@@ -70,17 +77,18 @@ const Desc = styled.article`
   height: 10rem;
   overflow-y: scroll;
   overflow-x: hidden;
-  border-top: 1px solid ${({ theme }) => theme.gray};
-  border-bottom: 1px solid ${({ theme }) => theme.gray};
+  border-top: 1px solid ${({ theme }) => theme.borderGray};
+  border-bottom: 1px solid ${({ theme }) => theme.borderGray};
 `;
 
 const Liked = styled.p``;
 
-const MapSection = styled.div``;
+const MapSection = styled.div`
+  margin-top: 4rem;
+`;
 
 const Map = styled.div`
-  width: 500px;
-  height: 400px;
+  border: 2px solid ${({ theme }) => theme.borderGray};
 `;
 
 const CommentSection = styled.div``;
