@@ -43,7 +43,7 @@ class Routes extends React.Component {
               <Route exact path="/post-list" component={PostList} />
               <Route exact path="/post-writing" component={PostWriting} />
             </Switch>
-            <Footer />
+            {/* <Footer /> */}
           </Router>
         </ThemeProvider>
       </React.Fragment>
