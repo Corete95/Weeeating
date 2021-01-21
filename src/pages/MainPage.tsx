@@ -1,22 +1,33 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import StoreCard from "../pages/childComponents/StoreCard.";
-import "./MainPage.scss";
 import { API } from "../config";
+import { useHistory } from "react-router-dom";
+import StoreCard from "../pages/childComponents/StoreCard.";
 import Slider from "react-slick";
+import KobbubakTheme from "../pages/childComponents/KobbubakTheme";
+import MetorTheme from "./childComponents/MetorTheme";
+import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-interface Props {
-  top: string;
-  image: string;
-  title: string;
-  heart: number;
-}
-export default function MainPage({ top, image, title, heart }: Props) {
-  const [storeData, setStoreData] = useState([]);
+interface Props {}
 
-  let setting = {
+export default function MainPage({}: Props) {
+  const [storeData, setStoreData] = useState([]);
+  const history = useHistory();
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    focusOnSelect: true
+    // autoplay: true,
+    // autoplaySpeed: 2000
+  };
+
+  const setting = {
     dots: false,
     infinite: true,
     speed: 1000,
@@ -30,7 +41,6 @@ export default function MainPage({ top, image, title, heart }: Props) {
           alt="rightArrow"
           className="next-slick-arrow"
           src="./images/right-arrow.png"
-         
         ></img>
       </div>
     ),
@@ -48,11 +58,10 @@ export default function MainPage({ top, image, title, heart }: Props) {
 
   useEffect(() => {
     axios.get(`${API}`).then((response) => {
-      console.log(response.data);
       setStoreData(response.data);
     });
   }, []);
-  console.log(setStoreData);
+
   return (
     <>
       <div className="mainTop5">
@@ -71,6 +80,41 @@ export default function MainPage({ top, image, title, heart }: Props) {
                 );
               })}
             </Slider>
+          </div>
+        </div>
+        <div className="themList">
+          <div className="themListDiv">
+            <Slider {...settings}>
+              <MetorTheme />
+              <KobbubakTheme />
+            </Slider>
+            <div className="alcoholFeather">
+              <div
+                className="alcoholMain"
+                onClick={() => history.push("./alcohol-detail")}
+              >
+                <div className="alcoholCenter">
+                  <p className="alcoholWith"> &gt; 술과함께</p>
+                  <p>술이랑 먹으면</p>
+                  <p>더 맛있어</p>
+                  <p>더 짜릿해</p>
+                  <p>더 즐거워</p>
+                </div>
+                <div className="alcoholImg">
+                  <img src="./images/soju.png" />
+                </div>
+              </div>
+              <div
+                className="featherMain"
+                onClick={() => history.push("./feather-detail")}
+              >
+                <div className="featherCenter">
+                  <p className="featherlWith"> &gt; GIT털 푸드</p>
+                  <p>깃털처럼 가볍게.</p>
+                  <p>코드는 산뜻하게.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

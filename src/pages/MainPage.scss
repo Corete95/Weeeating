@@ -1,27 +1,26 @@
 .mainTop5 {
-  margin-top: 150px;
+  margin-top: 7rem;
   margin-left: auto;
   margin-right: auto;
-  height: 700px;
+  height: 100%;
   width: 90vw;
 
   h1 {
-    font-size: 70px;
+    font-size: 4.25rem;
   }
   .rankingDiv {
     display: flex;
     .storeCardDiv {
       width: 102%;
       height: 100%;
-      margin-top: 50px;
-      margin-right: 20px;
+      margin-right: 1.25rem;
       .slides {
         .slick-prev {
-          left: -27px !important;
+          left: -2.25rem !important;
         }
 
         .slick-prev {
-          right: -37px !important;
+          right: -2.25rem !important;
         }
 
         .slick-next:before,
@@ -32,18 +31,19 @@
         .next-slick-arrow,
         .prev-slick-arrow {
           color: red;
-          font-size: 20px;
+          font-size: 1.25rem;
         }
 
         img {
-          width: 20px;
+          width: 1.25rem;
         }
       }
 
       .storeCard {
-        width: 330px;
+        width: 20.75rem;
         height: auto;
-        margin: 0px 50px;
+        margin: 0rem 3.25rem;
+        padding: 3.25rem 0rem;
         cursor: pointer;
         .ranking {
           text-align: center;
@@ -52,28 +52,28 @@
             margin: auto;
           }
           .iconCrown {
-            width: 40px;
-            height: 40px;
+            width: 2.5rem;
+            height: 2.5rem;
           }
           .p {
-            font-size: 20px;
+            font-size: 1.25rem;
           }
         }
         .rankingComponents {
-          border: solid 2px black;
-          height: 400px;
-          margin-top: 15px;
-          border-radius: 30px;
+          border: solid 0.125rem black;
+          height: 25rem;
+          margin-top: 1rem;
+          border-radius: 2rem;
           p {
             text-align: center;
-            margin-top: 5px;
-            padding: 5px;
-            padding-left: 15px;
-            font-size: 20px;
+            margin-top: 0.375rem;
+            padding: 0.375rem;
+            padding-left: 1rem;
+            font-size: 1.25rem;
           }
 
           hr {
-            border: solid 1px black;
+            border: solid 0.0625rem black;
           }
           img {
             width: 100%;
@@ -84,12 +84,12 @@
             align-items: center;
             text-align: center;
             .foodName {
-              width: 250px;
+              width: 15.75rem;
             }
 
             img {
-              width: 30px;
-              height: 30px;
+              width: 2rem;
+              height: 2rem;
             }
           }
         }
@@ -98,6 +98,164 @@
         transition: transform 0.2s;
         transform: scale(1.1);
         z-index: 2;
+      }
+    }
+  }
+
+  .themList {
+    width: 100%;
+    height: 31.25rem;
+    margin-top: 6.25rem;
+
+    .themListDiv {
+      width: 80%;
+      height: 18.75rem;
+      margin: 0rem auto;
+
+      .metorMain {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        padding: 2.375rem 2.375rem;
+        border: solid 0.125rem black;
+        background-color: #fff2cc;
+        cursor: pointer;
+        .metorCenter {
+          width: 50%;
+          height: 100%;
+          p {
+            font-size: 7rem;
+            font-weight: 900;
+          }
+          .pick:after {
+            content: "";
+            display: block;
+            width: 32rem;
+            border-bottom: 0.5625rem solid black;
+            margin-top: -1rem;
+          }
+        }
+        .metorText {
+          width: 50%;
+          p {
+            text-align: right;
+            font-size: 4.5rem;
+            font-weight: 400;
+          }
+        }
+      }
+
+      .kobbubakMain {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        padding: 1.16rem 3.2rem;
+        border: solid 0.125rem black;
+        background-color: #ffd966;
+        cursor: pointer;
+        .kobbubakCenter {
+          width: 70%;
+          .pFont {
+            font-size: 5.5rem;
+            font-weight: 900;
+          }
+          .recommend {
+            margin-top: 2rem;
+          }
+          .recommend:after {
+            content: "";
+            display: block;
+            position: relative;
+            bottom: 5.15rem;
+            left: 14.75rem;
+            width: 43.75rem;
+            border-bottom: 0.75rem solid black;
+            margin-top: 2.25rem;
+          }
+        }
+        .kobbubakText {
+          position: relative;
+          text-align: center;
+          font-size: 2.5rem;
+          top: 4.125rem;
+          right: 2.5rem;
+        }
+      }
+      .alcoholFeather {
+        display: flex;
+        margin-top: 2.5rem;
+        padding-bottom: 3.25rem;
+
+        .alcoholMain {
+          display: flex;
+          width: 50%;
+          height: 100%;
+          padding: 1.25rem 1.25rem;
+          border: solid 0.125rem black;
+          margin-right: 2rem;
+          cursor: pointer;
+          .alcoholCenter {
+            width: 50%;
+            height: 100%;
+            margin-top: 1.25rem;
+            .alcoholWith {
+              font-size: 4rem;
+              font-weight: 700;
+              margin-bottom: 1.5rem;
+            }
+            .alcoholWith:after {
+              content: "";
+              display: block;
+              width: 15.75rem;
+              border-bottom: 0.1875rem solid black;
+              margin-top: 2.25rem;
+            }
+            p {
+              font-size: 1.5rem;
+              line-height: 1.75rem;
+              text-align: center;
+            }
+          }
+          .alcoholImg {
+            width: 50%;
+            text-align: center;
+            img {
+              width: 89%;
+            }
+          }
+        }
+        .featherMain {
+          width: 50%;
+          height: 16.7rem;
+          padding: 1.25rem 1.25rem;
+          border: solid 0.125rem black;
+          cursor: pointer;
+          .featherCenter {
+            width: 100%;
+            height: 100%;
+            margin-top: 1.25rem;
+            .featherlWith {
+              text-align: center;
+              font-size: 4.125rem;
+              font-weight: 700;
+              margin-bottom: 1.625rem;
+            }
+            .featherlWith:after {
+              content: "";
+              display: block;
+              width: 22.5rem;
+              border-bottom: 0.1875rem solid black;
+              margin-top: 2rem;
+              position: relative;
+              left: 4.625rem;
+            }
+            p {
+              font-size: 1.5rem;
+              line-height: 2rem;
+              text-align: center;
+            }
+          }
+        }
       }
     }
   }
