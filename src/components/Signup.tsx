@@ -30,7 +30,7 @@ export default function Signup() {
         </BlockWrapper>
         <BlockWrapper>
           <Subject>비밀번호 확인</Subject>
-          <Input type="text" name="rePassword"></Input>
+          <Input type="text" name="repassword"></Input>
         </BlockWrapper>
         <Button type="submit" value="회원가입"></Button>
       </InfoSection>
@@ -87,4 +87,5 @@ const Button = styled.input`
   height: 4em;
   text-align: center;
   background-color: white;
+  cursor: pointer;
 `;

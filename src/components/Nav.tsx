@@ -146,6 +146,7 @@ const ModalWrapper = styled.div<StateForStyle>`
 `;
 
 const ModalInner = styled.div`
+  outline: none;
   position: relative;
   top: 50%;
   transform: translateY(-50%);

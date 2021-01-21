@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { mixin } from "../styles";
+import { GoogleLoginComponent } from "./index";
 
 interface StateForStyle {
   short?: boolean;
@@ -22,7 +23,7 @@ export default function Login() {
           <Input type="text" name="password"></Input>
         </BlockWrapper>
         <BlockWrapper buttons={true}>
-          <GoogleLogin>구글로 로그인하기</GoogleLogin>
+          <GoogleLoginComponent />
           <LoginBtn type="submit" value="로그인"></LoginBtn>
         </BlockWrapper>
       </InfoSection>
@@ -68,20 +69,6 @@ const Input = styled.input<StateForStyle>`
   height: 4em;
 `;
 
-const GoogleLogin = styled.div`
-  margin-top: 2em;
-  margin-right: 0.7em;
-  width: 28.6em;
-  font-size: 1em;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 4em;
-  text-align: center;
-  border: 1px solid black;
-`;
-
 const LoginBtn = styled.input`
   margin-top: 2em;
   width: 28.6em;
@@ -93,4 +80,5 @@ const LoginBtn = styled.input`
   height: 4em;
   text-align: center;
   background-color: white;
+  cursor: pointer;
 `;
