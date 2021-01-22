@@ -54,7 +54,7 @@ export default function StoreDetail() {
         </StoreDesc>
       </DescSection>
       <MapSection>
-        <Map id="map" style={{ width: "43.52rem", height: "25rem" }}></Map>
+        <Map id="map" style={{ width: "70rem", height: "25rem" }}></Map>
       </MapSection>
       <hr style={{ margin: "2rem 0" }}></hr>
       <CommentSection>
@@ -88,7 +88,8 @@ export default function StoreDetail() {
 }
 
 const Container = styled.div`
-  margin: 10rem 5rem;
+  margin: 10rem auto;
+  width: 70rem;
 `;
 
 const DescSection = styled.div`
