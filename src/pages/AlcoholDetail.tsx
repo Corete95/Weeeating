@@ -10,7 +10,13 @@ export default function AlcoholDetail() {
             <p>술과 함께</p>
           </div>
         </div>
-        <div className="sojuIcon">---알콜---</div>
+        <div className="sojuDiv">
+          <div className="sojuIcon">
+            <img src="./images/soju.png"></img>
+            <p>소주와</p>
+          </div>
+        </div>
+        <div className="sojuListDiv">asd</div>
       </div>
     </>
   );
