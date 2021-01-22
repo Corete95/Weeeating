@@ -1,6 +1,11 @@
 import React from "react";
+import styled from "styled-components";
 
-const Pagination = ({ postsPerPage, totalPosts, paginate }: any): any => {
+export default function Pagination({
+  postsPerPage,
+  totalPosts,
+  paginate
+}: any): any {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
@@ -9,15 +14,17 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }: any): any => {
 
   return (
     <nav>
-      <ul>
+      <Ul>
         {pageNumbers.map((number) => (
           <li key={number}>
             <button onClick={() => paginate(number)}>{number}</button>
           </li>
         ))}
-      </ul>
+      </Ul>
     </nav>
   );
-};
+}
 
-export default Pagination;
+const Ul = styled.ul`
+  display: flex;
+`;

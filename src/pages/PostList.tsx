@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Posts from "../components/Posts";
-import Pagination from "../components/Pagination";
+import Posts from "./childComponents/Posts";
+import Pagination from "./childComponents/Pagination";
 import axios from "axios";
+import ReactHtmlParser from "react-html-parser";
+import styled from "styled-components";
+import wemeok from "../images/wemeoktalk_2.png";
 
-const App = () => {
+export default function App() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +18,7 @@ const App = () => {
       const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
       setPosts(res.data);
       setLoading(false);
+      console.log(res.data);
     };
 
     fetchPosts();
@@ -31,7 +35,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>My Blog</h1>
+      <Img src={wemeok} alt="" />
       <Posts posts={currentPosts} loading={loading} />
       <Pagination
         postsPerPage={postsPerPage}
@@ -40,6 +44,8 @@ const App = () => {
       />
     </div>
   );
-};
+}
 
-export default App;
+const Img = styled.img`
+  margin-top: 5rem;
+`;

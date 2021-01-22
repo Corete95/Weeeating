@@ -1,22 +1,23 @@
 import React from "react";
+import styled from "styled-components";
 
-const Posts = ({ posts, loading }: any) => {
+export default function Posts({ posts, loading }: any) {
   if (loading) {
     return <h2>Loading...</h2>;
   }
 
   return (
-    <ul>
+    <Ul>
       {posts.map(
         (post: {
           id: string | number | null | undefined;
           title: React.ReactNode;
         }) => (
-          <li key={post.id}>{post.title}</li>
+          <li key={post.id}>{post.id}</li>
         )
       )}
-    </ul>
+    </Ul>
   );
-};
+}
 
-export default Posts;
+const Ul = styled.ul``;
