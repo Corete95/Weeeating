@@ -65,7 +65,7 @@ export default function MainPage({}: Props) {
   return (
     <>
       <div className="mainTop5">
-        <h1>E Ranking</h1>
+        <img className="erankingImg" src="./images/e_ranking.png"></img>
         <div className="rankingDiv">
           <div className="storeCardDiv">
             <Slider {...setting}>
