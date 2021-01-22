@@ -23,38 +23,21 @@ export default function GoogleLoginComponent() {
     console.log(response);
     const { accessToken } = response;
 
-    // fetch로 백엔드 통신 완료 후, axios로 변경 예정
-    // axios
-    //   .get(`${API}/login/social`, {
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //       "Content-Type": "application/json"
-    //     }
-    //   })
-    //   .then((res) => {
-    //     localStorage.setItem("token", res.data.token);
-    //     alert("구글 로그인 되었습니다");
-    //     history.push("/");
-    //   })
-    //   .catch((err) => {
-    //     console.log("ERRORS! ===>", err);
-    //     alert("Error가 발생하였습니다");
-    //   });
-
-    fetch(`${API}/login/social`, {
-      method: "GET",
-      headers: {
-        Authorization: accessToken
-      }
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.access_token) {
-          localStorage.setItem("token", res.access_token);
+    axios
+      .get(`${API}/user/login/social`, {
+        headers: {
+          Authorization: accessToken
         }
+      })
+      .then((res: any) => {
+        localStorage.setItem("token", res.access_token);
+        alert("구글 로그인 되었습니다");
+        history.push("/");
+      })
+      .catch((err: any) => {
+        console.log("ERRORS! ===>", err);
+        alert("Error가 발생하였습니다");
       });
-
-    history.push("/");
   };
 
   return (
