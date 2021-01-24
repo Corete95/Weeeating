@@ -1,58 +1,126 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import wemeok from "../images/wemeoktalk_2.png";
+import { COLORS } from "../styles/themeColor";
+import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
 export default function PostWriting() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [posts, setPosts] = useState({ title: title, content: content });
+  const history = useHistory();
+
+  let data = {
+    title: title,
+    content: content
+  };
+
+  const uploadData = () => {
+    axios
+      .post("http://10.58.6.15:8000/board/posting", JSON.stringify(data), {
+        headers: {
+          "Content-Type": `application/json`
+        }
+      })
+      .then((res) => {
+        console.log(res);
+        history.push("/post-list");
+      });
+  };
+
   return (
-    <Container>
-      <Img src={wemeok} alt="" />
-      <Title>
-        <span>제목</span>
-        <input />
-      </Title>
-      <Content>
-        <span>내용</span>
-        <textarea></textarea>
-      </Content>
-      <Attachments>
-        <span>첨부파일</span>
-        <input disabled />
-      </Attachments>
-    </Container>
+    <>
+      {console.log("in return posts", posts)}
+      <Container>
+        <Img src={wemeok} alt="" />
+        <InnerContainer>
+          <ImgText>개발자 공유문화 잊지말자, 그러니까 맛집도 공유하자</ImgText>
+          <TitleContainer>
+            <TitleText>제목</TitleText>
+            <TitleInput
+              type="text/html"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="제목"
+            ></TitleInput>
+          </TitleContainer>
+          <ContentContainer>
+            <TitleText>내용</TitleText>
+            <Content
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="내용을 입력하세요."
+            ></Content>
+          </ContentContainer>
+          <TitleContainer>
+            <TitleText>첨부파일</TitleText>
+            <TitleInput></TitleInput>
+          </TitleContainer>
+          <Button onClick={uploadData}>
+            <Link to="/post-writing">작성</Link>
+          </Button>
+        </InnerContainer>
+      </Container>
+    </>
   );
 }
 
 const Container = styled.div`
-  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+const InnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+  width: 45.2rem;
+  border: 4px solid ${COLORS.mainYellow};
 `;
 
 const Img = styled.img`
-  margin-top: 5rem;
+  position: relative;
+  top: 1rem;
+  margin: 5rem 3.3rem 0 0;
 `;
 
-const Title = styled.div`
+const ImgText = styled.p`
+  position: absolute;
+  top: 13rem;
+  z-index: 10;
+  font-size: 2rem;
+`;
+
+const TitleContainer = styled.div`
   display: flex;
-
-  input {
-    width: 100%;
-    background: lightgray;
-  }
+  align-items: center;
+  padding-bottom: 1.5rem;
+  width: 35rem;
 `;
 
-const Content = styled.div`
-  display: flex;
-  margin-top: 5rem;
+const TitleText = styled.p``;
 
-  textarea {
-    width: 100%;
-    height: 100%;
-    background: lightgray;
-  }
+const TitleInput = styled.input`
+  margin-left: 1rem;
+  width: 35rem;
+  height: 1.5rem;
 `;
 
-const Attachments = styled.div`
-  input {
-    width: 100%;
-    background: lightgray;
-  }
+const ContentContainer = styled.div`
+  margin-top: 2rem;
+`;
+
+const Content = styled.input`
+  width: 36rem;
+  height: 20rem;
+`;
+
+const Button = styled.button`
+  width: 4rem;
+  height: 2rem;
+  background: ${COLORS.mainYellow};
 `;

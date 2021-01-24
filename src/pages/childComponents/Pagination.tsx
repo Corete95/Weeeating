@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 export default function Pagination({
   postsPerPage,
   totalPosts,
-  paginate
+  paginate,
+  currentPage,
+  setCurrentPage
 }: any): any {
   const pageNumbers = [];
 
@@ -15,11 +17,25 @@ export default function Pagination({
   return (
     <nav>
       <Ul>
-        {pageNumbers.map((number) => (
+        <button
+          onClick={() => {
+            setCurrentPage(currentPage - 1);
+          }}
+        >
+          prev
+        </button>
+        {pageNumbers.slice(0.5).map((number) => (
           <li key={number}>
             <button onClick={() => paginate(number)}>{number}</button>
           </li>
         ))}
+        <button
+          onClick={() => {
+            setCurrentPage(currentPage + 1);
+          }}
+        >
+          next
+        </button>
       </Ul>
     </nav>
   );
