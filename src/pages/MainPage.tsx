@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API } from "../config";
 import { useHistory } from "react-router-dom";
-import StoreCard from "../pages/childComponents/StoreCard.";
+import StoreCard from "./childComponents/StoreCard";
 import Slider from "react-slick";
 import KobbubakTheme from "../pages/childComponents/KobbubakTheme";
 import MetorTheme from "./childComponents/MetorTheme";
