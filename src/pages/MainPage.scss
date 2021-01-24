@@ -230,10 +230,15 @@
           padding: 1.25rem 1.25rem;
           border: solid 0.125rem black;
           cursor: pointer;
+          background-image: url("feather.png");
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: 250px 250px;
           .featherCenter {
             width: 100%;
             height: 100%;
             margin-top: 1.25rem;
+
             .featherlWith {
               text-align: center;
               font-size: 4.125rem;
