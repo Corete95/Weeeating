@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import axios from "axios";
 import {
   IoIosArrowBack,
   IoIosArrowForward,
   IoIosAddCircle
 } from "react-icons/io";
 import { mixin } from "../styles";
-import { LOCALAPI } from "../config";
 
-export default function MetorDetail() {
-  const [mentorInfo, setMentorInfo] = useState([]);
+interface IProps {
+  info: never[];
+  TITLE: string[];
+}
 
-  useEffect(() => {
-    axios
-      .get(`${LOCALAPI}/data/mentor.json`)
-      .then((res: any) => setMentorInfo(res.data))
-      .catch((err: any) => console.log("Catched Errors!! >>>", err));
-  }, []);
-
-  const TITLE = ["위코드를 이끄는", "멘토들이 뽑은 최고의 맛집"];
-
+export default function PeoplePick({ info, TITLE }: IProps) {
   return (
     <Wrapper>
       <Container>
@@ -40,8 +32,8 @@ export default function MetorDetail() {
           </Arrow>
         </Header>
         <CardWrapper>
-          {mentorInfo.length &&
-            mentorInfo.map(
+          {info.length &&
+            info.map(
               ({ id, image, name, position, store_id, store, desc }: any) => (
                 <CardEach id={id}>
                   <Profile>
