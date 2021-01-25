@@ -64,7 +64,7 @@ export default function PeoplePick({ info, TITLE }: IProps) {
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 65rem;
   background-color: ${({ theme }) => theme.mentorBack};
   line-height: 1.3;
 `;
