@@ -24,7 +24,7 @@ export default function GoogleLoginComponent() {
     const { accessToken } = response;
 
     axios
-      .get(`${API}/user/login/social`, {
+      .get(`${BEAPI}/user/login/social`, {
         headers: {
           Authorization: accessToken
         }
@@ -42,13 +42,13 @@ export default function GoogleLoginComponent() {
 
   return (
     <Container>
-      {/* <GoogleLogin
+      <GoogleLogin
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
         buttonText="구글로 로그인하기"
         onSuccess={responseGoogle}
         onFailure={(err) => console.log("Google Error", err)}
         cookiePolicy={"single_host_origin"}
-      /> */}
+      />
     </Container>
   );
 }

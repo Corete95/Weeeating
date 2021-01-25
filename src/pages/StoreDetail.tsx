@@ -83,8 +83,8 @@ export default function StoreDetail() {
         <Images>
           <AliceCarousel
             mouseTracking
-            // infinite
-            // autoPlay
+            infinite
+            autoPlay
             animationDuration={1400}
             items={items}
           />
