@@ -46,15 +46,8 @@ export default function StoreDetail() {
       }
     };
 
-    // 주소-좌표간 변환 서비스 객체 생성: 번지나 도로명 주소가 필요함. 정확도 높음
-    /*
     var geocoder = new window.kakao.maps.services.Geocoder();
     geocoder.addressSearch("서울특별시 강남구 테헤란로 427", callback);
-    */
-
-    // 입력한 키워드로 검색: 검색할 키워드 필요. 매장이름 중복될 시 정확도 낮음. 그러나 주소 크롤링 과정이 생략되어 편리하기도 함.
-    var places = new window.kakao.maps.services.Places();
-    places.keywordSearch("wecode", callback);
   }, []);
 
   const handleDragStart = (e: any) => e.preventDefault();
@@ -83,8 +76,8 @@ export default function StoreDetail() {
         <Images>
           <AliceCarousel
             mouseTracking
-            // infinite
-            // autoPlay
+            infinite
+            autoPlay
             animationDuration={1400}
             items={items}
           />
