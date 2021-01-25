@@ -3,7 +3,7 @@ import { GoogleLogin } from "react-google-login";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { API } from "../config";
+import { BEAPI } from "../config";
 
 export default function GoogleLoginComponent() {
   const history = useHistory();
