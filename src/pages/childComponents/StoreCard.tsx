@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface Props {
   top: string;
@@ -8,6 +8,12 @@ interface Props {
 }
 
 export default function StoreCard({ top, image, title, heart }: Props) {
+  const [fullLike, setFullLike] = useState<boolean>(true);
+
+  const heartLike = () => {
+    setFullLike(!fullLike);
+  };
+  const iconLike = fullLike ? "./images/heart.png" : "./images/fullheart.png";
   return (
     <>
       <div className="storeCard">
@@ -16,14 +22,16 @@ export default function StoreCard({ top, image, title, heart }: Props) {
           <p>{top}</p>
         </div>
         <div className="rankingComponents">
-          <p>Weeeating</p>
-          <hr></hr>
-          <img src={image}></img>
-          <hr></hr>
+          <div className="storeHeader">
+            <p>Weeeating</p>
+            <hr></hr>
+            <img src={image}></img>
+            <hr></hr>
+          </div>
           <div className="storeFooter">
             <p className="foodName">{title}</p>
-            <img src="./images/heart.png"></img>
-            <p>{heart}</p>
+            <img src={iconLike} onClick={heartLike}></img>
+            <p className="heartTotal">{heart}</p>
           </div>
         </div>
       </div>

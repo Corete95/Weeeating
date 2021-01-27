@@ -11,14 +11,16 @@ export default function StoreCard2({ image, title, heart }: Props) {
     <>
       <div className="storeCard">
         <div className="rankingComponents">
-          <p>Weeeating</p>
-          <hr></hr>
-          <img src={image}></img>
-          <hr></hr>
+          <div className="storeHeader">
+            <p>Weeeating</p>
+            <hr></hr>
+            <img src={image}></img>
+            <hr></hr>
+          </div>
           <div className="storeFooter">
             <p className="foodName">{title}</p>
             <img src="./images/heart.png"></img>
-            <p>{heart}</p>
+            <p className="heartTotal">{heart}</p>
           </div>
         </div>
       </div>
