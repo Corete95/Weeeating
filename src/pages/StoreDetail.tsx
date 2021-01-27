@@ -47,7 +47,7 @@ export default function StoreDetail() {
     };
 
     var geocoder = new window.kakao.maps.services.Geocoder();
-    geocoder.addressSearch("서울특별시 강남구 테헤란로 427", callback);
+    geocoder.addressSearch("서울시 강남구 대치동 896-5", callback);
   }, []);
 
   const handleDragStart = (e: any) => e.preventDefault();
