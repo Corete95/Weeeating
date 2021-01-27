@@ -5,8 +5,8 @@
     "name": "김성태",
     "position": "Backend Developer",
     "store_id": 1,
-    "store": "업또",
-    "desc": "흠흠흠"
+    "store": "의령전원",
+    "desc": "모듬생선구이, 생선조림 가격도 괜찮고 맛있어요! 양이 많으니 주말 점심에 가서 느긋하게 드세요!!"
   },
   {
     "id": 2,
@@ -41,8 +41,8 @@
     "name": "신은선",
     "position": "Frontend Developer",
     "store_id": 1,
-    "store": "업또",
-    "desc": "흠흠흠"
+    "store": "호천당",
+    "desc": "맛있는 돈까스가 먹고 싶을 때 가면 좋은 집! 모듬카츠와 치즈카츠를 추천합니다. 식사시간엔 서두르지 않으면 줄서야 할 수 있으니 서두르세요!!!"
   },
   {
     "id": 6,
@@ -59,8 +59,8 @@
     "name": "허덕형",
     "position": "Frontend Developer",
     "store_id": 1,
-    "store": "업또",
-    "desc": "흠흠흠"
+    "store": "꺼벙이",
+    "desc": "저렴한 맛, 한 달 뒤 식비를 돌아보면... 자연스레 이유를 알게 될 것이다."
   },
   {
     "id": 8,
