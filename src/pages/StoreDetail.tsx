@@ -15,6 +15,7 @@ declare global {
 
 export default function StoreDetail(props: any) {
   const [info, setInfo] = useState();
+  const [like, setLike] = useState(false);
 
   useEffect(() => {
     // 예진님과 맞춰보면서 주석 해제 예정
@@ -51,7 +52,7 @@ export default function StoreDetail(props: any) {
         });
         var infowindow = new window.kakao.maps.InfoWindow({
           // "위코드" 부분이 ${info.식당이름 키값}으로 변경되어야 함
-          content: `<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">"위코드"</div><div>"국내 최고 부트캠프"</div></div>`
+          content: `<div style="width:10rem;height:2.5rem;display:flex;justify-content:center;align-items:center;padding:6px 0;"><div style="font-weight: bold;">"위코드"</div></div>`
         });
         infowindow.open(map, marker);
         map.setCenter(coords);
@@ -67,7 +68,63 @@ export default function StoreDetail(props: any) {
     var geocoder = new window.kakao.maps.services.Geocoder();
     // 주소 부분이 ${info.주소 키값}으로 변경되어야 함
     geocoder.addressSearch("서울시 강남구 대치동 896-5", callback);
-  }, []);
+  }, [info]);
+
+  const changeLikedState = () => {
+    // setInfo({
+    //   // 아래와 비슷한 내용으로 좋아요 수 변경
+    //   ...info,
+    //   like: Number(changedLike === false ? like + 1 : like - 1)
+    // });
+    setLike(!like);
+    // setTimeout(
+    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
+    //   axios.patch(`BEAPI${}`)
+    //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
+    //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
+    // , 1000)
+  };
+
+  const changeCommentState = (crud: string, commentId: number) => {
+    const currentTime = new Date();
+
+    if (crud === "INSERT") {
+      // setInfo {
+      //   ...info,
+      //   comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime}) }
+      // };
+      // return {
+      //   ...state,
+      //   userDrugsInfo: state.userDrugsInfo?.map((oneInfo: any, idx: number) =>
+      //     oneInfo.id === action.id && idx === action.idx
+      //       ? {
+      //           ...oneInfo,
+      //           drug: { ...oneInfo.drug, reimburse: action.payload },
+      //         }
+      //       : oneInfo
+      //   ),
+      // };
+    }
+    if (crud === "UPDATE") {
+      // setInfo(...info,
+      //     comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime}))
+      // axios 추가하기
+    }
+    if (crud === "DELETE") {
+    }
+    // setInfo({
+    //   // 아래와 비슷한 내용으로 댓글 수정
+    //   ...info,
+    //   like: Number(changedLike === false ? like + 1 : like - 1)
+    // });
+    setLike(!like);
+    // setTimeout(
+    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
+    //   axios.patch(`BEAPI${}`)
+    //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
+    //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
+    // , 1000)
+  };
 
   const handleDragStart = (e: any) => e.preventDefault();
 
@@ -105,10 +162,10 @@ export default function StoreDetail(props: any) {
         </Images>
         <StoreDesc>
           <StoreTitle>
-            <DecoTitle>"</DecoTitle>
+            <DecoTitle>“</DecoTitle>
             {/* ${info.매장이름}으로 변경하기 */}
             <Title>할머니 떡볶이</Title>
-            <DecoTitle>"</DecoTitle>
+            <DecoTitle>”</DecoTitle>
           </StoreTitle>
           <Desc>
             {/* ${info.배달 boolean 값}에 따라 "배달 가능 맛집 🛵" 혹은 "배달 불가 맛집 🏃🏻‍♂️"으로 변경하기 */}
@@ -121,7 +178,13 @@ export default function StoreDetail(props: any) {
             맛있어여 진짜로 맛있으니까 다들 꼭 먹어줘 …
           </Desc>
           <Liked>
-            <IoIosHeartEmpty id="icon" />
+            <span onClick={changeLikedState}>
+              {like ? (
+                <IoIosHeart className="like full" />
+              ) : (
+                <IoIosHeartEmpty className="like" />
+              )}
+            </span>
             {/* ${info.좋아요수}로 변경하기 */}
             <span className="amount">100</span>
             명의 위코더가 좋아해요 :-)
@@ -137,7 +200,9 @@ export default function StoreDetail(props: any) {
           <CommentDesc>댓글 입력</CommentDesc>
           <CommentInput>
             <Input placeholder="여러분의 이야기를 남겨주세요 !" />
-            <SubmitBtn>확인</SubmitBtn>
+            <SubmitBtn onClick={() => changeCommentState("INSERT", 0)}>
+              확인
+            </SubmitBtn>
           </CommentInput>
         </InputWrapper>
         <CommentsWrapper>
@@ -231,8 +296,12 @@ const Liked = styled.p`
   align-items: center;
   justify-content: center;
 
-  #icon {
+  .like {
     font-size: 2.2rem;
+  }
+
+  .full {
+    color: ${({ theme }) => theme.likedRed};
   }
 
   .amount {
