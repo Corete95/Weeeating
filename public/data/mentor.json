@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "image": "https://wecode.co.kr/static/media/kim-yeri.e5766bea.png",
+    "name": "김예리",
+    "position": "COO",
+    "store_id": 1,
+    "store": "비야게레로",
+    "desc": "현지느낌의 타코. 이런게 타코지!! 고수랑 라임 팍팍 넣어서 드세요!"
+  },
+  {
+    "id": 2,
+    "image": "https://wecode.co.kr/static/media/yang.0aac1edb.png",
+    "name": "양준식",
+    "position": "Frontend Mentor",
+    "store_id": 1,
+    "store": "업또",
+    "desc": "흠흠흠"
+  },
+  {
+    "id": 3,
+    "image": "https://wecode.co.kr/static/media/son.1887ee25.png",
+    "name": "손승현",
+    "position": "Fullstack Mentor",
+    "store_id": 1,
+    "store": "업또",
+    "desc": "흠흠흠"
+  },
+  {
+    "id": 4,
+    "image": "https://wecode.co.kr/static/media/lee-so.39e2a003.png",
+    "name": "이소헌",
+    "position": "Backend Mentor",
+    "store_id": 1,
+    "store": "업또",
+    "desc": "흠흠흠"
+  },
+  {
+    "id": 5,
+    "image": "https://wecode.co.kr/static/media/gwan.c332a03c.png",
+    "name": "김관희",
+    "position": "Frontend Mentor",
+    "store_id": 1,
+    "store": "뽕족",
+    "desc": "뽕족 매운족발 너무 맛있어요!!!!"
+  },
+  {
+    "id": 6,
+    "image": "https://wecode.co.kr/static/media/park.2efd61a7.png",
+    "name": "박지훈",
+    "position": "Backend Mentor",
+    "store_id": 1,
+    "store": "호천당",
+    "desc": "위코드와서 많은 수강생과 함께한 추억의 장소 입니다!"
+  },
+  {
+    "id": 7,
+    "image": "https://wecode.co.kr/static/media/taeck.283abc8b.png",
+    "name": "오종택",
+    "position": "Frontend Mentor",
+    "store_id": 1,
+    "store": "우마쿠라",
+    "desc": "낮과 저녁 두 얼굴의 이자카야. 낮에는 라멘/벤또, 저녁에는 사시미에 사케를 곁들이며 좋은 시간을 보낼 수 있다."
+  },
+  {
+    "id": 8,
+    "image": "https://wecode.co.kr/static/media/min.cfcc09ee.png",
+    "name": "유병민",
+    "position": "Backend Mentor",
+    "store_id": 1,
+    "store": "업또",
+    "desc": "흠흠흠"
+  },
+  {
+    "id": 9,
+    "image": "https://wecode.co.kr/static/media/shin.76d5cc6c.png",
+    "name": "김신영",
+    "position": "Frontend Mentor",
+    "store_id": 1,
+    "store": "일미집",
+    "desc": "맛있는 국물의 따끈한 감자탕이 빨리 먹고 싶을 때! 고기도 풍성한건 안비밀￼ 👍🏻"
+  },
+  {
+    "id": 10,
+    "image": "https://wecode.co.kr/static/media/jun.89152076.png",
+    "name": "최 준",
+    "position": "Fullstack Mentor",
+    "store_id": 1,
+    "store": "바스버거",
+    "desc": "감튀가 무한이다"
+  },
+  {
+    "id": 11,
+    "image": "https://wecode.co.kr/static/media/yoon.532096c4.png",
+    "name": "윤지영",
+    "position": "Frontend Mentor",
+    "store_id": 1,
+    "store": "친친",
+    "desc": "가지덮밥이 별미! 3끼 다 가지덮밥만 먹을 수 있을만큼 맛있고 분위기도 정통 중국집 느낌 나서 고오급 요리 먹는 것 같아요. 다시 한 번 강조하자면 가지덮밥은 반드시 드셔보시라.. ^^"
+  }
+]
