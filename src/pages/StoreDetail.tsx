@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { BEAPI } from "../config";
 import { mixin } from "../styles";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 
@@ -11,7 +13,22 @@ declare global {
   }
 }
 
-export default function StoreDetail() {
+export default function StoreDetail(props: any) {
+  const [info, setInfo] = useState();
+
+  useEffect(() => {
+    // 예진님과 맞춰보면서 주석 해제 예정
+    // 아래 API 안되면, `${API_BOOK}/${props.match.params.id}` 방식으로 변경하기
+    // axios.get(`BEAPI${}`, {
+    //   params: {
+    // id params 받는 부분은 멘토, 코뿌박, 랭킹 페이지에서 넘어올 때 테스트해보기
+    //     id: 1
+    //   }
+    // })
+    //   .then(res => setInfo(res.data))
+    //   .catch(err => console.log("Catched errors!! >>>", err))
+  }, [props.match.params.id]);
+
   useEffect(() => {
     let container = document.getElementById("map");
     let options = {
@@ -33,6 +50,7 @@ export default function StoreDetail() {
           position: coords
         });
         var infowindow = new window.kakao.maps.InfoWindow({
+          // "위코드" 부분이 ${info.식당이름 키값}으로 변경되어야 함
           content: `<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">"위코드"</div><div>"국내 최고 부트캠프"</div></div>`
         });
         infowindow.open(map, marker);
@@ -47,11 +65,13 @@ export default function StoreDetail() {
     };
 
     var geocoder = new window.kakao.maps.services.Geocoder();
+    // 주소 부분이 ${info.주소 키값}으로 변경되어야 함
     geocoder.addressSearch("서울시 강남구 대치동 896-5", callback);
   }, []);
 
   const handleDragStart = (e: any) => e.preventDefault();
 
+  // src 부분 모두 ${info.사진 키값}으로 변경하고, 해당 array에 map 메소드 적용해야 함 (사진 개수만큼 슬라이더 생성되도록)
   const items = [
     <img
       src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
@@ -86,11 +106,14 @@ export default function StoreDetail() {
         <StoreDesc>
           <StoreTitle>
             <DecoTitle>"</DecoTitle>
+            {/* ${info.매장이름}으로 변경하기 */}
             <Title>할머니 떡볶이</Title>
             <DecoTitle>"</DecoTitle>
           </StoreTitle>
           <Desc>
+            {/* ${info.배달 boolean 값}에 따라 "배달 가능 맛집 🛵" 혹은 "배달 불가 맛집 🏃🏻‍♂️"으로 변경하기 */}
             <div className="deli">배달 가능 맛집 🛵</div>
+            {/* ${info.매장설명}으로 변경하기 */}
             겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로 어떻게 설명해야할지
             모르겠네 나도 26년만에 먹어봤는데 진짜로 맛있어여 진짜로 맛있으니까
             다들 꼭 먹어줘 … 겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로
@@ -99,6 +122,7 @@ export default function StoreDetail() {
           </Desc>
           <Liked>
             <IoIosHeartEmpty id="icon" />
+            {/* ${info.좋아요수}로 변경하기 */}
             <span className="amount">100</span>
             명의 위코더가 좋아해요 :-)
           </Liked>
@@ -117,6 +141,7 @@ export default function StoreDetail() {
           </CommentInput>
         </InputWrapper>
         <CommentsWrapper>
+          {/* info.댓글array 에다가 map 메소드 적용하기. 유저이름, 내용, 시간 모두 키값 적용해야 함 */}
           <Comment>
             <User>13기_백은진</User>
             <Content>떡볶이 너무 먹고싶다...</Content>
