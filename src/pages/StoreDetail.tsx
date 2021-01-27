@@ -80,6 +80,7 @@ export default function StoreDetail() {
             autoPlay
             animationDuration={1400}
             items={items}
+            disableButtonsControls={true}
           />
         </Images>
         <StoreDesc>
