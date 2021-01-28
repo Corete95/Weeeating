@@ -14,8 +14,15 @@ declare global {
   }
 }
 
+interface UserData {
+  info: any[];
+  items: any[];
+}
+
 export default function StoreDetail(props: any) {
-  const [info, setInfo] = useState();
+  const [info, setInfo] = useState<UserData | null>(null);
+  const [address, setAddress] = useState("");
+  const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
   const [commentText, setCommentText] = useState({
     newComment: null,
@@ -23,20 +30,26 @@ export default function StoreDetail(props: any) {
   });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  console.log("items", items);
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
 
   useEffect(() => {
-    // 예진님과 맞춰보면서 주석 해제 예정
     // 아래 API 안되면, `${API_BOOK}/${props.match.params.id}` 방식으로 변경하기
-    // axios.get(`BEAPI${}`, {
-    //   params: {
-    // id params 받는 부분은 멘토, 코뿌박, 랭킹 페이지에서 넘어올 때 테스트해보기
-    //     id: 1
-    //   }
-    // })
-    //   .then(res => setInfo(res.data))
-    //   .catch(err => console.log("Catched errors!! >>>", err))
+    axios
+      .get(`${BEAPI}/store/detail/1`)
+      .then((res) => {
+        console.log("res", res.data);
+        const images = res.data.store_images.map((image: string) => (
+          <img src={image} onDragStart={handleDragStart} className="food" />
+        ));
+        const onlyImages = Array.from(images, (obj: any) => obj.props.src);
+        console.log("onlyImages", onlyImages);
+        setInfo(res.data);
+        setAddress(res.data.store_info[0].address);
+        setItems(onlyImages);
+      })
+      .catch((err) => console.log("Catched errors!! >>>", err));
   }, [props.match.params.id]);
 
   useEffect(() => {
@@ -52,6 +65,9 @@ export default function StoreDetail(props: any) {
     let map = new window.kakao.maps.Map(container, options);
 
     var callback = (result: any, status: any) => {
+      console.log("info in callback", info);
+      console.log("address in callback", address);
+
       if (status === window.kakao.maps.services.Status.OK) {
         console.log(result);
         var coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
@@ -59,11 +75,11 @@ export default function StoreDetail(props: any) {
           map: map,
           position: coords
         });
-        var infowindow = new window.kakao.maps.InfoWindow({
-          // "위코드" 부분이 ${info.식당이름 키값}으로 변경되어야 함
-          content: `<div style="width:10rem;height:2.5rem;display:flex;justify-content:center;align-items:center;padding:6px 0;"><div style="font-weight: bold;">"위코드"</div></div>`
-        });
-        infowindow.open(map, marker);
+        var infowindow = (info: any) =>
+          new window.kakao.maps.InfoWindow({
+            content: `<div style="width:10rem;height:2.5rem;display:flex;justify-content:center;align-items:center;padding:6px 0;"><div style="font-weight: bold;">"${info.store_info[0].name}"</div></div>`
+          });
+        infowindow(info).open(map, marker);
         map.setCenter(coords);
       }
       if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
@@ -75,9 +91,10 @@ export default function StoreDetail(props: any) {
     };
 
     var geocoder = new window.kakao.maps.services.Geocoder();
+    console.log("geocoder", geocoder);
     // 주소 부분이 ${info.주소 키값}으로 변경되어야 함
-    geocoder.addressSearch("서울시 강남구 대치동 896-5", callback);
-  }, [info]);
+    geocoder.addressSearch(address, callback);
+  }, [info, address]);
 
   const changeLikedState = () => {
     // setInfo({
@@ -156,23 +173,26 @@ export default function StoreDetail(props: any) {
   const handleDragStart = (e: any) => e.preventDefault();
 
   // src 부분 모두 ${info.사진 키값}으로 변경하고, 해당 array에 map 메소드 적용해야 함 (사진 개수만큼 슬라이더 생성되도록)
-  const items = [
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />,
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />,
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />
-  ];
+
+  // const items = (info: any) =>
+  //   info.store_images.map((img: any) =>
+  //     <img src={img} onDragStart={handleDragStart} className="food" />)
+  //   );
+  //   console.log(Array.from(info.store_images, image => `<img src=${image} onDragStart={handleDragStart} className="food" />`));
+  // expected output: Array [2, 4, 6]
+
+  useEffect(() => {
+    const func = async () => {
+      const imageItemsFunc = (info: any) =>
+        Array.from(
+          info.store_images,
+          (image) =>
+            `<img src=${image} onDragStart={handleDragStart} className="food" />`
+        );
+      const imageItems = await imageItemsFunc(info);
+      // setItems(imageItems);
+    };
+  }, [info]);
 
   return (
     <Container>
