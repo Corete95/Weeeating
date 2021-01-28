@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BEAPI } from "../config";
 import { LoginForm } from "./index";
@@ -8,6 +8,13 @@ export default function Login() {
     email: null,
     password: null
   });
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
