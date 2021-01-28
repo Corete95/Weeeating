@@ -3,11 +3,6 @@ import axios from "axios";
 import { SignupForm } from "./index";
 import { BEAPI } from "../config";
 
-interface StateForStyle {
-  short?: boolean;
-  needSpace?: boolean;
-}
-
 export default function Signup() {
   const [user, setUser] = useState({
     number: null,
