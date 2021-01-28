@@ -16,6 +16,10 @@ declare global {
 export default function StoreDetail(props: any) {
   const [info, setInfo] = useState();
   const [like, setLike] = useState(false);
+  const [commentText, setCommentText] = useState({
+    newComment: null,
+    updatedComment: { id: null, content: null }
+  });
 
   useEffect(() => {
     // 예진님과 맞춰보면서 주석 해제 예정
@@ -88,11 +92,15 @@ export default function StoreDetail(props: any) {
   const changeCommentState = (crud: string, commentId: number) => {
     const currentTime = new Date();
 
+    // info 데이터 양식 확인하고 수정하기
+    // insert는 newComment onChange text 받아서, setInfo에 spread로 추가함과 동시에 API POST 할 예정
+    // update는 updatedComment onChange text 및 comment_id 받아서, setInfo의 기존 comment_id와 동일한 것과 변경하는 동시에 API PATCH 할 예정
+    // delete는 comment_id 받아서, setInfo에서 기존 comment_id와 동일한 것을 삭제함과 동시에 API DELETE 할 예정
     if (crud === "INSERT") {
-      // setInfo {
+      // setInfo({
       //   ...info,
       //   comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime}) }
-      // };
+      // });
       // return {
       //   ...state,
       //   userDrugsInfo: state.userDrugsInfo?.map((oneInfo: any, idx: number) =>
@@ -222,6 +230,18 @@ export default function StoreDetail(props: any) {
                 commodi fuga.
               </Content>
               <UploadTime>(2021.01.22 3:10)</UploadTime>
+              {/* 작성자에게만 수정, 삭제가 노출되어야 함 */}
+              {/* 수정, 삭제 위치도 회의해서 결정하기 */}
+              <ModifyBtn
+                onClick={() => changeCommentState("UPDATE", comment_id)}
+              >
+                수정
+              </ModifyBtn>
+              <ModifyBtn
+                onClick={() => changeCommentState("DELETE", comment_id)}
+              >
+                삭제
+              </ModifyBtn>
             </div>
           </Comment>
         </CommentsWrapper>
@@ -376,7 +396,12 @@ const User = styled.span`
 
 const Content = styled.p`
   display: inline;
-  margin-right: 1rem;
 `;
 
-const UploadTime = styled.span``;
+const UploadTime = styled.span`
+  margin: 0 1rem;
+`;
+
+const ModifyBtn = styled.button`
+  margin: 0 0.2rem;
+`;
