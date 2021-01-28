@@ -40,6 +40,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
+  font-family: serif;
   height: 1em;
   text-align: center;
   font-size: 6em;
