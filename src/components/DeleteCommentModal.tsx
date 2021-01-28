@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { mixin } from "../styles";
 
 interface IProps {
   deleteModal: boolean;
@@ -19,15 +20,17 @@ export default function DeleteCommentModal({
   submitChangedComment
 }: IProps) {
   return (
-    <>
-      <ModalWrapper visible={deleteModal} tabIndex={-1}>
-        <ModalInner tabIndex={0}>
-          <header>삭제하시겠습니까?</header>
-          <button onClick={() => submitChangedComment("DELETE", 0)}>예</button>
-          <button onClick={() => setDeleteModal(false)}>아니오</button>
-        </ModalInner>
-      </ModalWrapper>
-    </>
+    <ModalWrapper visible={deleteModal} tabIndex={-1}>
+      <ModalInner tabIndex={0}>
+        <div className="header">
+          <Header>삭제하시겠습니까?</Header>
+        </div>
+        <div className="buttons">
+          <Button onClick={() => submitChangedComment("DELETE", 0)}>예</Button>
+          <Button onClick={() => setDeleteModal(false)}>아니오</Button>
+        </div>
+      </ModalInner>
+    </ModalWrapper>
   );
 }
 
@@ -44,6 +47,8 @@ const ModalWrapper = styled.div<StateForStyle>`
 `;
 
 const ModalInner = styled.div`
+  display: flex;
+  ${mixin.flexSet("center", "center", "column")};
   outline: none;
   position: relative;
   top: 50%;
@@ -55,4 +60,36 @@ const ModalInner = styled.div`
   border-radius: 3rem;
   background-color: ${({ theme }) => theme.white};
   box-shadow: 0 0 0.4rem 0 rgba(0, 0, 0, 0.6);
+
+  .buttons {
+    width: 18rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header {
+    width: 18rem;
+    height: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+const Header = styled.header`
+  display: block;
+  font-size: 1.4em;
+  font-weight: 500;
+  letter-spacing: 0.4rem;
+`;
+
+const Button = styled.button`
+  outline: none;
+  font-size: 0.8em;
+  font-weight: 700;
+  margin-top: 0.7rem;
+  cursor: pointer;
+  background-color: white;
+  width: 8.6rem;
+  height: 1.8rem;
 `;

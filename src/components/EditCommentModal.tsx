@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { mixin } from "../styles";
 
 interface IProps {
   editModal: boolean;
@@ -23,22 +24,22 @@ export default function EditCommentModal({
   updateComment
 }: IProps) {
   return (
-    <>
-      <ModalWrapper visible={editModal} tabIndex={-1}>
-        <ModalInner tabIndex={0}>
-          <input
-            type="text"
-            name="updatedCommentValue"
-            value={commentValue}
-            onChange={updateComment}
-          />
-          <button onClick={() => submitChangedComment("UPDATE", 0)}>
+    <ModalWrapper visible={editModal} tabIndex={-1}>
+      <ModalInner tabIndex={0}>
+        <Input
+          type="text"
+          name="updatedCommentValue"
+          value={commentValue}
+          onChange={updateComment}
+        />
+        <div className="buttons">
+          <Button onClick={() => submitChangedComment("UPDATE", 0)}>
             수정
-          </button>
-          <button onClick={() => setEditModal(false)}>취소</button>
-        </ModalInner>
-      </ModalWrapper>
-    </>
+          </Button>
+          <Button onClick={() => setEditModal(false)}>취소</Button>
+        </div>
+      </ModalInner>
+    </ModalWrapper>
   );
 }
 
@@ -55,6 +56,8 @@ const ModalWrapper = styled.div<StateForStyle>`
 `;
 
 const ModalInner = styled.div`
+  display: flex;
+  ${mixin.flexSet("center", "center", "column")};
   outline: none;
   position: relative;
   top: 50%;
@@ -66,4 +69,28 @@ const ModalInner = styled.div`
   border-radius: 3rem;
   background-color: ${({ theme }) => theme.white};
   box-shadow: 0 0 0.4rem 0 rgba(0, 0, 0, 0.6);
+
+  .buttons {
+    width: 18rem;
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
+const Input = styled.input`
+  display: block;
+  width: 18rem;
+  height: 6rem;
+  text-align: top;
+`;
+
+const Button = styled.button`
+  outline: none;
+  font-size: 0.8em;
+  font-weight: 700;
+  margin-top: 0.7rem;
+  cursor: pointer;
+  background-color: white;
+  width: 8.6rem;
+  height: 1.8rem;
 `;
