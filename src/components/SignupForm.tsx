@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 import { BEAPI } from "../config";
 
 interface IProps {
   handleChange: (e: any) => void;
-  submitSingup: (e: any) => void;
+  submitSingup: () => void;
 }
 
 interface StateForStyle {
@@ -13,6 +14,10 @@ interface StateForStyle {
 }
 
 export default function SignupForm({ handleChange, submitSingup }: IProps) {
+  const firstGoogle = useSelector(
+    ({ setFirstReducer }) => setFirstReducer.first
+  );
+
   return (
     <Container>
       <Title>회원가입</Title>
@@ -23,6 +28,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
           <Input
             type="number"
             name="number"
+            placeholder="숫자만 입력해주세요"
             onChange={handleChange}
             required
             short={true}
@@ -33,6 +39,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
           <Input
             type="text"
             name="userName"
+            placeholder="전체이름을 입력해주세요"
             onChange={handleChange}
             required
             short={true}
@@ -44,6 +51,8 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
             type="email"
             name="email"
             required
+            placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
+            disabled={firstGoogle ? true : false}
             onChange={handleChange}
           ></Input>
         </BlockWrapper>
@@ -53,6 +62,8 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
             type="password"
             name="password"
             required
+            placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
+            disabled={firstGoogle ? true : false}
             onChange={handleChange}
           ></Input>
         </BlockWrapper>
@@ -62,6 +73,8 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
             type="password"
             name="repassword"
             required
+            placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
+            disabled={firstGoogle ? true : false}
             onChange={handleChange}
           ></Input>
         </BlockWrapper>

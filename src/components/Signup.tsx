@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { SignupForm } from "./index";
 import { BEAPI } from "../config";
+import { SignupForm } from "./index";
 
 export default function Signup() {
   const [user, setUser] = useState({
