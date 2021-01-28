@@ -454,4 +454,9 @@ const UploadTime = styled.span`
 
 const ModifyBtn = styled.button`
   margin: 0 0.2rem;
+  outline: none;
+  font-size: 0.75em;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: white;
 `;
