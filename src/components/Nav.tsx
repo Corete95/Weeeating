@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
+import { FiX } from "react-icons/fi";
 import { setSignupActive, setLoginActive } from "../store/actions";
 import { mixin } from "../styles";
 import { Signup, Login } from "./index";
@@ -83,7 +84,7 @@ export default function Nav({ weight, goToPage }: IProps) {
               dispatch(setLoginActive(false));
             }}
           >
-            삭제
+            <FiX className="icon" />
           </CloseBtn>
           {signupModal || !loginModal ? <Signup /> : <Login />}
         </ModalInner>
@@ -167,8 +168,12 @@ const ModalInner = styled.div`
 
 const CloseBtn = styled.span`
   position: absolute;
-  top: 0;
-  right: 1rem;
+  top: 0.5rem;
+  right: 0.8rem;
   padding: 1rem;
   cursor: pointer;
+
+  .icon {
+    font-size: 1.8rem;
+  }
 `;

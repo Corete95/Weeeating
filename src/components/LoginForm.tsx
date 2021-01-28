@@ -28,7 +28,7 @@ export default function LoginForm({ handleChange, submitLogin }: IProps) {
         </BlockWrapper>
         <BlockWrapper buttons>
           <GoogleLoginComponent />
-          <LoginBtn type="submit" value="로그인"></LoginBtn>
+          <LoginBtn type="submit" value="로그인" className="button"></LoginBtn>
         </BlockWrapper>
       </InfoSection>
     </Container>
@@ -40,16 +40,18 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: serif;
+  color: ${({ theme }) => theme.mainYellow};
   height: 1em;
   text-align: center;
   font-size: 6em;
   font-weight: 900;
-  margin-bottom: 1.1em;
+  margin-top: 0.8em;
+  margin-bottom: 0.7em;
   letter-spacing: 0.2em;
 `;
 
 const InfoSection = styled.form`
+  font-family: "Noto Sans KR";
   margin: 0 2.5em;
   height: 20em;
 `;
@@ -60,11 +62,17 @@ const BlockWrapper = styled.div<StateForStyle>`
   justify-content: space-between;
   align-items: center;
   display: flex;
+
+  .button {
+    background-color: ${({ theme }) => theme.lightYellow};
+  }
 `;
 
 const Subject = styled.div<StateForStyle>`
   text-align: center;
-  width: 3.5em;
+  font-size: 1.15em;
+  font-weight: 500;
+  width: 4.5em;
   margin-right: 1.5em;
   margin-left: ${({ needSpace }) => (needSpace ? "1.5em" : "0")};
 `;
@@ -72,17 +80,19 @@ const Subject = styled.div<StateForStyle>`
 const Input = styled.input<StateForStyle>`
   width: ${({ short }) => (short ? "10.5em" : "30em")};
   height: 4em;
+  border: 2px solid ${({ theme }) => theme.mainYellow};
 `;
 
 const LoginBtn = styled.input`
+  border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 2em;
   width: 28.6em;
-  font-size: 1em;
+  font-size: 1.15rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4em;
+  height: 3.5em;
   text-align: center;
   background-color: white;
   cursor: pointer;

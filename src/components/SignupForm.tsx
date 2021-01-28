@@ -28,7 +28,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
           <Input
             type="number"
             name="number"
-            placeholder="숫자만 입력해주세요"
+            placeholder="숫자만!"
             onChange={handleChange}
             required
             short={true}
@@ -39,7 +39,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
           <Input
             type="text"
             name="userName"
-            placeholder="전체이름을 입력해주세요"
+            placeholder="전체이름!"
             onChange={handleChange}
             required
             short={true}
@@ -78,7 +78,12 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
             onChange={handleChange}
           ></Input>
         </BlockWrapper>
-        <Button type="submit" value="회원가입" onClick={submitSingup}></Button>
+        <Button
+          type="submit"
+          value="회원가입"
+          className="button"
+          onClick={submitSingup}
+        ></Button>
       </InfoSection>
     </Container>
   );
@@ -89,6 +94,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
+  color: ${({ theme }) => theme.mainYellow};
   height: 1em;
   text-align: center;
   font-size: 6em;
@@ -98,6 +104,7 @@ const Title = styled.h1`
 `;
 
 const InfoSection = styled.form`
+  font-family: "Noto Sans KR";
   margin: 0 2.5em;
   height: 20em;
 `;
@@ -108,30 +115,38 @@ const BlockWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   display: flex;
+
+  .button {
+    background-color: ${({ theme }) => theme.lightYellow};
+  }
 `;
 
 const Subject = styled.div<StateForStyle>`
   text-align: center;
-  width: 3.5em;
+  font-size: 1.15em;
+  font-weight: 500;
+  width: 4.5em;
   margin-right: 1.5em;
   margin-left: ${({ needSpace }) => (needSpace ? "1.5em" : "0")};
 `;
 
 const Input = styled.input<StateForStyle>`
-  width: ${({ short }) => (short ? "10.5em" : "30em")};
+  width: ${({ short }) => (short ? "8.5em" : "30em")};
   height: 4em;
+  border: 2px solid ${({ theme }) => theme.mainYellow};
 `;
 
 const Button = styled.input`
+  border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 2em;
-  width: 28.6em;
-  font-size: 1em;
+  width: 25em;
+  font-size: 1.15rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4em;
+  height: 3.5em;
   text-align: center;
-  background-color: white;
+  background-color: ${({ theme }) => theme.lightYellow};
   cursor: pointer;
 `;

@@ -55,6 +55,9 @@ export default function GoogleLoginComponent() {
   return (
     <Container>
       <GoogleLogin
+        render={(renderProps) => (
+          <span className="googleBtn">구글로 로그인하기</span>
+        )}
         className="googleLogin"
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
         buttonText="구글로 로그인하기"
@@ -70,20 +73,25 @@ const Container = styled.div`
   margin-top: 2em;
   margin-right: 0.7em;
   width: 28.6em;
-  font-size: 1em;
+  font-size: 1.15em;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4em;
+  height: 3.5em;
   text-align: center;
-  border: 1px solid black;
   cursor: pointer;
 
-  .googleLogin {
+  .googleBtn {
+    border: 2px solid ${({ theme }) => theme.mainYellow};
+    background-color: ${({ theme }) => theme.lightYellow};
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: black;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 `;
