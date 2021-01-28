@@ -45,7 +45,7 @@ class Routes extends React.Component {
                 path="/metor-detail"
                 component={MentorDetailContainer}
               />
-              <Route exact path="/store-detail" component={StoreDetail} />
+              <Route exact path="/store-detail/:id" component={StoreDetail} />
               <Route exact path="/store-list" component={StoreList} />
               <Route exact path="/theme-list" component={ThemeList} />
               <Route exact path="/today-random" component={TodayRandom} />
