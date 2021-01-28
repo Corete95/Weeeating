@@ -5,6 +5,7 @@ import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { BEAPI } from "../config";
 import { mixin } from "../styles";
+import { EditCommentModal, DeleteCommentModal } from "../components";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 
 declare global {
@@ -18,8 +19,12 @@ export default function StoreDetail(props: any) {
   const [like, setLike] = useState(false);
   const [commentText, setCommentText] = useState({
     newComment: null,
-    updatedComment: { id: null, content: null }
+    updatedComment: { id: null, content: "기존댓글~~~" }
   });
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  // const userVerified = info.user.id === localStorage.getItem.user.id;
 
   useEffect(() => {
     // 예진님과 맞춰보면서 주석 해제 예정
@@ -80,6 +85,7 @@ export default function StoreDetail(props: any) {
     //   ...info,
     //   like: Number(changedLike === false ? like + 1 : like - 1)
     // });
+    // setInfo 안에 있는 like boolean 값을 변경해야함
     setLike(!like);
     // setTimeout(
     //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
@@ -89,7 +95,7 @@ export default function StoreDetail(props: any) {
     // , 1000)
   };
 
-  const changeCommentState = (crud: string, commentId: number) => {
+  const submitChangedComment = (crud: string, commentId: number) => {
     const currentTime = new Date();
 
     // info 데이터 양식 확인하고 수정하기
@@ -119,6 +125,7 @@ export default function StoreDetail(props: any) {
       // axios 추가하기
     }
     if (crud === "DELETE") {
+      console.log("DELETE is clicked");
     }
     // setInfo({
     //   // 아래와 비슷한 내용으로 댓글 수정
@@ -132,6 +139,18 @@ export default function StoreDetail(props: any) {
     //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
     //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
     // , 1000)
+  };
+
+  const updateComment = (e: any) => {
+    const { name, value } = e.target;
+
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        ...commentText.updatedComment,
+        content: value
+      }
+    });
   };
 
   const handleDragStart = (e: any) => e.preventDefault();
@@ -187,6 +206,7 @@ export default function StoreDetail(props: any) {
           </Desc>
           <Liked>
             <span onClick={changeLikedState}>
+              {/* ${info.like} boolean 값 판별해서 조건문 설정하기 */}
               {like ? (
                 <IoIosHeart className="like full" />
               ) : (
@@ -208,7 +228,7 @@ export default function StoreDetail(props: any) {
           <CommentDesc>댓글 입력</CommentDesc>
           <CommentInput>
             <Input placeholder="여러분의 이야기를 남겨주세요 !" />
-            <SubmitBtn onClick={() => changeCommentState("INSERT", 0)}>
+            <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
               확인
             </SubmitBtn>
           </CommentInput>
@@ -232,20 +252,46 @@ export default function StoreDetail(props: any) {
               <UploadTime>(2021.01.22 3:10)</UploadTime>
               {/* 작성자에게만 수정, 삭제가 노출되어야 함 */}
               {/* 수정, 삭제 위치도 회의해서 결정하기 */}
+              {/* userVerified 변수 생성한 후 주석 풀기 */}
+              {/* {userVerified && ( */}
               <ModifyBtn
-                onClick={() => changeCommentState("UPDATE", comment_id)}
+                onClick={() => {
+                  setEditModal(true);
+                  setCommentText({
+                    ...commentText,
+                    updatedComment: {
+                      ...commentText.updatedComment,
+                      // id: 유저의 comment_id로 변경하기
+                      id: null
+                    }
+                  });
+                }}
               >
                 수정
               </ModifyBtn>
-              <ModifyBtn
-                onClick={() => changeCommentState("DELETE", comment_id)}
-              >
-                삭제
-              </ModifyBtn>
+              <ModifyBtn onClick={() => setDeleteModal(true)}>삭제</ModifyBtn>
+              {/* )} */}
             </div>
           </Comment>
         </CommentsWrapper>
       </CommentSection>
+      {editModal && (
+        <EditCommentModal
+          editModal={editModal}
+          setEditModal={setEditModal}
+          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
+          commentValue={commentText.updatedComment.content}
+          submitChangedComment={submitChangedComment}
+          updateComment={updateComment}
+        />
+      )}
+      {deleteModal && (
+        <DeleteCommentModal
+          deleteModal={deleteModal}
+          setDeleteModal={setDeleteModal}
+          submitChangedComment={submitChangedComment}
+        />
+      )}
     </Container>
   );
 }
@@ -258,7 +304,11 @@ const Container = styled.div`
 const DescSection = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-conteod {
+    width: 28rem;
+    height: 28rem;
+    border: 2px solid ${({ theme }) => theme.borderGray};
+  }
 `;
 
 const Images = styled.div`
