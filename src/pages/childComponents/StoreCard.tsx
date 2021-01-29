@@ -13,6 +13,7 @@ export default function StoreCard({ top, image, title, heart }: Props) {
   const heartLike = () => {
     setFullLike(!fullLike);
   };
+
   const iconLike = fullLike ? "./images/heart.png" : "./images/fullheart.png";
   return (
     <>
