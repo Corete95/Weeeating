@@ -15,12 +15,28 @@ declare global {
 }
 
 interface UserData {
-  info: any[];
+  info: any;
   items: any[];
 }
 
 export default function StoreDetail(props: any) {
-  const [info, setInfo] = useState<UserData | null>(null);
+  const [info, setInfo] = useState<UserData | any>({
+    store_info: [
+      {
+        name: "본죽",
+        description:
+          "관에 들어가기 전에 염라대왕이 너는 무엇이 먹고 싶으냐고 물으면 주저없이 호박죽이옵니다라고 대답할만큼 죽은 몸에 좋고 맛도 좋은~~~ 죽 최고! 속이 불편하면 코드치기 힘드니까 가볍게 가볍게 먹기 좋아요~~~~",
+        delivery: true,
+        address: "서울 강남구 선릉로 424 2층"
+      }
+    ],
+    like_count: 0,
+    like: false,
+    store_images: [
+      "https://cdn.bonif.co.kr/cmdt/BF101_pic_PJsdvyNk.jpg",
+      "https://cdn.bonif.co.kr/cmdt/BF101_pic_PJsdvyNk.jpg"
+    ]
+  });
   const [address, setAddress] = useState("");
   const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
@@ -34,23 +50,23 @@ export default function StoreDetail(props: any) {
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
 
-  useEffect(() => {
-    // 아래 API 안되면, `${API_BOOK}/${props.match.params.id}` 방식으로 변경하기
-    axios
-      .get(`${BEAPI}/store/detail/1`)
-      .then((res) => {
-        console.log("res", res.data);
-        const images = res.data.store_images.map((image: string) => (
-          <img src={image} onDragStart={handleDragStart} className="food" />
-        ));
-        const onlyImages = Array.from(images, (obj: any) => obj.props.src);
-        console.log("onlyImages", onlyImages);
-        setInfo(res.data);
-        setAddress(res.data.store_info[0].address);
-        setItems(onlyImages);
-      })
-      .catch((err) => console.log("Catched errors!! >>>", err));
-  }, [props.match.params.id]);
+  // useEffect(() => {
+  //   // 아래 API 안되면, `${API_BOOK}/${props.match.params.id}` 방식으로 변경하기
+  //   axios
+  //     .get(`${BEAPI}/store/detail/1`)
+  //     .then((res) => {
+  //       console.log("res", res.data);
+  //       const images = res.data.store_images.map((image: string) => (
+  //         <img src={image} onDragStart={handleDragStart} className="food" />
+  //       ));
+  //       const onlyImages = Array.from(images, (obj: any) => obj.props.src);
+  //       console.log("onlyImages", onlyImages);
+  //       setInfo(res.data);
+  //       setAddress(res.data.store_info[0].address);
+  //       setItems(onlyImages);
+  //     })
+  //     .catch((err) => console.log("Catched errors!! >>>", err));
+  // }, [props.match.params.id]);
 
   useEffect(() => {
     let container = document.getElementById("map");
@@ -65,9 +81,6 @@ export default function StoreDetail(props: any) {
     let map = new window.kakao.maps.Map(container, options);
 
     var callback = (result: any, status: any) => {
-      console.log("info in callback", info);
-      console.log("address in callback", address);
-
       if (status === window.kakao.maps.services.Status.OK) {
         console.log(result);
         var coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
@@ -91,19 +104,18 @@ export default function StoreDetail(props: any) {
     };
 
     var geocoder = new window.kakao.maps.services.Geocoder();
-    console.log("geocoder", geocoder);
-    // 주소 부분이 ${info.주소 키값}으로 변경되어야 함
-    geocoder.addressSearch(address, callback);
-  }, [info, address]);
+    geocoder.addressSearch(info.store_info[0]?.address, callback);
+  }, [info]);
 
   const changeLikedState = () => {
-    // setInfo({
-    //   // 아래와 비슷한 내용으로 좋아요 수 변경
-    //   ...info,
-    //   like: Number(changedLike === false ? like + 1 : like - 1)
-    // });
+    setInfo({
+      ...info,
+      like_count: Number(
+        info.like === false ? info.like_count + 1 : info.like_count - 1
+      ),
+      like: !info.like
+    });
     // setInfo 안에 있는 like boolean 값을 변경해야함
-    setLike(!like);
     // setTimeout(
     //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
     //   axios.patch(`BEAPI${}`)
@@ -144,18 +156,6 @@ export default function StoreDetail(props: any) {
     if (crud === "DELETE") {
       console.log("DELETE is clicked");
     }
-    // setInfo({
-    //   // 아래와 비슷한 내용으로 댓글 수정
-    //   ...info,
-    //   like: Number(changedLike === false ? like + 1 : like - 1)
-    // });
-    setLike(!like);
-    // setTimeout(
-    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
-    //   axios.patch(`BEAPI${}`)
-    //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
-    //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
-    // , 1000)
   };
 
   const updateComment = (e: any) => {
@@ -181,18 +181,18 @@ export default function StoreDetail(props: any) {
   //   console.log(Array.from(info.store_images, image => `<img src=${image} onDragStart={handleDragStart} className="food" />`));
   // expected output: Array [2, 4, 6]
 
-  useEffect(() => {
-    const func = async () => {
-      const imageItemsFunc = (info: any) =>
-        Array.from(
-          info.store_images,
-          (image) =>
-            `<img src=${image} onDragStart={handleDragStart} className="food" />`
-        );
-      const imageItems = await imageItemsFunc(info);
-      // setItems(imageItems);
-    };
-  }, [info]);
+  // useEffect(() => {
+  //   const func = async () => {
+  //     const imageItemsFunc = (info: any) =>
+  //       Array.from(
+  //         info.store_images,
+  //         (image) =>
+  //           `<img src=${image} onDragStart={handleDragStart} className="food" />`
+  //       );
+  //     const imageItems = await imageItemsFunc(info);
+  //     // setItems(imageItems);
+  //   };
+  // }, [info]);
 
   return (
     <Container>
@@ -203,38 +203,36 @@ export default function StoreDetail(props: any) {
             infinite
             autoPlay
             animationDuration={1400}
-            items={items}
             disableButtonsControls={true}
-          />
+          >
+            {info.store_images?.map((image: string) => (
+              <img src={image} onDragStart={handleDragStart} className="food" />
+            ))}
+          </AliceCarousel>
         </Images>
         <StoreDesc>
           <StoreTitle>
             <DecoTitle>“</DecoTitle>
-            {/* ${info.매장이름}으로 변경하기 */}
-            <Title>할머니 떡볶이</Title>
+            <Title>{info.store_info[0]?.name}</Title>
             <DecoTitle>”</DecoTitle>
           </StoreTitle>
           <Desc>
-            {/* ${info.배달 boolean 값}에 따라 "배달 가능 맛집 🛵" 혹은 "배달 불가 맛집 🏃🏻‍♂️"으로 변경하기 */}
-            <div className="deli">배달 가능 맛집 🛵</div>
-            {/* ${info.매장설명}으로 변경하기 */}
-            겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로 어떻게 설명해야할지
-            모르겠네 나도 26년만에 먹어봤는데 진짜로 맛있어여 진짜로 맛있으니까
-            다들 꼭 먹어줘 … 겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로
-            어떻게 설명해야할지 모르겠네 나도 26년만에 먹어봤는데 진짜로
-            맛있어여 진짜로 맛있으니까 다들 꼭 먹어줘 …
+            <div className="deli">
+              {info.store_info[0]?.delivery
+                ? "배달 가능 맛집 🛵"
+                : "배달 불가 맛집 🏃🏻‍♂️"}
+            </div>
+            {info.store_info[0]?.description}
           </Desc>
           <Liked>
             <span onClick={changeLikedState}>
-              {/* ${info.like} boolean 값 판별해서 조건문 설정하기 */}
-              {like ? (
+              {info?.like ? (
                 <IoIosHeart className="like full" />
               ) : (
                 <IoIosHeartEmpty className="like" />
               )}
             </span>
-            {/* ${info.좋아요수}로 변경하기 */}
-            <span className="amount">100</span>
+            <span className="amount">{info?.like_count}</span>
             명의 위코더가 좋아해요 :-)
           </Liked>
         </StoreDesc>
@@ -324,11 +322,7 @@ const Container = styled.div`
 const DescSection = styled.div`
   display: flex;
   flex-direction: row;
-  justify-conteod {
-    width: 28rem;
-    height: 28rem;
-    border: 2px solid ${({ theme }) => theme.borderGray};
-  }
+  justify-content: space-between;
 `;
 
 const Images = styled.div`
