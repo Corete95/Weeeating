@@ -4,11 +4,11 @@ import wemeok from "../images/wemeoktalk_2.png";
 import { COLORS } from "../styles/themeColor";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
+import { boardAPI } from "../config";
 
 export default function PostWriting() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [posts, setPosts] = useState({ title: title, content: content });
   const history = useHistory();
 
   let data = {
@@ -18,20 +18,18 @@ export default function PostWriting() {
 
   const uploadData = () => {
     axios
-      .post("http://10.58.6.15:8000/board/posting", JSON.stringify(data), {
+      .post(`${boardAPI}`, JSON.stringify(data), {
         headers: {
           "Content-Type": `application/json`
         }
       })
       .then((res) => {
-        console.log(res);
         history.push("/post-list");
       });
   };
 
   return (
     <>
-      {console.log("in return posts", posts)}
       <Container>
         <Img src={wemeok} alt="" />
         <InnerContainer>

@@ -1,39 +1,60 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import wemeok from "../images/wemeoktalk_2.png";
-import { COLORS } from "../styles/themeColor"; /* 
-import PostReply from "../pages/childComponents/PostReply"; */
-import Posts from "./childComponents/Posts";
-import Pagination from "./childComponents/Pagination";
+import { COLORS } from "../styles/themeColor";
+import PostReply from "../pages/childComponents/PostReply";
 import axios from "axios";
+import { boardAPI } from "../config";
+import ReactPaginate from "react-paginate";
 
-export default function PostDetail() {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+export default function PostDetail({ match }: any) {
+  const [posts, setPosts] = useState<any>([]);
+  const [comments, setComments] = useState<any>([]);
+  const [content, setContent] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-      setPosts(res.data);
-      setLoading(false);
-      console.log(res.data);
+      await axios
+        .get(`${boardAPI}/${match.params.id}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log(res);
+          setPosts(res.data.board_info);
+          setComments(res.data.board_comments);
+        });
     };
-
     fetchPosts();
   }, []);
 
-  // Get current posts
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const onChangeComment = (e: any) => {
+    setContent(e.target.value);
+  };
 
-  // Change page
-  const paginate = (pageNumber: React.SetStateAction<number>) =>
-    setCurrentPage(pageNumber);
+  let data = {
+    comment: content
+  };
 
+  const addComment = (): void => {
+    axios
+      .post(`${boardAPI}/${match.params.id}/comment`, JSON.stringify(data), {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        console.log(res);
+        if (content.length >= 1) {
+          setComments([...comments, content]);
+          setContent("");
+        }
+      });
+  };
+
+  console.log(comments);
   return (
     <Container>
       <Img src={wemeok} alt="" />
@@ -41,27 +62,29 @@ export default function PostDetail() {
         <ImgText>개발자 공유문화 잊지말자, 그러니까 맛집도 공유하자</ImgText>
         <TitleContainer>
           <TitleText>제목</TitleText>
-          <TitleInput></TitleInput>
+          <TitleInput>{posts[0]?.title}</TitleInput>
         </TitleContainer>
         <ContentContainer>
-          <Writer>이름 | 날짜</Writer>
-          <TitleText>내용</TitleText>
-          <Content></Content>
+          <Writer>{posts[0]?.writer}</Writer>
+          <Content>{posts[0]?.content}</Content>
+          <Edit>삭제</Edit>
+          <Edit>수정</Edit>
         </ContentContainer>
         <ReplyContainer>
           <ReplyText>댓글</ReplyText>
-          <ReplyInput></ReplyInput>
+          <ReplyInput value={content} onChange={onChangeComment}></ReplyInput>
+          <Button onClick={addComment}>등록</Button>
         </ReplyContainer>
-        {/* <PostReply></PostReply> */}
-        <Posts posts={currentPosts} loading={loading} />
-        <Pagination
-          postsPerPage={postsPerPage}
-          totalPosts={posts.length}
-          paginate={paginate}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
-        <Button>작성</Button>
+        <PostReply comments={comments}></PostReply>
+        <StyledPaginateContainer>
+          <ReactPaginate
+            pageCount={posts.total_comment}
+            pageRangeDisplayed={5}
+            marginPagesDisplayed={currentPage}
+            previousLabel={"<"}
+            nextLabel={">"}
+          />
+        </StyledPaginateContainer>
       </InnerContainer>
     </Container>
   );
@@ -99,25 +122,33 @@ const ImgText = styled.p`
 const TitleContainer = styled.div`
   display: flex;
   align-items: center;
-  padding-bottom: 1.5rem;
+  padding-bottom: 0.3rem;
   width: 35rem;
+  height: 1.5rem;
+  border-bottom: 2px solid black;
 `;
 
-const TitleText = styled.p``;
-
-const TitleInput = styled.input`
-  margin-left: 1rem;
-  width: 35rem;
+const TitleText = styled.p`
+  width: 2rem;
   height: 1.5rem;
 `;
 
-const Writer = styled.div``;
-
-const ContentContainer = styled.div`
-  margin-top: 2rem;
+const TitleInput = styled.p`
+  margin-left: 1rem;
+  width: 33rem;
+  height: 1.5rem;
 `;
 
-const Content = styled.input`
+const Writer = styled.div`
+  text-align: right;
+`;
+
+const ContentContainer = styled.div`
+  margin: 2rem 0;
+  border-bottom: 2px solid black;
+`;
+
+const Content = styled.p`
   width: 36rem;
   height: 20rem;
 `;
@@ -140,4 +171,17 @@ const Button = styled.button`
   width: 4rem;
   height: 2rem;
   background: ${COLORS.mainYellow};
+`;
+
+const Edit = styled.button`
+  width: 4rem;
+  height: 2rem;
+  background: ${COLORS.mainYellow};
+  float: right;
+`;
+
+const StyledPaginateContainer = styled.div`
+  ul {
+    display: flex;
+  }
 `;

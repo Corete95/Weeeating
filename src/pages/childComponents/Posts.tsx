@@ -1,11 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Posts({ posts, loading }: any) {
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
-
+export default function Posts({ posts }: any) {
   return (
     <Ul>
       <div>
@@ -14,7 +11,7 @@ export default function Posts({ posts, loading }: any) {
         <li>등록일</li>
         <li>댓글</li>
       </div>
-      {posts.map(
+      {posts?.map(
         (post: {
           id: string | number | null | undefined;
           title: React.ReactNode;
@@ -22,12 +19,14 @@ export default function Posts({ posts, loading }: any) {
           created_at: string;
           comments: number;
         }) => (
-          <div key={post.id}>
-            <li>{post.title}</li>
-            <li>{post.writer}</li>
-            <li>{post.created_at}</li>
-            <li>{post.comments}</li>
-          </div>
+          <Link to={`/post-detail/${post.id}`}>
+            <div key={post.id}>
+              <li>{post.title}</li>
+              <li>{post.writer}</li>
+              <li>{post.created_at}</li>
+              <li>{post.comments}</li>
+            </div>
+          </Link>
         )
       )}
     </Ul>
@@ -45,6 +44,7 @@ const Ul = styled.ul`
     li {
       margin: 0 1rem;
       line-height: 2rem;
+      flex: 1;
     }
   }
 `;
