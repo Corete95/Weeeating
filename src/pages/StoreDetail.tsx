@@ -52,12 +52,18 @@ export default function StoreDetail(props: any) {
 
   useEffect(() => {
     axios
-      .get(`${BEAPI}/store/detail/${props.match.params.id}`)
-      .then((res) => {
-        setInfo(res.data);
-        setAddress(res.data.store_info[0].address);
-      })
-      .catch((err) => console.log("Catched errors!! >>>", err));
+      .all([
+        axios.get(`${BEAPI}/store/detail/${props.match.params.id}`),
+        axios.get(`${BEAPI}/store/detail/${props.match.params.id}/comment`)
+      ])
+      .then(
+        axios.spread((res1, res2) => {
+          setInfo(res1.data);
+          setAddress(res1.data.store_info[0].address);
+          console.log("res2", res2);
+        })
+      )
+      .catch((err) => console.log("Catched erros!! >>>", err));
   }, [props.match.params.id]);
 
   useEffect(() => {
@@ -311,17 +317,6 @@ export default function StoreDetail(props: any) {
     </Container>
   );
 }
-
-const Container = styled.div`
-  margin: 10rem auto;
-  width: 65rem;
-`;
-
-const DescSection = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 
 const Images = styled.div`
   width: 28rem;
