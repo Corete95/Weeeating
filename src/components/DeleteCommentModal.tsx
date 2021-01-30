@@ -6,6 +6,7 @@ interface IProps {
   deleteModal: boolean;
   setDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   submitChangedComment: (crud: string, commentId: number) => void;
+  commentId: any;
 }
 
 interface StateForStyle {
@@ -17,7 +18,8 @@ interface StateForStyle {
 export default function DeleteCommentModal({
   deleteModal,
   setDeleteModal,
-  submitChangedComment
+  submitChangedComment,
+  commentId
 }: IProps) {
   return (
     <ModalWrapper visible={deleteModal} tabIndex={-1}>
@@ -26,7 +28,9 @@ export default function DeleteCommentModal({
           <Header>삭제하시겠습니까?</Header>
         </div>
         <div className="buttons">
-          <Button onClick={() => submitChangedComment("DELETE", 0)}>예</Button>
+          <Button onClick={() => submitChangedComment("DELETE", commentId)}>
+            예
+          </Button>
           <Button onClick={() => setDeleteModal(false)}>아니오</Button>
         </div>
       </ModalInner>

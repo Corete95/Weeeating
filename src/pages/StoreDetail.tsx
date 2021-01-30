@@ -36,6 +36,7 @@ export default function StoreDetail(props: any) {
     ]
   });
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
+  console.log("currentComment", currentComment);
   const [address, setAddress] = useState("");
   const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
@@ -125,9 +126,6 @@ export default function StoreDetail(props: any) {
   };
 
   const submitChangedComment = (crud: string, commentId: number) => {
-    // insert는 newComment onChange text 받아서, setInfo에 spread로 추가함과 동시에 API POST 할 예정
-    // update는 updatedComment onChange text 및 comment_id 받아서, setInfo의 기존 comment_id와 동일한 것과 변경하는 동시에 API PATCH 할 예정
-    // delete는 comment_id 받아서, setInfo에서 기존 comment_id와 동일한 것을 삭제함과 동시에 API DELETE 할 예정
     if (crud === "INSERT") {
       setCurrentComment([
         {
@@ -150,24 +148,15 @@ export default function StoreDetail(props: any) {
         .catch((err) => console.log(err));
     }
     if (crud === "UPDATE") {
-      setCurrentComment([
-        currentComment.map((comment: any) => {
+      setCurrentComment(
+        currentComment.map((comment: any) =>
           comment.id === commentId
-            ? { ...comment, comment: commentText.newComment }
-            : comment;
-        })
-      ]);
+            ? { ...comment, comment: commentText.updatedComment.content }
+            : comment
+        )
+      );
       setEditModal(false);
 
-      // setCommentText({
-      //   ...commentText,
-      //   updatedComment: {
-      //     ...commentText.updatedComment,
-      //     id: comment.id
-      //   }
-      // });
-      // setInfo(...info,
-      //     comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime}))
       axios
         .patch(
           `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
@@ -181,9 +170,12 @@ export default function StoreDetail(props: any) {
         .catch((err) => console.log(err));
     }
     if (crud === "DELETE") {
-      console.log(
-        `comment id ${commentText.updatedComment.id} DELETE is clicked`
+      setCurrentComment(
+        currentComment.filter(
+          (comment: any) => comment.id !== Number(commentText.updatedComment.id)
+        )
       );
+      setDeleteModal(false);
       axios
         .delete(
           `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
@@ -194,7 +186,7 @@ export default function StoreDetail(props: any) {
   };
 
   const updateComment = (e: any) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
 
     setCommentText({
       ...commentText,
@@ -206,28 +198,6 @@ export default function StoreDetail(props: any) {
   };
 
   const handleDragStart = (e: any) => e.preventDefault();
-
-  // src 부분 모두 ${info.사진 키값}으로 변경하고, 해당 array에 map 메소드 적용해야 함 (사진 개수만큼 슬라이더 생성되도록)
-
-  // const items = (info: any) =>
-  //   info.store_images.map((img: any) =>
-  //     <img src={img} onDragStart={handleDragStart} className="food" />)
-  //   );
-  //   console.log(Array.from(info.store_images, image => `<img src=${image} onDragStart={handleDragStart} className="food" />`));
-  // expected output: Array [2, 4, 6]
-
-  // useEffect(() => {
-  //   const func = async () => {
-  //     const imageItemsFunc = (info: any) =>
-  //       Array.from(
-  //         info.store_images,
-  //         (image) =>
-  //           `<img src=${image} onDragStart={handleDragStart} className="food" />`
-  //       );
-  //     const imageItems = await imageItemsFunc(info);
-  //     // setItems(imageItems);
-  //   };
-  // }, [info]);
 
   return (
     <Container>
@@ -354,6 +324,7 @@ export default function StoreDetail(props: any) {
           deleteModal={deleteModal}
           setDeleteModal={setDeleteModal}
           submitChangedComment={submitChangedComment}
+          commentId={commentText.updatedComment.id}
         />
       )}
     </Container>
