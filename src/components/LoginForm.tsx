@@ -17,20 +17,35 @@ export default function LoginForm({ handleChange, submitLogin }: IProps) {
   return (
     <Container>
       <Title>로그인</Title>
-      <InfoSection method="POST">
-        <BlockWrapper>
-          <Subject>이메일</Subject>
-          <Input type="email" name="email" required></Input>
-        </BlockWrapper>
-        <BlockWrapper>
-          <Subject>비밀번호</Subject>
-          <Input type="password" name="password" required></Input>
-        </BlockWrapper>
-        <BlockWrapper buttons>
-          <GoogleLoginComponent />
-          <LoginBtn type="submit" value="로그인" className="button"></LoginBtn>
-        </BlockWrapper>
-      </InfoSection>
+      {/* <InfoSection method="POST"> */}
+      <BlockWrapper>
+        <Subject>이메일</Subject>
+        <Input
+          onChange={handleChange}
+          type="email"
+          name="email"
+          required
+        ></Input>
+      </BlockWrapper>
+      <BlockWrapper>
+        <Subject>비밀번호</Subject>
+        <Input
+          onChange={handleChange}
+          type="password"
+          name="password"
+          required
+        ></Input>
+      </BlockWrapper>
+      <BlockWrapper buttons>
+        <GoogleLoginComponent />
+        <LoginBtn
+          onClick={submitLogin}
+          type="submit"
+          value="로그인"
+          className="button"
+        ></LoginBtn>
+      </BlockWrapper>
+      {/* </InfoSection> */}
     </Container>
   );
 }

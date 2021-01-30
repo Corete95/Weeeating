@@ -22,24 +22,18 @@ export default function Signup() {
 
   const submitSingup = () => {
     if (user.password === user.repassword || !user.password) {
-      const data = {
+      const body = {
         number: user.number,
         name: user.userName,
         email: user.email,
         password: user.password
       };
       axios
-        .post(`${BEAPI}/user/signup`, { data })
+        .post(`${BEAPI}/user/signup`, JSON.stringify({ ...body }))
         .then((res) => {
-          if (res.data.success === "SUCCESS") {
-            if (window.localStorage.getItem("token")) {
-              localStorage.token = res.data.token;
-              localStorage.isAuthenticated = true;
-              window.location.reload();
-            } else {
-              window.localStorage.setItem("token", res.data.token);
-              window.location.reload();
-            }
+          console.log("회원가입 통신 잘 됐음!", res);
+          if (res.data.message === "SUCCESS") {
+            alert("회원가입이 완료되었습니다. :-)");
           } else {
             alert("회원가입이 완료되지 않았습니다.");
           }

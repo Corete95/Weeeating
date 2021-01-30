@@ -29,18 +29,16 @@ export default function Login() {
       email: user.email,
       password: user.password
     };
+    console.log("data", data);
     axios
-      .post(`${BEAPI}/user/login`, { data })
+      .post(`${BEAPI}/user/login`, JSON.stringify(data))
       .then((res) => {
-        if (res.data.success === "SUCCESS") {
-          if (window.localStorage.getItem("token")) {
-            localStorage.token = res.data.token;
-            localStorage.isAuthenticated = true;
-            window.location.reload();
-          } else {
-            window.localStorage.setItem("token", res.data.token);
-            window.location.reload();
-          }
+        console.log("res", res.data);
+        if (res.data.MESSAGE === "SUCCESS") {
+          console.log("res.data.Authorization", res.data.Authorization);
+          localStorage.setItem("token", res.data.Authorization);
+          localStorage.isAuthenticated = true;
+          window.location.reload();
         } else {
           alert("로그인이 완료되지 않았습니다.");
         }
