@@ -1,3 +1,5 @@
+export { default as DeleteCommentModal } from "./DeleteCommentModal";
+export { default as EditCommentModal } from "./EditCommentModal";
 export { default as Footer } from "./Footer";
 export { default as Login } from "./Login";
 export { default as Nav } from "./Nav";
