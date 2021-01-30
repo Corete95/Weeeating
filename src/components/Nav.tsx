@@ -24,6 +24,8 @@ interface StateForStyle {
 
 export default function Nav({ weight, goToPage }: IProps) {
   const dispatch = useDispatch();
+  const loggedIn = localStorage.getItem("isAuthenticated");
+  console.log("loggedIn", loggedIn);
 
   const signupModal = useSelector(
     ({ setModalReducer }) => setModalReducer.signupModal
@@ -31,6 +33,12 @@ export default function Nav({ weight, goToPage }: IProps) {
   const loginModal = useSelector(
     ({ setModalReducer }) => setModalReducer.loginModal
   );
+
+  const toLogout = () => {
+    localStorage.clear();
+    localStorage.isAuthenticated = false;
+    window.location.reload();
+  };
 
   return (
     <Container>
@@ -60,21 +68,30 @@ export default function Nav({ weight, goToPage }: IProps) {
       >
         About Weeeating
       </Button>
-      <ModalBtnWrapper>
-        <Button
-          present={signupModal}
-          onClick={() => dispatch(setSignupActive(true))}
-        >
-          회원가입
-        </Button>
-        <Button
-          theLast={true}
-          present={loginModal}
-          onClick={() => dispatch(setLoginActive(true))}
-        >
-          로그인
-        </Button>
-      </ModalBtnWrapper>
+      {loggedIn ? (
+        <ModalBtnWrapper>
+          <Button theLast={true} onClick={toLogout}>
+            로그아웃
+          </Button>
+        </ModalBtnWrapper>
+      ) : (
+        <ModalBtnWrapper>
+          <Button
+            present={signupModal}
+            onClick={() => dispatch(setSignupActive(true))}
+          >
+            회원가입
+          </Button>
+          <Button
+            theLast={true}
+            present={loginModal}
+            onClick={() => dispatch(setLoginActive(true))}
+          >
+            로그인
+          </Button>
+        </ModalBtnWrapper>
+      )}
+
       <ModalOverlay visible={signupModal || loginModal} />
       <ModalWrapper visible={signupModal || loginModal} tabIndex={-1}>
         <ModalInner tabIndex={0}>
