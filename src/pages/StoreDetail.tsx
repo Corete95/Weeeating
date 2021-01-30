@@ -112,13 +112,10 @@ export default function StoreDetail(props: any) {
       ),
       like: !info.like
     });
-
-    // 맛집좋아요 - POST 10.58.0.152:8000/store/like/<store_id></store_id>
     axios
       .post(`${BEAPI}/store/like/${props.match.params.id}`)
       .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
       .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-    // setInfo 안에 있는 like boolean 값을 변경해야함
     // setTimeout(
     //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
     //   axios.patch(`BEAPI${}`)
@@ -153,15 +150,14 @@ export default function StoreDetail(props: any) {
         .catch((err) => console.log(err));
     }
     if (crud === "UPDATE") {
-      // setCurrentComment([
-      //   ...currentComment,
-      //   comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime})
-      //   {
-      //     comment: commentText.newComment,
-      //     created_at: "방금 전",
-      //     writer_name: "작성자"
-      //   },
-      // ]);
+      setCurrentComment([
+        currentComment.map((comment: any) => {
+          comment.id === commentId
+            ? { ...comment, comment: commentText.newComment }
+            : comment;
+        })
+      ]);
+      setEditModal(false);
 
       // setCommentText({
       //   ...commentText,
@@ -348,7 +344,7 @@ export default function StoreDetail(props: any) {
           editModal={editModal}
           setEditModal={setEditModal}
           // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
-          commentText={commentText.updatedComment.content}
+          updatedComment={commentText.updatedComment}
           submitChangedComment={submitChangedComment}
           updateComment={updateComment}
         />
