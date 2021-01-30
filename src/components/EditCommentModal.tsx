@@ -5,7 +5,7 @@ import { mixin } from "../styles";
 interface IProps {
   editModal: boolean;
   setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
-  commentValue: string;
+  commentText: string;
   submitChangedComment: (crud: string, commentId: number) => void;
   updateComment: (e: any) => void;
 }
@@ -19,7 +19,7 @@ interface StateForStyle {
 export default function EditCommentModal({
   editModal,
   setEditModal,
-  commentValue,
+  commentText,
   submitChangedComment,
   updateComment
 }: IProps) {
@@ -29,7 +29,7 @@ export default function EditCommentModal({
         <Input
           type="text"
           name="updatedCommentValue"
-          value={commentValue}
+          value={commentText}
           onChange={updateComment}
         />
         <div className="buttons">

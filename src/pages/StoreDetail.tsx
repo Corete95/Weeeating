@@ -23,11 +23,10 @@ export default function StoreDetail(props: any) {
   const [info, setInfo] = useState<UserData | any>({
     store_info: [
       {
-        name: "본죽",
-        description:
-          "관에 들어가기 전에 염라대왕이 너는 무엇이 먹고 싶으냐고 물으면 주저없이 호박죽이옵니다라고 대답할만큼 죽은 몸에 좋고 맛도 좋은~~~ 죽 최고! 속이 불편하면 코드치기 힘드니까 가볍게 가볍게 먹기 좋아요~~~~",
+        name: "매장명",
+        description: "로딩중 ~~~ 조금만 기다려주세요 !",
         delivery: true,
-        address: "서울 강남구 선릉로 424 2층"
+        address: "서울시 강남구 테헤란로 427"
       }
     ],
     like_count: 0,
@@ -36,17 +35,16 @@ export default function StoreDetail(props: any) {
       "https://images.unsplash.com/photo-1607434472257-d9f8e57a643d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1952&q=80"
     ]
   });
-  const [currentComment, setCurrentComment] = useState<UserData | any>();
+  const [currentComment, setCurrentComment] = useState<UserData | any>([]);
   const [address, setAddress] = useState("");
   const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
-  const [commentText, setCommentText] = useState({
+  const [commentText, setCommentText] = useState<UserData | any>({
     newComment: null,
     updatedComment: { id: null, content: "기존댓글~~~" }
   });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  console.log("items", items);
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
 
@@ -60,7 +58,8 @@ export default function StoreDetail(props: any) {
         axios.spread((res1, res2) => {
           setInfo(res1.data);
           setAddress(res1.data.store_info[0].address);
-          console.log("res2", res2);
+          setCurrentComment(res2.data.comment_list);
+          console.log("res2.data.comment_list", res2.data.comment_list);
         })
       )
       .catch((err) => console.log("Catched erros!! >>>", err));
@@ -129,36 +128,72 @@ export default function StoreDetail(props: any) {
   };
 
   const submitChangedComment = (crud: string, commentId: number) => {
-    const currentTime = new Date();
-
-    // info 데이터 양식 확인하고 수정하기
     // insert는 newComment onChange text 받아서, setInfo에 spread로 추가함과 동시에 API POST 할 예정
     // update는 updatedComment onChange text 및 comment_id 받아서, setInfo의 기존 comment_id와 동일한 것과 변경하는 동시에 API PATCH 할 예정
     // delete는 comment_id 받아서, setInfo에서 기존 comment_id와 동일한 것을 삭제함과 동시에 API DELETE 할 예정
     if (crud === "INSERT") {
-      // setInfo({
-      //   ...info,
-      //   comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime}) }
-      // });
-      // return {
-      //   ...state,
-      //   userDrugsInfo: state.userDrugsInfo?.map((oneInfo: any, idx: number) =>
-      //     oneInfo.id === action.id && idx === action.idx
-      //       ? {
-      //           ...oneInfo,
-      //           drug: { ...oneInfo.drug, reimburse: action.payload },
-      //         }
-      //       : oneInfo
-      //   ),
-      // };
+      setCurrentComment([
+        {
+          comment: commentText.newComment,
+          created_at: "방금 전",
+          writer_name: "작성자"
+        },
+        ...currentComment
+      ]);
+      axios
+        .post(
+          `${BEAPI}/store/detail/${props.match.params.id}/comment`,
+          JSON.stringify({
+            // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
+            header: { Authorization: 1 },
+            comment: commentText.newComment
+          })
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
     if (crud === "UPDATE") {
+      // setCurrentComment([
+      //   ...currentComment,
+      //   comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime})
+      //   {
+      //     comment: commentText.newComment,
+      //     created_at: "방금 전",
+      //     writer_name: "작성자"
+      //   },
+      // ]);
+
+      // setCommentText({
+      //   ...commentText,
+      //   updatedComment: {
+      //     ...commentText.updatedComment,
+      //     id: comment.id
+      //   }
+      // });
       // setInfo(...info,
       //     comment: info.comment?.map((commentId: number) => commentId === comment.id ? {...comment, comment.content: updatedValue, comment.time: currentTime}))
-      // axios 추가하기
+      axios
+        .patch(
+          `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+          JSON.stringify({
+            // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
+            header: { Authorization: 1 },
+            comment: commentText.updatedComment.content
+          })
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
     if (crud === "DELETE") {
-      console.log("DELETE is clicked");
+      console.log(
+        `comment id ${commentText.updatedComment.id} DELETE is clicked`
+      );
+      axios
+        .delete(
+          `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
   };
 
@@ -248,53 +283,64 @@ export default function StoreDetail(props: any) {
       <CommentSection>
         <InputWrapper>
           <CommentDesc>댓글 입력</CommentDesc>
-          <CommentInput>
-            <Input placeholder="여러분의 이야기를 남겨주세요 !" />
-            <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
-              확인
-            </SubmitBtn>
-          </CommentInput>
+          <form method="post">
+            <CommentInput>
+              <Input
+                onChange={(e) =>
+                  setCommentText({ ...commentText, newComment: e.target.value })
+                }
+                placeholder="여러분의 이야기를 남겨주세요 !"
+              />
+              <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
+                확인
+              </SubmitBtn>
+            </CommentInput>
+          </form>
         </InputWrapper>
         <CommentsWrapper>
-          {/* info.댓글array 에다가 map 메소드 적용하기. 유저이름, 내용, 시간 모두 키값 적용해야 함 */}
-          <Comment>
-            <User>13기_백은진</User>
-            <Content>떡볶이 너무 먹고싶다...</Content>
-            <UploadTime>(2021.01.22 3:10)</UploadTime>
-          </Comment>
-          <Comment>
-            <User>13기_백은진</User>
-            <div className="right">
-              <Content>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Laborum, labore quas quis optio suscipit voluptatum? Et a est in
-                ratione. Provident expedita eveniet vero quae dolores minus sint
-                commodi fuga.
-              </Content>
-              <UploadTime>(2021.01.22 3:10)</UploadTime>
-              {/* 작성자에게만 수정, 삭제가 노출되어야 함 */}
-              {/* 수정, 삭제 위치도 회의해서 결정하기 */}
-              {/* userVerified 변수 생성한 후 주석 풀기 */}
-              {/* {userVerified && ( */}
-              <ModifyBtn
-                onClick={() => {
-                  setEditModal(true);
-                  setCommentText({
-                    ...commentText,
-                    updatedComment: {
-                      ...commentText.updatedComment,
-                      // id: 유저의 comment_id로 변경하기
-                      id: null
-                    }
-                  });
-                }}
-              >
-                수정
-              </ModifyBtn>
-              <ModifyBtn onClick={() => setDeleteModal(true)}>삭제</ModifyBtn>
-              {/* )} */}
-            </div>
-          </Comment>
+          {currentComment &&
+            currentComment.map((comment: any, idx: any) => (
+              <Comment key={idx}>
+                <User>{comment.writer_name}</User>
+                <div className="right">
+                  <Content>{comment.comment}</Content>
+                  <UploadTime>( {comment.created_at} )</UploadTime>
+                  {/* 작성자에게만 수정, 삭제가 노출되어야 함 */}
+                  {/* 수정, 삭제 위치도 회의해서 결정하기 */}
+                  {/* userVerified 변수 생성한 후 주석 풀기 */}
+                  {/* {userVerified && ( */}
+                  <ModifyBtn
+                    onClick={() => {
+                      setEditModal(true);
+                      setCommentText({
+                        ...commentText,
+                        updatedComment: {
+                          id: comment.id,
+                          content: comment.comment
+                        }
+                      });
+                    }}
+                  >
+                    수정
+                  </ModifyBtn>
+                  <ModifyBtn
+                    onClick={() => {
+                      setDeleteModal(true);
+                      setCommentText({
+                        ...commentText,
+                        updatedComment: {
+                          ...commentText.updatedComment,
+                          id: comment.id
+                        }
+                      });
+                    }}
+                  >
+                    삭제
+                  </ModifyBtn>
+                  {/* )} */}
+                </div>
+              </Comment>
+            ))}
         </CommentsWrapper>
       </CommentSection>
       {editModal && (
@@ -302,7 +348,7 @@ export default function StoreDetail(props: any) {
           editModal={editModal}
           setEditModal={setEditModal}
           // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
-          commentValue={commentText.updatedComment.content}
+          commentText={commentText.updatedComment.content}
           submitChangedComment={submitChangedComment}
           updateComment={updateComment}
         />
@@ -317,6 +363,17 @@ export default function StoreDetail(props: any) {
     </Container>
   );
 }
+
+const Container = styled.div`
+  margin: 10rem auto;
+  width: 65rem;
+`;
+
+const DescSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 const Images = styled.div`
   width: 28rem;
