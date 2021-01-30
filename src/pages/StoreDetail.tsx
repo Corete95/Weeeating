@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { BEAPI } from "../config";
 import { mixin } from "../styles";
+import { EditCommentModal, DeleteCommentModal } from "../components";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 
 declare global {
@@ -11,7 +14,58 @@ declare global {
   }
 }
 
-export default function StoreDetail() {
+interface UserData {
+  info: any;
+  items: any[];
+}
+
+export default function StoreDetail(props: any) {
+  const [info, setInfo] = useState<UserData | any>({
+    store_info: [
+      {
+        name: "매장명",
+        description: "로딩중 ~~~ 조금만 기다려주세요 !",
+        delivery: true,
+        address: "서울시 강남구 테헤란로 427"
+      }
+    ],
+    like_count: 0,
+    like: false,
+    store_images: [
+      "https://images.unsplash.com/photo-1607434472257-d9f8e57a643d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1952&q=80"
+    ]
+  });
+  const [currentComment, setCurrentComment] = useState<UserData | any>([]);
+  console.log("currentComment", currentComment);
+  const [address, setAddress] = useState("");
+  const [items, setItems] = useState<UserData | any[]>([]);
+  const [like, setLike] = useState(false);
+  const [commentText, setCommentText] = useState<UserData | any>({
+    newComment: null,
+    updatedComment: { id: null, content: "기존댓글~~~" }
+  });
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  // const userVerified = info.user.id === localStorage.getItem.user.id;
+
+  useEffect(() => {
+    axios
+      .all([
+        axios.get(`${BEAPI}/store/detail/${props.match.params.id}`),
+        axios.get(`${BEAPI}/store/detail/${props.match.params.id}/comment`)
+      ])
+      .then(
+        axios.spread((res1, res2) => {
+          setInfo(res1.data);
+          setAddress(res1.data.store_info[0].address);
+          setCurrentComment(res2.data.comment_list);
+          console.log("res2.data.comment_list", res2.data.comment_list);
+        })
+      )
+      .catch((err) => console.log("Catched erros!! >>>", err));
+  }, [props.match.params.id]);
+
   useEffect(() => {
     let container = document.getElementById("map");
     let options = {
@@ -24,18 +78,19 @@ export default function StoreDetail() {
 
     let map = new window.kakao.maps.Map(container, options);
 
-    var callback = (result: any, status: any) => {
+    let callback = (result: any, status: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
         console.log(result);
-        var coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-        var marker = new window.kakao.maps.Marker({
+        let coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+        let marker = new window.kakao.maps.Marker({
           map: map,
           position: coords
         });
-        var infowindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">"위코드"</div><div>"국내 최고 부트캠프"</div></div>`
-        });
-        infowindow.open(map, marker);
+        let infowindow = (info: any) =>
+          new window.kakao.maps.InfoWindow({
+            content: `<div style="width:10rem;height:2.5rem;display:flex;justify-content:center;align-items:center;padding:6px 0;"><div style="font-weight: bold;">"${info.store_info[0].name}"</div></div>`
+          });
+        infowindow(info).open(map, marker);
         map.setCenter(coords);
       }
       if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
@@ -46,29 +101,103 @@ export default function StoreDetail() {
       }
     };
 
-    var geocoder = new window.kakao.maps.services.Geocoder();
-    geocoder.addressSearch("서울특별시 강남구 테헤란로 427", callback);
-  }, []);
+    let geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.addressSearch(info.store_info[0]?.address, callback);
+  }, [info]);
+
+  const changeLikedState = () => {
+    setInfo({
+      ...info,
+      like_count: Number(
+        info.like === false ? info.like_count + 1 : info.like_count - 1
+      ),
+      like: !info.like
+    });
+    axios
+      .post(`${BEAPI}/store/like/${props.match.params.id}`)
+      .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+      .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    // setTimeout(
+    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
+    //   axios.patch(`BEAPI${}`)
+    //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
+    //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
+    // , 1000)
+  };
+
+  const submitChangedComment = (crud: string, commentId: number) => {
+    if (crud === "INSERT") {
+      setCurrentComment([
+        {
+          comment: commentText.newComment,
+          created_at: "방금 전",
+          writer_name: "작성자"
+        },
+        ...currentComment
+      ]);
+      axios
+        .post(
+          `${BEAPI}/store/detail/${props.match.params.id}/comment`,
+          JSON.stringify({
+            // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
+            header: { Authorization: 1 },
+            comment: commentText.newComment
+          })
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
+    if (crud === "UPDATE") {
+      setCurrentComment(
+        currentComment.map((comment: any) =>
+          comment.id === commentId
+            ? { ...comment, comment: commentText.updatedComment.content }
+            : comment
+        )
+      );
+      setEditModal(false);
+
+      axios
+        .patch(
+          `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+          JSON.stringify({
+            // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
+            header: { Authorization: 1 },
+            comment: commentText.updatedComment.content
+          })
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
+    if (crud === "DELETE") {
+      setCurrentComment(
+        currentComment.filter(
+          (comment: any) => comment.id !== Number(commentText.updatedComment.id)
+        )
+      );
+      setDeleteModal(false);
+      axios
+        .delete(
+          `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const updateComment = (e: any) => {
+    const { value } = e.target;
+
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        ...commentText.updatedComment,
+        content: value
+      }
+    });
+  };
 
   const handleDragStart = (e: any) => e.preventDefault();
-
-  const items = [
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />,
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />,
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />
-  ];
 
   return (
     <Container>
@@ -79,26 +208,36 @@ export default function StoreDetail() {
             infinite
             autoPlay
             animationDuration={1400}
-            items={items}
-          />
+            disableButtonsControls={true}
+          >
+            {info.store_images?.map((image: string) => (
+              <img src={image} onDragStart={handleDragStart} className="food" />
+            ))}
+          </AliceCarousel>
         </Images>
         <StoreDesc>
           <StoreTitle>
-            <DecoTitle>"</DecoTitle>
-            <Title>할머니 떡볶이</Title>
-            <DecoTitle>"</DecoTitle>
+            <DecoTitle>“</DecoTitle>
+            <Title>{info.store_info[0]?.name}</Title>
+            <DecoTitle>”</DecoTitle>
           </StoreTitle>
           <Desc>
-            <div className="deli">배달 가능 맛집 🛵</div>
-            겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로 어떻게 설명해야할지
-            모르겠네 나도 26년만에 먹어봤는데 진짜로 맛있어여 진짜로 맛있으니까
-            다들 꼭 먹어줘 … 겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로
-            어떻게 설명해야할지 모르겠네 나도 26년만에 먹어봤는데 진짜로
-            맛있어여 진짜로 맛있으니까 다들 꼭 먹어줘 …
+            <div className="deli">
+              {info.store_info[0]?.delivery
+                ? "배달 가능 맛집 🛵"
+                : "배달 불가 맛집 🏃🏻‍♂️"}
+            </div>
+            <div className="desc">{info.store_info[0]?.description}</div>
           </Desc>
           <Liked>
-            <IoIosHeartEmpty id="icon" />
-            <span className="amount">100</span>
+            <span onClick={changeLikedState}>
+              {info?.like ? (
+                <IoIosHeart className="like full" />
+              ) : (
+                <IoIosHeartEmpty className="like" />
+              )}
+            </span>
+            <span className="amount">{info?.like_count}</span>
             명의 위코더가 좋아해요 :-)
           </Liked>
         </StoreDesc>
@@ -110,31 +249,84 @@ export default function StoreDetail() {
       <CommentSection>
         <InputWrapper>
           <CommentDesc>댓글 입력</CommentDesc>
-          <CommentInput>
-            <Input placeholder="여러분의 이야기를 남겨주세요 !" />
-            <SubmitBtn>확인</SubmitBtn>
-          </CommentInput>
+          <form method="post">
+            <CommentInput>
+              <Input
+                onChange={(e) =>
+                  setCommentText({ ...commentText, newComment: e.target.value })
+                }
+                placeholder="여러분의 이야기를 남겨주세요 !"
+              />
+              <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
+                확인
+              </SubmitBtn>
+            </CommentInput>
+          </form>
         </InputWrapper>
         <CommentsWrapper>
-          <Comment>
-            <User>13기_백은진</User>
-            <Content>떡볶이 너무 먹고싶다...</Content>
-            <UploadTime>(2021.01.22 3:10)</UploadTime>
-          </Comment>
-          <Comment>
-            <User>13기_백은진</User>
-            <div className="right">
-              <Content>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Laborum, labore quas quis optio suscipit voluptatum? Et a est in
-                ratione. Provident expedita eveniet vero quae dolores minus sint
-                commodi fuga.
-              </Content>
-              <UploadTime>(2021.01.22 3:10)</UploadTime>
-            </div>
-          </Comment>
+          {currentComment &&
+            currentComment.map((comment: any, idx: any) => (
+              <Comment key={idx}>
+                <User>{comment.writer_name}</User>
+                <div className="right">
+                  <Content>{comment.comment}</Content>
+                  <UploadTime>( {comment.created_at} )</UploadTime>
+                  {/* 작성자에게만 수정, 삭제가 노출되어야 함 */}
+                  {/* 수정, 삭제 위치도 회의해서 결정하기 */}
+                  {/* userVerified 변수 생성한 후 주석 풀기 */}
+                  {/* {userVerified && ( */}
+                  <ModifyBtn
+                    onClick={() => {
+                      setEditModal(true);
+                      setCommentText({
+                        ...commentText,
+                        updatedComment: {
+                          id: comment.id,
+                          content: comment.comment
+                        }
+                      });
+                    }}
+                  >
+                    수정
+                  </ModifyBtn>
+                  <ModifyBtn
+                    onClick={() => {
+                      setDeleteModal(true);
+                      setCommentText({
+                        ...commentText,
+                        updatedComment: {
+                          ...commentText.updatedComment,
+                          id: comment.id
+                        }
+                      });
+                    }}
+                  >
+                    삭제
+                  </ModifyBtn>
+                  {/* )} */}
+                </div>
+              </Comment>
+            ))}
         </CommentsWrapper>
       </CommentSection>
+      {editModal && (
+        <EditCommentModal
+          editModal={editModal}
+          setEditModal={setEditModal}
+          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
+          updatedComment={commentText.updatedComment}
+          submitChangedComment={submitChangedComment}
+          updateComment={updateComment}
+        />
+      )}
+      {deleteModal && (
+        <DeleteCommentModal
+          deleteModal={deleteModal}
+          setDeleteModal={setDeleteModal}
+          submitChangedComment={submitChangedComment}
+          commentId={commentText.updatedComment.id}
+        />
+      )}
     </Container>
   );
 }
@@ -197,6 +389,10 @@ const Desc = styled.article`
     text-align: center;
     margin-bottom: 1rem;
   }
+
+  .desc {
+    font-family: sans-serif;
+  }
 `;
 
 const Liked = styled.p`
@@ -205,8 +401,12 @@ const Liked = styled.p`
   align-items: center;
   justify-content: center;
 
-  #icon {
+  .like {
     font-size: 2.2rem;
+  }
+
+  .full {
+    color: ${({ theme }) => theme.likedRed};
   }
 
   .amount {
@@ -281,7 +481,17 @@ const User = styled.span`
 
 const Content = styled.p`
   display: inline;
-  margin-right: 1rem;
 `;
 
-const UploadTime = styled.span``;
+const UploadTime = styled.span`
+  margin: 0 1rem;
+`;
+
+const ModifyBtn = styled.button`
+  margin: 0 0.2rem;
+  outline: none;
+  font-size: 0.75em;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: white;
+`;
