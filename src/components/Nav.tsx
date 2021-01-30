@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { FiX } from "react-icons/fi";
+import { setSignupActive, setLoginActive } from "../store/actions";
 import { mixin } from "../styles";
 import { Signup, Login } from "./index";
 
@@ -10,10 +13,7 @@ interface IProps {
     postList: boolean;
     aboutPage: boolean;
   };
-  modalActive: { signup: boolean; login: boolean };
   goToPage: (path: string, page: string) => void;
-  changeModalActive: (domain: string) => void;
-  closeModal: () => void;
 }
 
 interface StateForStyle {
@@ -22,13 +22,16 @@ interface StateForStyle {
   visible?: boolean;
 }
 
-export default function Nav({
-  weight,
-  modalActive,
-  goToPage,
-  changeModalActive,
-  closeModal
-}: IProps) {
+export default function Nav({ weight, goToPage }: IProps) {
+  const dispatch = useDispatch();
+
+  const signupModal = useSelector(
+    ({ setModalReducer }) => setModalReducer.signupModal
+  );
+  const loginModal = useSelector(
+    ({ setModalReducer }) => setModalReducer.loginModal
+  );
+
   return (
     <Container>
       <Logo onClick={() => goToPage("/", "main")}>Weeeating</Logo>
@@ -59,27 +62,31 @@ export default function Nav({
       </Button>
       <ModalBtnWrapper>
         <Button
-          present={modalActive.signup}
-          onClick={() => changeModalActive("signup")}
+          present={signupModal}
+          onClick={() => dispatch(setSignupActive(true))}
         >
           회원가입
         </Button>
         <Button
           theLast={true}
-          present={modalActive.login}
-          onClick={() => changeModalActive("login")}
+          present={loginModal}
+          onClick={() => dispatch(setLoginActive(true))}
         >
           로그인
         </Button>
       </ModalBtnWrapper>
-      <ModalOverlay visible={modalActive.signup || modalActive.login} />
-      <ModalWrapper
-        visible={modalActive.signup || modalActive.login}
-        tabIndex={-1}
-      >
+      <ModalOverlay visible={signupModal || loginModal} />
+      <ModalWrapper visible={signupModal || loginModal} tabIndex={-1}>
         <ModalInner tabIndex={0}>
-          <CloseBtn onClick={closeModal}>삭제</CloseBtn>
-          {modalActive.signup || !modalActive.login ? <Signup /> : <Login />}
+          <CloseBtn
+            onClick={() => {
+              dispatch(setSignupActive(false));
+              dispatch(setLoginActive(false));
+            }}
+          >
+            <FiX className="icon" />
+          </CloseBtn>
+          {signupModal || !loginModal ? <Signup /> : <Login />}
         </ModalInner>
       </ModalWrapper>
     </Container>
@@ -161,8 +168,12 @@ const ModalInner = styled.div`
 
 const CloseBtn = styled.span`
   position: absolute;
-  top: 0;
-  right: 1rem;
+  top: 0.5rem;
+  right: 0.8rem;
   padding: 1rem;
   cursor: pointer;
+
+  .icon {
+    font-size: 1.8rem;
+  }
 `;

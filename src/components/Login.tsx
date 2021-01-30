@@ -1,84 +1,52 @@
-import React from "react";
-import styled from "styled-components";
-import { mixin } from "../styles";
-import { GoogleLoginComponent } from "./index";
-
-interface StateForStyle {
-  short?: boolean;
-  needSpace?: boolean;
-  buttons?: boolean;
-}
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { BEAPI } from "../config";
+import { LoginForm } from "./index";
 
 export default function Login() {
-  return (
-    <Container>
-      <Title>로그인</Title>
-      <InfoSection action="" method="POST">
-        <BlockWrapper>
-          <Subject>아이디</Subject>
-          <Input type="text" name="id"></Input>
-        </BlockWrapper>
-        <BlockWrapper>
-          <Subject>비밀번호</Subject>
-          <Input type="text" name="password"></Input>
-        </BlockWrapper>
-        <BlockWrapper buttons={true}>
-          <GoogleLoginComponent />
-          <LoginBtn type="submit" value="로그인"></LoginBtn>
-        </BlockWrapper>
-      </InfoSection>
-    </Container>
-  );
+  const [user, setUser] = useState({
+    email: null,
+    password: null
+  });
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setUser((prevState: any) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const submitLogin = () => {
+    const data = {
+      email: user.email,
+      password: user.password
+    };
+    console.log("data", data);
+    axios
+      .post(`${BEAPI}/user/login`, JSON.stringify(data))
+      .then((res) => {
+        console.log("res", res.data);
+        if (res.data.MESSAGE === "SUCCESS") {
+          console.log("res.data.Authorization", res.data.Authorization);
+          localStorage.setItem("token", res.data.Authorization);
+          localStorage.isAuthenticated = true;
+          window.location.reload();
+        } else {
+          alert("로그인이 완료되지 않았습니다.");
+        }
+      })
+      .catch((err) => console.log("로그인 통신이 원활하지 않습니다.", err));
+  };
+
+  const props = { handleChange, submitLogin };
+
+  return <LoginForm {...props} />;
 }
-
-const Container = styled.div`
-  margin: 2em 1.5em;
-`;
-
-const Title = styled.h1`
-  height: 1em;
-  text-align: center;
-  font-size: 6em;
-  font-weight: 900;
-  margin-bottom: 1.1em;
-  letter-spacing: 0.2em;
-`;
-
-const InfoSection = styled.form`
-  margin: 0 2.5em;
-  height: 20em;
-`;
-
-const BlockWrapper = styled.div<StateForStyle>`
-  margin: ${({ buttons }) => (buttons ? "5.7em 0 0" : "3em 0")};
-  height: 2.5em;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
-`;
-
-const Subject = styled.div<StateForStyle>`
-  text-align: center;
-  width: 3.5em;
-  margin-right: 1.5em;
-  margin-left: ${({ needSpace }) => (needSpace ? "1.5em" : "0")};
-`;
-
-const Input = styled.input<StateForStyle>`
-  width: ${({ short }) => (short ? "10.5em" : "30em")};
-  height: 4em;
-`;
-
-const LoginBtn = styled.input`
-  margin-top: 2em;
-  width: 28.6em;
-  font-size: 1em;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 4em;
-  text-align: center;
-  background-color: white;
-  cursor: pointer;
-`;
