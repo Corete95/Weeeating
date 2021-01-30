@@ -33,10 +33,10 @@ export default function StoreDetail(props: any) {
     like_count: 0,
     like: false,
     store_images: [
-      "https://cdn.bonif.co.kr/cmdt/BF101_pic_PJsdvyNk.jpg",
-      "https://cdn.bonif.co.kr/cmdt/BF101_pic_PJsdvyNk.jpg"
+      "https://images.unsplash.com/photo-1607434472257-d9f8e57a643d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1952&q=80"
     ]
   });
+  const [currentComment, setCurrentComment] = useState<UserData | any>();
   const [address, setAddress] = useState("");
   const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
@@ -50,23 +50,15 @@ export default function StoreDetail(props: any) {
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
 
-  // useEffect(() => {
-  //   // 아래 API 안되면, `${API_BOOK}/${props.match.params.id}` 방식으로 변경하기
-  //   axios
-  //     .get(`${BEAPI}/store/detail/1`)
-  //     .then((res) => {
-  //       console.log("res", res.data);
-  //       const images = res.data.store_images.map((image: string) => (
-  //         <img src={image} onDragStart={handleDragStart} className="food" />
-  //       ));
-  //       const onlyImages = Array.from(images, (obj: any) => obj.props.src);
-  //       console.log("onlyImages", onlyImages);
-  //       setInfo(res.data);
-  //       setAddress(res.data.store_info[0].address);
-  //       setItems(onlyImages);
-  //     })
-  //     .catch((err) => console.log("Catched errors!! >>>", err));
-  // }, [props.match.params.id]);
+  useEffect(() => {
+    axios
+      .get(`${BEAPI}/store/detail/${props.match.params.id}`)
+      .then((res) => {
+        setInfo(res.data);
+        setAddress(res.data.store_info[0].address);
+      })
+      .catch((err) => console.log("Catched errors!! >>>", err));
+  }, [props.match.params.id]);
 
   useEffect(() => {
     let container = document.getElementById("map");
@@ -80,15 +72,15 @@ export default function StoreDetail(props: any) {
 
     let map = new window.kakao.maps.Map(container, options);
 
-    var callback = (result: any, status: any) => {
+    let callback = (result: any, status: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
         console.log(result);
-        var coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-        var marker = new window.kakao.maps.Marker({
+        let coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+        let marker = new window.kakao.maps.Marker({
           map: map,
           position: coords
         });
-        var infowindow = (info: any) =>
+        let infowindow = (info: any) =>
           new window.kakao.maps.InfoWindow({
             content: `<div style="width:10rem;height:2.5rem;display:flex;justify-content:center;align-items:center;padding:6px 0;"><div style="font-weight: bold;">"${info.store_info[0].name}"</div></div>`
           });
@@ -103,7 +95,7 @@ export default function StoreDetail(props: any) {
       }
     };
 
-    var geocoder = new window.kakao.maps.services.Geocoder();
+    let geocoder = new window.kakao.maps.services.Geocoder();
     geocoder.addressSearch(info.store_info[0]?.address, callback);
   }, [info]);
 
@@ -115,6 +107,12 @@ export default function StoreDetail(props: any) {
       ),
       like: !info.like
     });
+
+    // 맛집좋아요 - POST 10.58.0.152:8000/store/like/<store_id></store_id>
+    axios
+      .post(`${BEAPI}/store/like/${props.match.params.id}`)
+      .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+      .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     // setInfo 안에 있는 like boolean 값을 변경해야함
     // setTimeout(
     //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
@@ -222,7 +220,7 @@ export default function StoreDetail(props: any) {
                 ? "배달 가능 맛집 🛵"
                 : "배달 불가 맛집 🏃🏻‍♂️"}
             </div>
-            {info.store_info[0]?.description}
+            <div className="desc">{info.store_info[0]?.description}</div>
           </Desc>
           <Liked>
             <span onClick={changeLikedState}>
@@ -371,6 +369,10 @@ const Desc = styled.article`
     font-size: 1.5rem;
     text-align: center;
     margin-bottom: 1rem;
+  }
+
+  .desc {
+    font-family: sans-serif;
   }
 `;
 
