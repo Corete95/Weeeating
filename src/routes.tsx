@@ -49,11 +49,7 @@ class Routes extends React.Component {
               <Route exact path="/store-list" component={StoreList} />
               <Route exact path="/theme-list" component={ThemeList} />
               <Route exact path="/today-random" component={TodayRandom} />
-              <Route exact path="/post-detail" component={PostDetail} />
-<<<<<<< HEAD
               <Route exact path="/post-detail/:id" component={PostDetail} />
-=======
->>>>>>> develop
               <Route exact path="/post-list" component={PostList} />
               <Route exact path="/post-writing" component={PostWriting} />
             </Switch>

@@ -7,12 +7,31 @@ import axios from "axios";
 import { boardAPI } from "../config";
 import ReactPaginate from "react-paginate";
 import { useHistory } from "react-router-dom";
+import { EditCommentModal, DeleteCommentModal } from "../components";
+
+interface UserData {
+  info: any;
+  items: any[];
+}
 
 export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
   const [content, setContent] = useState<string>("");
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
+  const [commentText, setCommentText] = useState<UserData | any>({
+    newComment: null,
+    updatedComment: { id: null, content: "기존댓글~~~" }
+  });
+  const [currentComment, setCurrentComment] = useState<UserData | any>([]);
+  const [activeInput, setActiveInput] = useState(false);
+  const [updatedPost, setUpdatedPost] = useState(posts[0]?.content);
+  /* const [updatedPost, setUpdatedPost] = useState({
+    id: posts[0]?.comment_id,
+    content: posts[0]?.content
+  }); */
   const history = useHistory();
 
   useEffect(() => {
@@ -58,15 +77,83 @@ export default function PostDetail({ match }: any) {
           }
         })
         .then((res) => {
-          console.log(res);
+          window.location.reload();
         });
     }
   };
 
-  const patchComment = (comment_id: any) => {};
+  const patchComment = (crud: string, comment_id: number) => {
+    console.log("댓글수정", comment_id);
+    setCurrentComment(
+      currentComment.map((comment: any) =>
+        comment.id === comment_id
+          ? { ...comment, comment: commentText.updatedComment.content }
+          : comment
+      )
+    );
+    setEditModal(false);
+
+    axios
+      .patch(
+        `${boardAPI}/${match.params.id}/${comment_id}`,
+        JSON.stringify({
+          // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
+          header: { Authorization: 1 },
+          comment: commentText.updatedComment.content
+        })
+      )
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deleteComment = (comment_id: any): void => {
+    if (window.confirm("삭제?")) {
+      axios
+        .delete(`${boardAPI}/${match.params.id}/${comment_id}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          window.location.reload();
+        });
+    }
+  };
+
+  const updateComment = (e: any) => {
+    const { value } = e.target;
+    console.log("updateComment value", value);
+
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        ...commentText.updatedComment,
+        content: value
+      }
+    });
+  };
+
+  const clickEdit = (comment: any) => {
+    setEditModal(true);
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        id: comment.comment_id,
+        content: comment.comment_comment
+      }
+    });
+  };
 
   const patchPost = (): void => {
-    axios.patch(`${boardAPI}/${match.params.id}`, {
+    const data = {
+      title: posts[0].title,
+      content: updatedPost
+    };
+
+    axios.patch(`${boardAPI}/${match.params.id}`, JSON.stringify(data), {
       headers: {
         Authorization: localStorage.getItem("token")
       }
@@ -111,16 +198,47 @@ export default function PostDetail({ match }: any) {
         </TitleContainer>
         <ContentContainer>
           <Writer>{posts[0]?.writer}</Writer>
-          <Content>{posts[0]?.content}</Content>
-          <Edit onClick={deletePost}>삭제</Edit>
-          <Edit>수정</Edit>
+          {console.log("activeInput", activeInput)}
+          {activeInput ? (
+            <>
+              <ContentInput
+                onChange={(e) => setUpdatedPost(e.target.value)}
+              ></ContentInput>
+              <Edit
+                onClick={() => {
+                  patchPost();
+                  setActiveInput(false);
+                }}
+              >
+                완료
+              </Edit>
+            </>
+          ) : (
+            <>
+              <Content>{posts[0]?.content}</Content>
+              <Edit onClick={deletePost}>삭제</Edit>
+              <Edit
+                onClick={() => {
+                  setActiveInput(true);
+                }}
+              >
+                수정
+              </Edit>
+            </>
+          )}
         </ContentContainer>
         <ReplyContainer>
           <ReplyText>댓글</ReplyText>
           <ReplyInput value={content} onChange={onChangeComment}></ReplyInput>
           <Button onClick={addComment}>등록</Button>
         </ReplyContainer>
-        <PostReply comments={comments} match={match}></PostReply>
+        <PostReply
+          comments={comments}
+          match={match}
+          setEditModal={setEditModal}
+          clickEdit={clickEdit}
+          deleteComment={deleteComment}
+        ></PostReply>
         <StyledPaginateContainer>
           <ReactPaginate
             pageCount={Math.ceil(posts.total_comment / 10)}
@@ -137,6 +255,24 @@ export default function PostDetail({ match }: any) {
           />
         </StyledPaginateContainer>
       </InnerContainer>
+      {editModal && (
+        <EditCommentModal
+          editModal={editModal}
+          setEditModal={setEditModal}
+          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
+          updatedComment={commentText.updatedComment}
+          submitChangedComment={patchComment}
+          updateComment={updateComment}
+        />
+      )}
+      {deleteModal && (
+        <DeleteCommentModal
+          deleteModal={deleteModal}
+          setDeleteModal={setDeleteModal}
+          submitChangedComment={deleteComment}
+          commentId={commentText.updatedComment.id}
+        />
+      )}
     </Container>
   );
 }
@@ -200,6 +336,11 @@ const ContentContainer = styled.div`
 `;
 
 const Content = styled.p`
+  width: 36rem;
+  height: 20rem;
+`;
+
+const ContentInput = styled.input`
   width: 36rem;
   height: 20rem;
 `;
