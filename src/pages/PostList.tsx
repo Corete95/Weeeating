@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Posts from "./childComponents/Posts";
-import ReactPaginate from "react-paginate";
+import Pagination from "react-js-pagination";
 import axios from "axios";
 import styled from "styled-components";
 import wemeok from "../images/wemeoktalk_2.png";
@@ -10,7 +10,7 @@ import { boardAPI } from "../config";
 
 export default function App() {
   const [posts, setPosts] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activePage, setActivePage] = useState<any>(1);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -20,13 +20,31 @@ export default function App() {
             Authorization: localStorage.getItem("token")
           }
         })
-        .then((res) => setPosts(res.data.board_list));
+        .then((res) => {
+          setPosts(res.data);
+        })
+        .catch(function (error) {
+          if (error.response) {
+            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // 요청이 이루어 졌으나 응답을 받지 못했습니다.
+            // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
+            // Node.js의 http.ClientRequest 인스턴스입니다.
+            console.log(error.request);
+          } else {
+            // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        });
     };
-
     fetchPosts();
   }, []);
 
-  const handlePageChange = (pageNumber: number) => {
+  const handlePageChange = (pageNumber: any) => {
     axios
       .get(`${boardAPI}?offset=${(pageNumber - 1) * 5}`, {
         headers: {
@@ -36,7 +54,7 @@ export default function App() {
       .then((res) => {
         setPosts(res.data);
       });
-    setCurrentPage(pageNumber);
+    setActivePage(pageNumber);
   };
 
   return (
@@ -46,12 +64,17 @@ export default function App() {
         <ImgText>개발자 공유문화 잊지말자, 그러니까 맛집도 공유하자</ImgText>
         <Posts posts={posts} />
         <StyledPaginateContainer>
-          <ReactPaginate
-            pageCount={posts.total_board}
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={5}
+            totalItemsCount={posts.total_board}
             pageRangeDisplayed={5}
-            marginPagesDisplayed={currentPage}
-            previousLabel={"<"}
-            nextLabel={">"}
+            hideFirstLastPages
+            itemClassPrev={"prevPageText"}
+            itemClassNext={"nextPageText"}
+            prevPageText={"<"}
+            nextPageText={">"}
+            onChange={handlePageChange}
           />
         </StyledPaginateContainer>
         <Button>

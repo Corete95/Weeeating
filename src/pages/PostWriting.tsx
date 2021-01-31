@@ -5,6 +5,8 @@ import { COLORS } from "../styles/themeColor";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { boardAPI } from "../config";
+import ReactQuill from "react-quill"; // Typescript
+import "react-quill/dist/quill.snow.css";
 
 export default function PostWriting() {
   const [title, setTitle] = useState("");
@@ -26,6 +28,10 @@ export default function PostWriting() {
       .then((res) => {
         history.push("/post-list");
       });
+  };
+
+  const createPost = (e: any): any => {
+    setContent(e.target.value);
   };
 
   return (
@@ -50,6 +56,9 @@ export default function PostWriting() {
               onChange={(e) => setContent(e.target.value)}
               placeholder="내용을 입력하세요."
             ></Content>
+            {/*             <QuillContainer>
+              <ReactQuill value={content} onChange={createPost} />
+            </QuillContainer> */}
           </ContentContainer>
           <TitleContainer>
             <TitleText>첨부파일</TitleText>
@@ -100,7 +109,10 @@ const TitleContainer = styled.div`
   width: 35rem;
 `;
 
-const TitleText = styled.p``;
+const TitleText = styled.p`
+  width: 4rem;
+  height: 1.5rem;
+`;
 
 const TitleInput = styled.input`
   margin-left: 1rem;
@@ -121,4 +133,10 @@ const Button = styled.button`
   width: 4rem;
   height: 2rem;
   background: ${COLORS.mainYellow};
+`;
+
+const QuillContainer = styled.div`
+  .quill {
+    height: 10rem;
+  }
 `;

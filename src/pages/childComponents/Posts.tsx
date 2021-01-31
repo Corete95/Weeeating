@@ -11,7 +11,7 @@ export default function Posts({ posts }: any) {
         <li>등록일</li>
         <li>댓글</li>
       </div>
-      {posts?.map(
+      {posts.board_list?.map(
         (post: {
           id: string | number | null | undefined;
           title: React.ReactNode;

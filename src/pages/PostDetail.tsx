@@ -6,12 +6,14 @@ import PostReply from "../pages/childComponents/PostReply";
 import axios from "axios";
 import { boardAPI } from "../config";
 import ReactPaginate from "react-paginate";
+import { useHistory } from "react-router-dom";
 
 export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
   const [content, setContent] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<any>(1);
+  const history = useHistory();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -22,7 +24,7 @@ export default function PostDetail({ match }: any) {
           }
         })
         .then((res) => {
-          console.log(res);
+          console.log(res.data);
           setPosts(res.data.board_info);
           setComments(res.data.board_comments);
         });
@@ -38,23 +40,66 @@ export default function PostDetail({ match }: any) {
     comment: content
   };
 
-  const addComment = (): void => {
+  const addComment = (): any => {
+    if (content.length >= 1) {
+      setComments([
+        ...comments,
+        {
+          comment_content: content,
+          comment_writer: "로그인된 사람",
+          comment_created_at: "방금 전"
+        }
+      ]);
+      setContent("");
+      axios
+        .post(`${boardAPI}/${match.params.id}/comment`, JSON.stringify(data), {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    }
+  };
+
+  const patchComment = (comment_id: any) => {};
+
+  const patchPost = (): void => {
+    axios.patch(`${boardAPI}/${match.params.id}`, {
+      headers: {
+        Authorization: localStorage.getItem("token")
+      }
+    });
+  };
+
+  const deletePost = (): void => {
+    if (window.confirm("삭제?")) {
+      axios
+        .delete(`${boardAPI}/${match.params.id}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          history.push("/post-list");
+        });
+    }
+  };
+
+  const handlePageChange = (pageNumber: any) => {
     axios
-      .post(`${boardAPI}/${match.params.id}/comment`, JSON.stringify(data), {
+      .get(`${boardAPI}?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }
       })
       .then((res) => {
-        console.log(res);
-        if (content.length >= 1) {
-          setComments([...comments, content]);
-          setContent("");
-        }
+        setPosts(res.data);
       });
+    setCurrentPage(pageNumber);
   };
 
-  console.log(comments);
   return (
     <Container>
       <Img src={wemeok} alt="" />
@@ -67,7 +112,7 @@ export default function PostDetail({ match }: any) {
         <ContentContainer>
           <Writer>{posts[0]?.writer}</Writer>
           <Content>{posts[0]?.content}</Content>
-          <Edit>삭제</Edit>
+          <Edit onClick={deletePost}>삭제</Edit>
           <Edit>수정</Edit>
         </ContentContainer>
         <ReplyContainer>
@@ -75,14 +120,20 @@ export default function PostDetail({ match }: any) {
           <ReplyInput value={content} onChange={onChangeComment}></ReplyInput>
           <Button onClick={addComment}>등록</Button>
         </ReplyContainer>
-        <PostReply comments={comments}></PostReply>
+        <PostReply comments={comments} match={match}></PostReply>
         <StyledPaginateContainer>
           <ReactPaginate
-            pageCount={posts.total_comment}
+            pageCount={Math.ceil(posts.total_comment / 10)}
             pageRangeDisplayed={5}
-            marginPagesDisplayed={currentPage}
-            previousLabel={"<"}
-            nextLabel={">"}
+            marginPagesDisplayed={0}
+            breakLabel={""}
+            previousLabel={"이전"}
+            nextLabel={"다음"}
+            onPageChange={handlePageChange}
+            containerClassName={"pagination-ul"}
+            activeClassName={"currentPage"}
+            previousClassName={"pageLabel-btn"}
+            nextClassName={"pageLabel-btn"}
           />
         </StyledPaginateContainer>
       </InnerContainer>
@@ -160,7 +211,11 @@ const ReplyContainer = styled.div`
   width: 35rem;
 `;
 
-const ReplyText = styled.p``;
+const ReplyText = styled.p`
+  width: 2rem;
+  height: 1.5rem;
+`;
+
 const ReplyInput = styled.input`
   margin-left: 1rem;
   width: 35rem;

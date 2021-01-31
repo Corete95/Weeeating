@@ -1,8 +1,24 @@
 import React from "react";
 import { COLORS } from "../../styles/themeColor";
+import axios from "axios";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
+import { boardAPI } from "../../config";
 
-export default function PostReply({ comments }: any) {
+export default function PostReply({ comments, match }: any) {
+  const history = useHistory();
+
+  const deleteComment = (comment_id: any): void => {
+    if (window.confirm("삭제?")) {
+      axios
+        .delete(`${boardAPI}/${match.params.id}/${comment_id}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {});
+    }
+  };
   return (
     <ReplyContainer>
       {comments?.map(
@@ -11,6 +27,7 @@ export default function PostReply({ comments }: any) {
           comment_writer: {} | null | undefined;
           comment_content: any;
           comment_created_at: any;
+          comment_id: any;
         }) => (
           <div>
             <li>{comment.comment_writer}</li>
@@ -18,7 +35,10 @@ export default function PostReply({ comments }: any) {
             <li>{comment.comment_content}</li>
             <li>({comment.comment_created_at})</li>
             <Button>수정</Button>
-            <Button>삭제</Button>
+            {console.log("댓글삭제", comment.comment_id)}
+            <Button onClick={() => deleteComment(comment.comment_id)}>
+              삭제
+            </Button>
           </div>
         )
       )}
