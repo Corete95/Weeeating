@@ -119,7 +119,7 @@ export default function StoreDetail(props: any) {
       .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
       .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     // setTimeout(
-    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 설정함.
+    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
     //   axios.patch(`BEAPI${}`)
     //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
     //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
@@ -128,60 +128,68 @@ export default function StoreDetail(props: any) {
 
   const submitChangedComment = (crud: string, commentId: number) => {
     if (crud === "INSERT") {
-      setCurrentComment([
-        {
-          comment: commentText.newComment,
-          created_at: "방금 전",
-          writer_name: "작성자"
-        },
-        ...currentComment
-      ]);
+      // location.reload와 해당 방법 사이 고민중..
+      // setCurrentComment([
+      //   {
+      //     comment: commentText.newComment,
+      //     created_at: "방금 전",
+      //     writer_name: "작성자"
+      //   },
+      //   ...currentComment
+      // ]);
       axios
         .post(
           `${BEAPI}/store/detail/${props.match.params.id}/comment`,
           JSON.stringify({
-            // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
-            header: { Authorization: 1 },
+            header: { Authorization: localStorage.getItem("token") },
             comment: commentText.newComment
           })
         )
-        .then((res) => console.log(res))
+        .then((res) => {
+          console.log(res);
+          window.location.reload();
+        })
         .catch((err) => console.log(err));
     }
     if (crud === "UPDATE") {
-      setCurrentComment(
-        currentComment.map((comment: any) =>
-          comment.id === commentId
-            ? { ...comment, comment: commentText.updatedComment.content }
-            : comment
-        )
-      );
+      // setCurrentComment(
+      //   currentComment.map((comment: any) =>
+      //     comment.id === commentId
+      //       ? { ...comment, comment: commentText.updatedComment.content }
+      //       : comment
+      //   )
+      // );
       setEditModal(false);
 
       axios
         .patch(
           `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
           JSON.stringify({
-            // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
-            header: { Authorization: 1 },
+            header: { Authorization: localStorage.getItem("token") },
             comment: commentText.updatedComment.content
           })
         )
-        .then((res) => console.log(res))
+        .then((res) => {
+          console.log(res);
+          window.location.reload();
+        })
         .catch((err) => console.log(err));
     }
     if (crud === "DELETE") {
-      setCurrentComment(
-        currentComment.filter(
-          (comment: any) => comment.id !== Number(commentText.updatedComment.id)
-        )
-      );
+      // setCurrentComment(
+      //   currentComment.filter(
+      //     (comment: any) => comment.id !== Number(commentText.updatedComment.id)
+      //   )
+      // );
       setDeleteModal(false);
       axios
         .delete(
           `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
         )
-        .then((res) => console.log(res))
+        .then((res) => {
+          console.log(res);
+          window.location.reload();
+        })
         .catch((err) => console.log(err));
     }
   };
@@ -272,9 +280,7 @@ export default function StoreDetail(props: any) {
                 <div className="right">
                   <Content>{comment.comment}</Content>
                   <UploadTime>( {comment.created_at} )</UploadTime>
-                  {/* 작성자에게만 수정, 삭제가 노출되어야 함 */}
-                  {/* 수정, 삭제 위치도 회의해서 결정하기 */}
-                  {/* userVerified 변수 생성한 후 주석 풀기 */}
+                  {/* 작성자에게만 수정, 삭제가 노출되도록 변경 예정*/}
                   {/* {userVerified && ( */}
                   <ModifyBtn
                     onClick={() => {
@@ -314,7 +320,6 @@ export default function StoreDetail(props: any) {
         <EditCommentModal
           editModal={editModal}
           setEditModal={setEditModal}
-          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
           updatedComment={commentText.updatedComment}
           submitChangedComment={submitChangedComment}
           updateComment={updateComment}
