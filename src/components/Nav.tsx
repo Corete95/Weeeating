@@ -24,8 +24,8 @@ interface StateForStyle {
 
 export default function Nav({ weight, goToPage }: IProps) {
   const dispatch = useDispatch();
-  const loggedIn = localStorage.getItem("isAuthenticated");
-  console.log("loggedIn", loggedIn);
+  const loggedIn =
+    localStorage.getItem("isAuthenticated") === "true" ? true : false;
 
   const signupModal = useSelector(
     ({ setModalReducer }) => setModalReducer.signupModal
@@ -68,29 +68,29 @@ export default function Nav({ weight, goToPage }: IProps) {
       >
         About Weeeating
       </Button>
-      {loggedIn ? (
-        <ModalBtnWrapper>
+      <ModalBtnWrapper>
+        {loggedIn ? (
           <Button theLast={true} onClick={toLogout}>
             로그아웃
           </Button>
-        </ModalBtnWrapper>
-      ) : (
-        <ModalBtnWrapper>
-          <Button
-            present={signupModal}
-            onClick={() => dispatch(setSignupActive(true))}
-          >
-            회원가입
-          </Button>
-          <Button
-            theLast={true}
-            present={loginModal}
-            onClick={() => dispatch(setLoginActive(true))}
-          >
-            로그인
-          </Button>
-        </ModalBtnWrapper>
-      )}
+        ) : (
+          <>
+            <Button
+              present={signupModal}
+              onClick={() => dispatch(setSignupActive(true))}
+            >
+              회원가입
+            </Button>
+            <Button
+              theLast={true}
+              present={loginModal}
+              onClick={() => dispatch(setLoginActive(true))}
+            >
+              로그인
+            </Button>
+          </>
+        )}
+      </ModalBtnWrapper>
 
       <ModalOverlay visible={signupModal || loginModal} />
       <ModalWrapper visible={signupModal || loginModal} tabIndex={-1}>
