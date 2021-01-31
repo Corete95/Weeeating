@@ -25,6 +25,7 @@ export default function GoogleLoginComponent() {
   };
 
   const responseGoogle = (response: any) => {
+    console.log("구글로그인");
     console.log(response);
     const { accessToken } = response;
 
@@ -83,8 +84,8 @@ const Container = styled.div`
   cursor: pointer;
 
   .googleBtn {
-    border: 2px solid ${({ theme }) => theme.mainYellow};
-    background-color: ${({ theme }) => theme.lightYellow};
+    /* border: 2px solid ${({ theme }) => theme.mainYellow}; */
+    /* background-color: ${({ theme }) => theme.lightYellow}; */
     font-size: 1.05rem;
     font-weight: 700;
     color: black;
