@@ -3,14 +3,16 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, COLORS } from "./styles";
 import { Footer } from "./components";
-import { Nav } from "./containers";
+import {
+  Nav,
+  MentorDetailContainer,
+  KobbubakDetailContainer
+} from "./containers";
 import {
   AboutPage,
   AlcoholDetail,
   FeatherDetail,
-  KobbubakDetail,
   MainPage,
-  MetorDetail,
   PostDetail,
   PostList,
   PostWriting,
@@ -33,18 +35,29 @@ class Routes extends React.Component {
               <Route exact path="/about" component={AboutPage} />
               <Route exact path="/alcohol-detail" component={AlcoholDetail} />
               <Route exact path="/feather-detail" component={FeatherDetail} />
-              <Route exact path="/kobbubak-detail" component={KobbubakDetail} />
-              <Route exact path="/metor-detail" component={MetorDetail} />
-              <Route exact path="/store-detail" component={StoreDetail} />
+              <Route
+                exact
+                path="/kobbubak-detail"
+                component={KobbubakDetailContainer}
+              />
+              <Route
+                exact
+                path="/metor-detail"
+                component={MentorDetailContainer}
+              />
+              <Route exact path="/store-detail/:id" component={StoreDetail} />
               <Route exact path="/store-list" component={StoreList} />
               <Route exact path="/theme-list" component={ThemeList} />
               <Route exact path="/today-random" component={TodayRandom} />
               <Route exact path="/post-detail" component={PostDetail} />
+<<<<<<< HEAD
               <Route exact path="/post-detail/:id" component={PostDetail} />
+=======
+>>>>>>> develop
               <Route exact path="/post-list" component={PostList} />
               <Route exact path="/post-writing" component={PostWriting} />
             </Switch>
-            <Footer />
+            {/* <Footer /> */}
           </Router>
         </ThemeProvider>
       </React.Fragment>
