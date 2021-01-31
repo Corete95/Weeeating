@@ -25,6 +25,7 @@ export default function EditCommentModal({
 }: IProps) {
   return (
     <ModalWrapper visible={editModal} tabIndex={-1}>
+      {console.log("EditModal updatedComment", updatedComment)}
       <ModalInner tabIndex={0}>
         <Input
           type="text"
@@ -33,6 +34,7 @@ export default function EditCommentModal({
           onChange={updateComment}
         />
         <div className="buttons">
+          {console.log("updatedComment.id", updatedComment.id)}
           <Button
             onClick={() => submitChangedComment("UPDATE", updatedComment.id)}
           >
