@@ -57,6 +57,7 @@ export default function StoreDetail(props: any) {
       ])
       .then(
         axios.spread((res1, res2) => {
+          console.log("res1", res1);
           setInfo(res1.data);
           setAddress(res1.data.store_info[0].address);
           setCurrentComment(res2.data.comment_list);
