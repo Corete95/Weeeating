@@ -1,0 +1,110 @@
+.aboutPage {
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  width: 90rem;
+
+  .aboutTop {
+    width: 50rem;
+    height: 100%;
+    border-left: 6px solid #cccccc;
+    .aboutTopText {
+      padding: 20px 20px 0px 20px;
+      p {
+        font-size: 81px;
+        line-height: 82px;
+        color: #cccccc;
+      }
+      .hello {
+        color: #d9d9d9;
+      }
+      span {
+        color: #ffd966;
+      }
+    }
+  }
+  .aboutCenter {
+    display: flex;
+    width: 100%;
+    margin-top: 4.5rem;
+
+    .aboutCenterImg {
+      width: 50%;
+      height: 100%;
+      margin-right: 2rem;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .aboutCenterText {
+      width: 50%;
+
+      .centerTextTop {
+        width: 100%;
+        text-align: center;
+        margin-top: -10px;
+        .weeeating {
+          display: flex;
+          align-items: center;
+          p {
+            font-size: 26px;
+            width: 170px;
+          }
+        }
+        .weeeating:after {
+          content: "";
+          display: block;
+          width: 45%;
+          border-bottom: 2px solid black;
+          margin-left: 12px;
+        }
+        .weeeating:before {
+          content: "";
+          display: block;
+          width: 45%;
+          border-bottom: 2px solid black;
+          margin-right: 12px;
+        }
+      }
+      .centerTextCenter {
+        margin-top: 30px;
+        p {
+          font-family: sans-serif;
+          line-height: 30px;
+          font-size: 18px;
+        }
+      }
+      .centerTextBottom {
+        margin-top: 108px;
+        border-bottom: 2px solid black;
+      }
+    }
+  }
+  .aboutBottom {
+    width: 100%;
+    margin-top: 150px;
+    .thanksTo {
+      display: flex;
+      align-items: center;
+      p {
+        font-size: 26px;
+      }
+    }
+    .thanksTo:after {
+      content: "";
+      display: block;
+      width: 45%;
+      border-bottom: 2px solid black;
+      margin-left: 12px;
+    }
+    .thanksTo:before {
+      content: "";
+      display: block;
+      width: 45%;
+      border-bottom: 2px solid black;
+      margin-right: 12px;
+    }
+  }
+}
