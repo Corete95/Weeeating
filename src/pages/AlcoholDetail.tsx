@@ -8,8 +8,8 @@ import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-export default function AlcoholDetail() {
-  const [alcoholData, setAlcoholData] = useState([]);
+export default function AlcoholDetail({ match, props }: any) {
+  const [alcoholData, setAlcoholData] = useState<any>([]);
 
   const setting = {
     dots: false,
@@ -38,6 +38,37 @@ export default function AlcoholDetail() {
     ),
     className: "slides"
   };
+  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
+  // useEffect(() => {
+  //   const alcohol = async () => {
+  //     await axios
+  //       .get(`${API1}/store/list?tag=${alcohol}`, {
+  //         headers: {
+  //           Authorization: localStorage.getItem("token")
+  //         }
+  //       })
+  //       .then((res) => {
+  //         setAlcoholData(res.data);
+  //       });
+  //   };
+  //   alcohol();
+  // }, []);
+
+  // 백엔드와 맞추기위해 좋아요 로직 작업
+  // const changeLikedState = () => {
+  //   setAlcoholData({
+  //     ...info,
+  //     like_count: Number(
+  //       info.like === false ? info.like_count + 1 : info.like_count - 1
+  //     ),
+  //     like: !info.like
+  //   });
+  //   axios
+  //     .post(`${API1}/store/like/${props.match.params.id}`)
+  //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+  //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+
+  // };
 
   useEffect(() => {
     axios.get(`${API1}`).then((response) => {
