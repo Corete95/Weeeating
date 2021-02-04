@@ -10,11 +10,22 @@ import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-interface Props {}
+const RANKING = [
+  { top: "TOP 1" },
+  { top: "TOP 2" },
+  { top: "TOP 3" },
+  { top: "TOP 4" },
+  { top: "TOP 5" }
+];
 
-export default function MainPage({}: Props) {
+export default function MainPage() {
   const [storeData, setStoreData] = useState([]);
   const history = useHistory();
+
+  const rankingData = storeData.map((data: any, index: number) => ({
+    ...data,
+    top: RANKING[index].top
+  }));
 
   const settings = {
     dots: true,
@@ -69,7 +80,7 @@ export default function MainPage({}: Props) {
         <div className="rankingDiv">
           <div className="storeCardDiv">
             <Slider {...setting}>
-              {storeData?.map((store: any) => {
+              {rankingData?.map((store: any) => {
                 return (
                   <StoreCard
                     top={store.top}
