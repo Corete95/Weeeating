@@ -65,9 +65,11 @@ export default function AlcoholDetail() {
               {alcoholData?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
+                    name={alcohol.name}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
                   />
                 );
               })}
@@ -86,9 +88,11 @@ export default function AlcoholDetail() {
               {alcoholData?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
+                    name={alcohol.name}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
                   />
                 );
               })}
@@ -107,9 +111,11 @@ export default function AlcoholDetail() {
               {alcoholData?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
+                    name={alcohol.name}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
                   />
                 );
               })}
