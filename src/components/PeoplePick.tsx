@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import {
   IoIosArrowBack,
@@ -13,6 +14,8 @@ interface IProps {
 }
 
 export default function PeoplePick({ info, TITLE }: IProps) {
+  const history = useHistory();
+
   return (
     <Wrapper>
       <Container>
@@ -50,7 +53,12 @@ export default function PeoplePick({ info, TITLE }: IProps) {
                     <div className="storeDesc">{desc}</div>
                   </Desc>
                   <MoreBtn>
-                    <span className="seeStoreInfo">맛집 구경하기</span>
+                    <span
+                      className="seeStoreInfo"
+                      onClick={() => history.push(`/store-detail/${store_id}`)}
+                    >
+                      맛집 구경하기
+                    </span>
                     <IoIosAddCircle className="btnIcon" />
                   </MoreBtn>
                 </CardEach>
@@ -79,11 +87,11 @@ const Header = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 3.9rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Title = styled.h2`
-  width: 53.2rem;
+  width: 55rem;
   font-size: 2.5rem;
   letter-spacing: 0.4rem;
 `;
