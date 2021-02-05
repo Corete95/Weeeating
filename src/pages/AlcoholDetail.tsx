@@ -95,8 +95,8 @@ export default function AlcoholDetail({ match, props }: any) {
                 return (
                   <StoreCard2
                     id={alcohol.id}
-                    image={alcohol.image}
                     name={alcohol.name}
+                    image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
                   />
@@ -118,8 +118,8 @@ export default function AlcoholDetail({ match, props }: any) {
                 return (
                   <StoreCard2
                     id={alcohol.id}
-                    image={alcohol.image}
                     name={alcohol.name}
+                    image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
                   />
@@ -141,8 +141,8 @@ export default function AlcoholDetail({ match, props }: any) {
                 return (
                   <StoreCard2
                     id={alcohol.id}
-                    image={alcohol.image}
                     name={alcohol.name}
+                    image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
                   />
