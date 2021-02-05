@@ -18,14 +18,48 @@ const RANKING = [
   { top: "TOP 5" }
 ];
 
-export default function MainPage() {
+export default function MainPage({ props }: any) {
   const [storeData, setStoreData] = useState([]);
   const history = useHistory();
-
+  const like = "like";
   const rankingData = storeData.map((data: any, index: number) => ({
     ...data,
     top: RANKING[index].top
   }));
+
+  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
+  useEffect(() => {
+    const alcohol = async () => {
+      await axios
+        .get(`${API}/store/list?sort=${like}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log("res", res);
+          setStoreData(res.data.store_list.like);
+        });
+    };
+    alcohol();
+  }, []);
+
+  // 백엔드와 맞추기위해 좋아요 로직 작업
+  // const changeLikedState = () => {
+  //   setStoreData({
+  //     ...storeData,
+  //     like_count: Number(
+  //       storeData.like === false
+  //         ? storeData.like_count + 1
+  //         : storeData.like_count - 1
+  //     ),
+  //     like: !storeData.like
+  //   });
+  //   axios
+  //     .post(`${API}/store/like/${props.match.params.id}`)
+  //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+  //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+  // };
 
   const settings = {
     dots: true,
@@ -67,12 +101,12 @@ export default function MainPage() {
     className: "slides"
   };
 
-  useEffect(() => {
-    axios.get(`${API}`).then((response) => {
-      setStoreData(response.data);
-    });
-  }, []);
-
+  // useEffect(() => {
+  //   axios.get(`${API}`).then((response) => {
+  //     setStoreData(response.data);
+  //   });
+  // }, []);
+  console.log(storeData);
   return (
     <>
       <div className="mainTop5">
@@ -83,10 +117,12 @@ export default function MainPage() {
               {rankingData?.map((store: any) => {
                 return (
                   <StoreCard
+                    id={store.id}
                     top={store.top}
+                    name={store.name}
                     image={store.image}
-                    title={store.title}
-                    heart={store.heart}
+                    likeCount={store.like_count}
+                    likeState={store.like_state}
                   />
                 );
               })}
