@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API1 } from "../config";
+import { API } from "../config";
 import axios from "axios";
 import StoreCard2 from "./childComponents/StoreCard2";
 import Slider from "react-slick";
@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function AlcoholDetail({ match, props }: any) {
   const [alcoholData, setAlcoholData] = useState<any>([]);
-
+  const alcohol = "alcohol";
   const setting = {
     dots: false,
     infinite: true,
@@ -39,20 +39,20 @@ export default function AlcoholDetail({ match, props }: any) {
     className: "slides"
   };
   // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
-  // useEffect(() => {
-  //   const alcohol = async () => {
-  //     await axios
-  //       .get(`${API1}/store/list?tag=${alcohol}`, {
-  //         headers: {
-  //           Authorization: localStorage.getItem("token")
-  //         }
-  //       })
-  //       .then((res) => {
-  //         setAlcoholData(res.data);
-  //       });
-  //   };
-  //   alcohol();
-  // }, []);
+  useEffect(() => {
+    const alcohol = async () => {
+      await axios
+        .get(`${API}/store/list?tag=${alcohol}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          setAlcoholData(res.data);
+        });
+    };
+    alcohol();
+  }, []);
 
   // 백엔드와 맞추기위해 좋아요 로직 작업
   // const changeLikedState = () => {
@@ -70,12 +70,12 @@ export default function AlcoholDetail({ match, props }: any) {
 
   // };
 
-  useEffect(() => {
-    axios.get(`${API1}`).then((response) => {
-      setAlcoholData(response.data);
-    });
-  }, []);
-
+  // useEffect(() => {
+  //   axios.get(`${API1}`).then((response) => {
+  //     setAlcoholData(response.data);
+  //   });
+  // }, []);
+  console.log(alcoholData);
   return (
     <>
       <div className="alcohol">
