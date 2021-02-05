@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { BEAPI } from "../config";
+import { API } from "../config";
 import {
   setSignupActive,
   setLoginActive,
@@ -30,7 +30,7 @@ export default function GoogleLoginComponent() {
     const { accessToken } = response;
 
     axios
-      .get(`${BEAPI}/user/login/social`, {
+      .get(`${API}/user/login/social`, {
         headers: {
           Authorization: accessToken
         }

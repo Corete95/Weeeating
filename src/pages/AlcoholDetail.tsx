@@ -61,14 +61,14 @@ export default function AlcoholDetail({ match, props }: any) {
   //     like: !info.like
   //   });
   //   axios
-  //     .post(`${API1}/store/like/${props.match.params.id}`)
+  //     .post(`${API}/store/like/${props.match.params.id}`)
   //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
   //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
 
   // };
 
   // useEffect(() => {
-  //   axios.get(`${API1}`).then((response) => {
+  //   axios.get(`${API}`).then((response) => {
   //     setAlcoholData(response.data);
   //   });
   // }, []);

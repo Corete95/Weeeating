@@ -4,7 +4,7 @@ import wemeok from "../images/wemeoktalk_2.png";
 import { COLORS } from "../styles/themeColor";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import { boardAPI } from "../config";
+import { API } from "../config";
 import ReactQuill from "react-quill"; // Typescript
 import "react-quill/dist/quill.snow.css";
 
@@ -20,7 +20,7 @@ export default function PostWriting() {
 
   const uploadData = () => {
     axios
-      .post(`${boardAPI}`, JSON.stringify(data), {
+      .post(`${API}`, JSON.stringify(data), {
         headers: {
           "Content-Type": `application/json`
         }

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { BEAPI } from "../config";
+import { API } from "../config";
 
 interface IProps {
   handleChange: (e: any) => void;
@@ -21,7 +21,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
   return (
     <Container>
       <Title>회원가입</Title>
-      {/* <InfoSection action={`${BEAPI}/user/signup`} method="POST"> */}
+      {/* <InfoSection action={`${API}/user/signup`} method="POST"> */}
       {/* <InfoSection> */}
       <BlockWrapper>
         <Subject short={true}>기수</Subject>

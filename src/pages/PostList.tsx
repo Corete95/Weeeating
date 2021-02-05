@@ -6,7 +6,7 @@ import styled from "styled-components";
 import wemeok from "../images/wemeoktalk_2.png";
 import { COLORS } from "../styles/themeColor";
 import { Link } from "react-router-dom";
-import { boardAPI } from "../config";
+import { API } from "../config";
 
 export default function App() {
   const [posts, setPosts] = useState<any>([]);
@@ -15,7 +15,7 @@ export default function App() {
   useEffect(() => {
     const fetchPosts = async () => {
       await axios
-        .get(`${boardAPI}`, {
+        .get(`${API}/board`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -46,7 +46,7 @@ export default function App() {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${boardAPI}?offset=${(pageNumber - 1) * 5}`, {
+      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { BEAPI } from "../config";
+import { API } from "../config";
 import { SignupForm } from "./index";
 
 export default function Signup() {
@@ -29,10 +29,10 @@ export default function Signup() {
         password: user.password
       };
       axios
-        .post(`${BEAPI}/user/signup`, JSON.stringify({ ...body }))
+        .post(`${API}/user/signup`, JSON.stringify({ ...body }))
         .then((res) => {
           console.log("회원가입 통신 잘 됐음!", res);
-          if (res.data.message === "SUCCESS") {
+          if (res.data.MESSAGE === "SUCCESS") {
             alert("회원가입이 완료되었습니다. :-)");
           } else {
             alert("회원가입이 완료되지 않았습니다.");

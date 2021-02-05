@@ -3,7 +3,7 @@ import { COLORS } from "../../styles/themeColor";
 import axios from "axios";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { boardAPI } from "../../config";
+import { API } from "../../config";
 
 interface UserData {
   info: any;

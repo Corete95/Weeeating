@@ -3,7 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
-import { BEAPI } from "../config";
+import { API } from "../config";
 import { mixin } from "../styles";
 import { EditCommentModal, DeleteCommentModal } from "../components";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
@@ -52,8 +52,8 @@ export default function StoreDetail(props: any) {
   useEffect(() => {
     axios
       .all([
-        axios.get(`${BEAPI}/store/detail/${props.match.params.id}`),
-        axios.get(`${BEAPI}/store/detail/${props.match.params.id}/comment`)
+        axios.get(`${API}/store/detail/${props.match.params.id}`),
+        axios.get(`${API}/store/detail/${props.match.params.id}/comment`)
       ])
       .then(
         axios.spread((res1, res2) => {
@@ -115,12 +115,12 @@ export default function StoreDetail(props: any) {
       like: !info.like
     });
     axios
-      .post(`${BEAPI}/store/like/${props.match.params.id}`)
+      .post(`${API}/store/like/${props.match.params.id}`)
       .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
       .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     // setTimeout(
     //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
-    //   axios.patch(`BEAPI${}`)
+    //   axios.patch(`API${}`)
     //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
     //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
     // , 1000)
@@ -139,7 +139,7 @@ export default function StoreDetail(props: any) {
       // ]);
       axios
         .post(
-          `${BEAPI}/store/detail/${props.match.params.id}/comment`,
+          `${API}/store/detail/${props.match.params.id}/comment`,
           JSON.stringify({
             header: { Authorization: localStorage.getItem("token") },
             comment: commentText.newComment
@@ -163,7 +163,7 @@ export default function StoreDetail(props: any) {
 
       axios
         .patch(
-          `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
           JSON.stringify({
             header: { Authorization: localStorage.getItem("token") },
             comment: commentText.updatedComment.content
@@ -184,7 +184,7 @@ export default function StoreDetail(props: any) {
       setDeleteModal(false);
       axios
         .delete(
-          `${BEAPI}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
+          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
         )
         .then((res) => {
           console.log(res);

@@ -4,7 +4,7 @@ import wemeok from "../images/wemeoktalk_2.png";
 import { COLORS } from "../styles/themeColor";
 import PostReply from "../pages/childComponents/PostReply";
 import axios from "axios";
-import { boardAPI } from "../config";
+import { API } from "../config";
 import ReactPaginate from "react-paginate";
 import { useHistory } from "react-router-dom";
 import { EditCommentModal, DeleteCommentModal } from "../components";
@@ -37,7 +37,7 @@ export default function PostDetail({ match }: any) {
   useEffect(() => {
     const fetchPosts = async () => {
       await axios
-        .get(`${boardAPI}/${match.params.id}`, {
+        .get(`${API}/${match.params.id}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -71,7 +71,7 @@ export default function PostDetail({ match }: any) {
       ]);
       setContent("");
       axios
-        .post(`${boardAPI}/${match.params.id}/comment`, JSON.stringify(data), {
+        .post(`${API}/${match.params.id}/comment`, JSON.stringify(data), {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -95,7 +95,7 @@ export default function PostDetail({ match }: any) {
 
     axios
       .patch(
-        `${boardAPI}/${match.params.id}/${comment_id}`,
+        `${API}/${match.params.id}/${comment_id}`,
         JSON.stringify({
           // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
           header: { Authorization: 1 },
@@ -112,7 +112,7 @@ export default function PostDetail({ match }: any) {
   const deleteComment = (comment_id: any): void => {
     if (window.confirm("삭제?")) {
       axios
-        .delete(`${boardAPI}/${match.params.id}/${comment_id}`, {
+        .delete(`${API}/${match.params.id}/${comment_id}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -153,7 +153,7 @@ export default function PostDetail({ match }: any) {
       content: updatedPost
     };
 
-    axios.patch(`${boardAPI}/${match.params.id}`, JSON.stringify(data), {
+    axios.patch(`${API}/${match.params.id}`, JSON.stringify(data), {
       headers: {
         Authorization: localStorage.getItem("token")
       }
@@ -163,7 +163,7 @@ export default function PostDetail({ match }: any) {
   const deletePost = (): void => {
     if (window.confirm("삭제?")) {
       axios
-        .delete(`${boardAPI}/${match.params.id}`, {
+        .delete(`${API}/${match.params.id}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -176,7 +176,7 @@ export default function PostDetail({ match }: any) {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${boardAPI}?offset=${(pageNumber - 1) * 5}`, {
+      .get(`${API}?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }

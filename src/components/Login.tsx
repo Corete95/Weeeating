@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BEAPI } from "../config";
+import { API } from "../config";
 import { LoginForm } from "./index";
 
 export default function Login() {
@@ -31,7 +31,7 @@ export default function Login() {
     };
     console.log("data", data);
     axios
-      .post(`${BEAPI}/user/login`, JSON.stringify(data))
+      .post(`${API}/user/login`, JSON.stringify(data))
       .then((res) => {
         console.log("res", res.data);
         if (res.data.MESSAGE === "SUCCESS") {
