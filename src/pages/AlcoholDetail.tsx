@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API1 } from "../config";
+import { API } from "../config";
 import axios from "axios";
 import StoreCard2 from "./childComponents/StoreCard2";
 import Slider from "react-slick";
@@ -8,9 +8,9 @@ import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-export default function AlcoholDetail() {
-  const [alcoholData, setAlcoholData] = useState([]);
-
+export default function AlcoholDetail({ match, props }: any) {
+  const [alcoholData, setAlcoholData] = useState<any>([]);
+  const alcohol = "alcohol";
   const setting = {
     dots: false,
     infinite: true,
@@ -38,13 +38,42 @@ export default function AlcoholDetail() {
     ),
     className: "slides"
   };
-
+  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
   useEffect(() => {
-    axios.get(`${API1}`).then((response) => {
-      setAlcoholData(response.data);
-    });
+    axios
+      .get(`${API}/store/list?tag=${alcohol}`, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        setAlcoholData(res.data.store_list);
+      });
   }, []);
 
+  // 백엔드와 맞추기위해 좋아요 로직 작업
+  // const changeLikedState = () => {
+  //   setAlcoholData({
+  //     ...info,
+  //     like_count: Number(
+  //       info.like === false ? info.like_count + 1 : info.like_count - 1
+  //     ),
+  //     like: !info.like
+  //   });
+  //   axios
+  //     .post(`${API1}/store/like/${props.match.params.id}`)
+  //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+  //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+
+  // };
+
+  // useEffect(() => {
+  //   axios.get(`${API1}`).then((response) => {
+  //     setAlcoholData(response.data);
+  //   });
+  // }, []);
+  console.log(alcoholData);
+  console.log(alcoholData.beer);
   return (
     <>
       <div className="alcohol">
@@ -62,7 +91,7 @@ export default function AlcoholDetail() {
         <div className="sojuListDiv">
           <div className="sojuCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.soju?.map((alcohol: any) => {
                 return (
                   <StoreCard2
                     id={alcohol.id}
@@ -85,7 +114,7 @@ export default function AlcoholDetail() {
         <div className="beerListDiv">
           <div className="beerCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.beer?.map((alcohol: any) => {
                 return (
                   <StoreCard2
                     id={alcohol.id}
@@ -108,7 +137,7 @@ export default function AlcoholDetail() {
         <div className="riceWineDiv">
           <div className="riceWineCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.makgeolli?.map((alcohol: any) => {
                 return (
                   <StoreCard2
                     id={alcohol.id}
