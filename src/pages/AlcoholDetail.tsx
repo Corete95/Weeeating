@@ -40,18 +40,15 @@ export default function AlcoholDetail({ match, props }: any) {
   };
   // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
   useEffect(() => {
-    const alcohol = async () => {
-      await axios
-        .get(`${API}/store/list?tag=${alcohol}`, {
-          headers: {
-            Authorization: localStorage.getItem("token")
-          }
-        })
-        .then((res) => {
-          setAlcoholData(res.data);
-        });
-    };
-    alcohol();
+    axios
+      .get(`${API}/store/list?tag=${alcohol}`, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        setAlcoholData(res.data.store_list);
+      });
   }, []);
 
   // 백엔드와 맞추기위해 좋아요 로직 작업
@@ -76,6 +73,7 @@ export default function AlcoholDetail({ match, props }: any) {
   //   });
   // }, []);
   console.log(alcoholData);
+  console.log(alcoholData.beer);
   return (
     <>
       <div className="alcohol">
@@ -93,12 +91,14 @@ export default function AlcoholDetail({ match, props }: any) {
         <div className="sojuListDiv">
           <div className="sojuCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.soju?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    name={alcohol.name}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
                   />
                 );
               })}
@@ -114,12 +114,14 @@ export default function AlcoholDetail({ match, props }: any) {
         <div className="beerListDiv">
           <div className="beerCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.beer?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    name={alcohol.name}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
                   />
                 );
               })}
@@ -135,12 +137,14 @@ export default function AlcoholDetail({ match, props }: any) {
         <div className="riceWineDiv">
           <div className="riceWineCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.makgeolli?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    name={alcohol.name}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
                   />
                 );
               })}
