@@ -11,10 +11,6 @@ export default function NavContainer() {
     postList: false,
     aboutPage: false
   });
-  const [modalActive, setModalActive] = useState({
-    signup: false,
-    login: false
-  });
 
   const goToPage = (path: string, page: string) => {
     const initialState = {
@@ -37,26 +33,9 @@ export default function NavContainer() {
     }
   };
 
-  const changeModalActive = (domain: string) => {
-    setModalActive({
-      ...modalActive,
-      [domain]: true
-    });
-  };
-
-  const closeModal = () => {
-    setModalActive({
-      signup: false,
-      login: false
-    });
-  };
-
   const NavProps = {
     weight,
-    modalActive,
-    goToPage,
-    changeModalActive,
-    closeModal
+    goToPage
   };
 
   return <Nav {...NavProps} />;
