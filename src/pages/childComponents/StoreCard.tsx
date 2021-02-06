@@ -30,7 +30,11 @@ export default function StoreCard({
     <>
       <div className="storeCard">
         <div className="ranking">
-          <img className="iconCrown" src="./images/crown.png"></img>
+          <img
+            alt="CrownIcon"
+            className="iconCrown"
+            src="./images/crown.png"
+          ></img>
           <p>{top}</p>
         </div>
         <div className="rankingComponents">
@@ -40,12 +44,12 @@ export default function StoreCard({
           >
             <p>Weeeating</p>
             <hr></hr>
-            <img src={image}></img>
+            <img alt="storeImg" src={image}></img>
             <hr></hr>
           </div>
           <div className="storeFooter">
             <p className="foodName">{name}</p>
-            <img src={iconLike} onClick={heartLike}></img>
+            <img alt="Like" src={iconLike} onClick={heartLike}></img>
             <p className="heartTotal">{likeCount}</p>
           </div>
         </div>

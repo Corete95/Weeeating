@@ -34,12 +34,12 @@ export default function StoreCard2({
           >
             <p>Weeeating</p>
             <hr></hr>
-            <img src={image}></img>
+            <img alt="storeImg" src={image}></img>
             <hr></hr>
           </div>
           <div className="storeFooter">
             <p className="foodName">{name}</p>
-            <img src={iconLike} onClick={heartLike}></img>
+            <img alt="Like" src={iconLike} onClick={heartLike}></img>
             <p className="heartTotal">{likeCount}</p>
           </div>
         </div>

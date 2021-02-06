@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API } from "../config";
 import { useHistory } from "react-router-dom";
 import StoreCard from "./childComponents/StoreCard";
 import Slider from "react-slick";
+import axios from "axios";
 import KobbubakTheme from "../pages/childComponents/KobbubakTheme";
 import MetorTheme from "./childComponents/MetorTheme";
 import "./MainPage.scss";
@@ -22,14 +22,14 @@ export default function MainPage({ props }: any) {
   const [storeData, setStoreData] = useState([]);
   const history = useHistory();
   const like = "like";
+
   const rankingData = storeData.map((data: any, index: number) => ({
     ...data,
     top: RANKING[index].top
   }));
 
-  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
   useEffect(() => {
-    const alcohol = async () => {
+    const ranking = async () => {
       await axios
         .get(`${API}/store/list?sort=${like}`, {
           headers: {
@@ -37,11 +37,10 @@ export default function MainPage({ props }: any) {
           }
         })
         .then((res) => {
-          console.log("res", res);
           setStoreData(res.data.store_list.like);
         });
     };
-    alcohol();
+    ranking();
   }, []);
 
   // 백엔드와 맞추기위해 좋아요 로직 작업
@@ -61,7 +60,7 @@ export default function MainPage({ props }: any) {
   //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
   // };
 
-  const settings = {
+  const metorKobbubakSlick = {
     dots: true,
     infinite: true,
     speed: 1000,
@@ -72,7 +71,7 @@ export default function MainPage({ props }: any) {
     autoplaySpeed: 2000
   };
 
-  const setting = {
+  const rankingSlick = {
     dots: false,
     infinite: true,
     speed: 1000,
@@ -98,22 +97,40 @@ export default function MainPage({ props }: any) {
         ></img>
       </div>
     ),
-    className: "slides"
+    className: "slides",
+    responsive: [
+      {
+        breakpoint: 1023,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 375,
+        settings: {
+          slidesToShow: 1
+        }
+      }
+    ]
   };
 
-  // useEffect(() => {
-  //   axios.get(`${API}`).then((response) => {
-  //     setStoreData(response.data);
-  //   });
-  // }, []);
-  console.log(storeData);
   return (
     <>
       <div className="mainTop5">
-        <img className="erankingImg" src="./images/e_ranking.png"></img>
+        <img
+          className="erankingImg"
+          src="./images/e_ranking.png"
+          alt="랭킹TOP5"
+        ></img>
         <div className="rankingDiv">
           <div className="storeCardDiv">
-            <Slider {...setting}>
+            <Slider {...rankingSlick}>
               {rankingData?.map((store: any) => {
                 return (
                   <StoreCard
@@ -131,7 +148,7 @@ export default function MainPage({ props }: any) {
         </div>
         <div className="themList">
           <div className="themListDiv">
-            <Slider {...settings}>
+            <Slider {...metorKobbubakSlick}>
               <MetorTheme />
               <KobbubakTheme />
             </Slider>
@@ -148,7 +165,7 @@ export default function MainPage({ props }: any) {
                   <p>더 즐거워</p>
                 </div>
                 <div className="alcoholImg">
-                  <img src="./images/soju.png" />
+                  <img alt="메인소주" src="./images/soju.png" />
                 </div>
               </div>
               <div
