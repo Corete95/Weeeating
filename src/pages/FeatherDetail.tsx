@@ -7,17 +7,24 @@ import "./FeatherDetail.scss";
 export default function FeatherDetail() {
   const [featherFood, setFeatherFood] = useState([]);
   const feather = "feather";
+
   useEffect(() => {
-    axios
-      .get(`${API}/store/list?tag=${feather}`, {
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
-      })
-      .then((res) => {
-        console.log("res", res);
+    if (localStorage.getItem("token")) {
+      axios
+        .get(`${API}/store/list?tag=${feather}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log("res", res);
+          setFeatherFood(res.data.store_list.feather);
+        });
+    } else {
+      axios.get(`${API}/store/list?tag=${feather}`).then((res) => {
         setFeatherFood(res.data.store_list.feather);
       });
+    }
   }, []);
 
   return (

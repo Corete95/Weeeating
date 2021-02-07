@@ -9,7 +9,7 @@ const store = createStore(RootReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Routes />,
+    <Routes />
   </Provider>,
   document.getElementById("root")
 );

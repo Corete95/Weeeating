@@ -22,23 +22,35 @@ export default function MainPage({ props }: any) {
   const [storeData, setStoreData] = useState([]);
   const history = useHistory();
   const like = "like";
-
   const rankingData = storeData.map((data: any, index: number) => ({
     ...data,
     top: RANKING[index].top
   }));
-
+  const time = () => {
+    if (typeof localStorage !== "undefined") {
+      localStorage.getItem("token");
+    } else {
+      // localStorage not defined
+    }
+  };
+  
   useEffect(() => {
     const ranking = async () => {
-      await axios
-        .get(`${API}/store/list?sort=${like}`, {
-          headers: {
-            Authorization: localStorage.getItem("token")
-          }
-        })
-        .then((res) => {
+      if (localStorage.getItem("token")) {
+        await axios
+          .get(`${API}/store/list?sort=${like}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+          .then((res) => {
+            setStoreData(res.data.store_list.like);
+          });
+      } else {
+        await axios.get(`${API}/store/list?sort=${like}`).then((res) => {
           setStoreData(res.data.store_list.like);
         });
+      }
     };
     ranking();
   }, []);
@@ -71,7 +83,7 @@ export default function MainPage({ props }: any) {
     autoplaySpeed: 2000
   };
 
-  const rankingSlick = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 1000,
@@ -130,7 +142,7 @@ export default function MainPage({ props }: any) {
         ></img>
         <div className="rankingDiv">
           <div className="storeCardDiv">
-            <Slider {...rankingSlick}>
+            <Slider {...settings}>
               {rankingData?.map((store: any) => {
                 return (
                   <StoreCard

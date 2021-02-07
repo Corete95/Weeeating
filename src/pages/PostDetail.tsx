@@ -37,7 +37,7 @@ export default function PostDetail({ match }: any) {
   useEffect(() => {
     const fetchPosts = async () => {
       await axios
-        .get(`${API}/${match.params.id}`, {
+        .get(`${API}/board/${match.params.id}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -49,7 +49,7 @@ export default function PostDetail({ match }: any) {
         });
     };
     fetchPosts();
-  }, []);
+  }, [match.params.id]);
 
   const onChangeComment = (e: any) => {
     setContent(e.target.value);

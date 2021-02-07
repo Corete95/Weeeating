@@ -36,7 +36,6 @@ export default function StoreDetail(props: any) {
     ]
   });
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
-  console.log("currentComment", currentComment);
   const [address, setAddress] = useState("");
   const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
@@ -52,8 +51,16 @@ export default function StoreDetail(props: any) {
   useEffect(() => {
     axios
       .all([
-        axios.get(`${API}/store/detail/${props.match.params.id}`),
-        axios.get(`${API}/store/detail/${props.match.params.id}/comment`)
+        axios.get(`${API}/store/detail/${props.match.params.id}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        }),
+        axios.get(`${API}/store/detail/${props.match.params.id}/comment`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
       ])
       .then(
         axios.spread((res1, res2) => {
@@ -115,7 +122,11 @@ export default function StoreDetail(props: any) {
       like: !info.like
     });
     axios
-      .post(`${API}/store/like/${props.match.params.id}`)
+      .post(`${API}/store/like/${props.match.params.id}`, "data", {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
       .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
       .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     // setTimeout(
@@ -141,9 +152,9 @@ export default function StoreDetail(props: any) {
         .post(
           `${API}/store/detail/${props.match.params.id}/comment`,
           JSON.stringify({
-            header: { Authorization: localStorage.getItem("token") },
             comment: commentText.newComment
-          })
+          }),
+          { headers: { Authorization: localStorage.getItem("token") } }
         )
         .then((res) => {
           console.log(res);
@@ -165,9 +176,9 @@ export default function StoreDetail(props: any) {
         .patch(
           `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
           JSON.stringify({
-            header: { Authorization: localStorage.getItem("token") },
             comment: commentText.updatedComment.content
-          })
+          }),
+          { headers: { Authorization: localStorage.getItem("token") } }
         )
         .then((res) => {
           console.log(res);
@@ -184,7 +195,12 @@ export default function StoreDetail(props: any) {
       setDeleteModal(false);
       axios
         .delete(
-          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
+          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          }
         )
         .then((res) => {
           console.log(res);

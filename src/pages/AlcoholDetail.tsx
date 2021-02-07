@@ -40,15 +40,21 @@ export default function AlcoholDetail({ match, props }: any) {
   };
   // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
   useEffect(() => {
-    axios
-      .get(`${API}/store/list?tag=${alcohol}`, {
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
-      })
-      .then((res) => {
+    if (localStorage.getItem("token")) {
+      axios
+        .get(`${API}/store/list?tag=${alcohol}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          setAlcoholData(res.data.store_list);
+        });
+    } else {
+      axios.get(`${API}/store/list?tag=${alcohol}`).then((res) => {
         setAlcoholData(res.data.store_list);
       });
+    }
   }, []);
 
   // 백엔드와 맞추기위해 좋아요 로직 작업

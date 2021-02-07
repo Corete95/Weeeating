@@ -7,17 +7,24 @@ import "./StoreList.scss";
 export default function StoreList() {
   const [featherFood, setFeatherFood] = useState([]);
   const feather = "feather";
+
   useEffect(() => {
-    axios
-      .get(`${API}/store/list`, {
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
-      })
-      .then((res) => {
-        console.log("res", res);
+    if (localStorage.getItem("token")) {
+      axios
+        .get(`${API}/store/list`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log("res", res);
+          setFeatherFood(res.data.store_list);
+        });
+    } else {
+      axios.get(`${API}/store/list`).then((res) => {
         setFeatherFood(res.data.store_list);
       });
+    }
   }, []);
 
   return (
