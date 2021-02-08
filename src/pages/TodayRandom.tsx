@@ -7,10 +7,12 @@ import { API } from "../config";
 
 interface UserData {
   store: any;
+  clickedState: boolean;
 }
 
 export default function TodayRandom() {
   const [store, setStore] = useState<UserData | any>({});
+  const [clickedState, setClickedState] = useState<UserData | boolean>(false);
   const getRandomStore = () => {
     console.log("버튼 클릭됌");
     axios
@@ -18,6 +20,7 @@ export default function TodayRandom() {
       .then((res: any) => {
         console.log("res", res.data.store_list.random[0]);
         setStore(res.data.store_list.random[0]);
+        setClickedState(true);
       })
       .catch((err: any) => console.log("Catched errors!", err));
   };
@@ -38,32 +41,35 @@ export default function TodayRandom() {
       </DescSection>
       <RandomSection>
         <RandomComponent>
-          <Row>
-            <VerticalText>무얼먹을지</VerticalText>
-            <span onClick={getRandomStore}>
-              <img
-                width="350rem"
-                src="https://www.clickimagination.com/wp-content/uploads/2018/06/click-logo-01.png"
-              />
-            </span>
-            <VerticalText>고민이라면</VerticalText>
-          </Row>
-        </RandomComponent>
-        <RandomComponent>
-          <Row>
-            <VerticalText>여기로</VerticalText>
-            <StoreCard2
-              id={store.id}
-              image={store.image}
-              name={store.name}
-              likeCount={store.like_count}
-              likeState={store.like_state}
-            />{" "}
-            <VerticalText>가즈아</VerticalText>
-          </Row>
-          <div className="buttonSection">
-            <ReplayBtn>다시하기</ReplayBtn>
-          </div>
+          {!clickedState ? (
+            <Row>
+              <VerticalText>무얼먹을지</VerticalText>
+              <span onClick={getRandomStore}>
+                <img
+                  width="350rem"
+                  src="https://www.clickimagination.com/wp-content/uploads/2018/06/click-logo-01.png"
+                />
+              </span>
+              <VerticalText>고민이라면</VerticalText>
+            </Row>
+          ) : (
+            <>
+              <Row>
+                <VerticalText>여기로</VerticalText>
+                <StoreCard2
+                  id={store.id}
+                  image={store.image}
+                  name={store.name}
+                  likeCount={store.like_count}
+                  likeState={store.like_state}
+                />{" "}
+                <VerticalText>가즈아</VerticalText>
+              </Row>
+              <div className="buttonSection">
+                <ReplayBtn>다시하기</ReplayBtn>
+              </div>
+            </>
+          )}
         </RandomComponent>
       </RandomSection>
     </Container>
