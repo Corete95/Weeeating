@@ -71,7 +71,7 @@ export default function PostDetail({ match }: any) {
       ]);
       setContent("");
       axios
-        .post(`${API}/${match.params.id}/comment`, JSON.stringify(data), {
+        .post(`${API}/board/${match.params.id}/comment`, JSON.stringify(data), {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -95,12 +95,12 @@ export default function PostDetail({ match }: any) {
 
     axios
       .patch(
-        `${API}/${match.params.id}/${comment_id}`,
+        `${API}/board/${match.params.id}/${comment_id}`,
         JSON.stringify({
           // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
-          header: { Authorization: 1 },
           comment: commentText.updatedComment.content
-        })
+        }),
+        { headers: { Authorization: localStorage.getItem("token") } }
       )
       .then((res) => {
         console.log(res);
@@ -112,7 +112,7 @@ export default function PostDetail({ match }: any) {
   const deleteComment = (comment_id: any): void => {
     if (window.confirm("삭제?")) {
       axios
-        .delete(`${API}/${match.params.id}/${comment_id}`, {
+        .delete(`${API}/board/${match.params.id}/${comment_id}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -153,7 +153,7 @@ export default function PostDetail({ match }: any) {
       content: updatedPost
     };
 
-    axios.patch(`${API}/${match.params.id}`, JSON.stringify(data), {
+    axios.patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
       headers: {
         Authorization: localStorage.getItem("token")
       }
@@ -163,7 +163,7 @@ export default function PostDetail({ match }: any) {
   const deletePost = (): void => {
     if (window.confirm("삭제?")) {
       axios
-        .delete(`${API}/${match.params.id}`, {
+        .delete(`${API}/board/${match.params.id}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
@@ -176,7 +176,7 @@ export default function PostDetail({ match }: any) {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${API}?offset=${(pageNumber - 1) * 5}`, {
+      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }

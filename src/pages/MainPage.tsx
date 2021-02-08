@@ -10,6 +10,10 @@ import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+interface UserData {
+  storeData: any;
+}
+
 const RANKING = [
   { top: "TOP 1" },
   { top: "TOP 2" },
@@ -19,21 +23,14 @@ const RANKING = [
 ];
 
 export default function MainPage({ props }: any) {
-  const [storeData, setStoreData] = useState([]);
+  const [storeData, setStoreData] = useState<UserData | any>([]);
   const history = useHistory();
   const like = "like";
   const rankingData = storeData.map((data: any, index: number) => ({
     ...data,
     top: RANKING[index].top
   }));
-  const time = () => {
-    if (typeof localStorage !== "undefined") {
-      localStorage.getItem("token");
-    } else {
-      // localStorage not defined
-    }
-  };
-  
+
   useEffect(() => {
     const ranking = async () => {
       if (localStorage.getItem("token")) {
@@ -54,23 +51,41 @@ export default function MainPage({ props }: any) {
     };
     ranking();
   }, []);
+  console.log("storeData", storeData);
 
-  // 백엔드와 맞추기위해 좋아요 로직 작업
-  // const changeLikedState = () => {
-  //   setStoreData({
-  //     ...storeData,
-  //     like_count: Number(
-  //       storeData.like === false
-  //         ? storeData.like_count + 1
-  //         : storeData.like_count - 1
-  //     ),
-  //     like: !storeData.like
-  //   });
-  //   axios
-  //     .post(`${API}/store/like/${props.match.params.id}`)
-  //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
-  //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-  // };
+  // ...state,
+  // userDrugsInfo: state.userDrugsInfo?.map((oneInfo: any, idx: number) =>
+  //   oneInfo.id === action.id && idx === action.idx
+  //     ? { ...oneInfo, drug: { ...oneInfo.drug, name: action.payload } }
+  //     : oneInfo
+  // ),
+
+  const changeLikedState = (id: any) => {
+    setStoreData({
+      ...storeData
+      // like_count: storeData.map((data: any) => {
+      //   if(data.id === id){
+      //     if(data.like_state) {
+      //       ...data, like_count: data.like_count -1
+      //     } else {
+      //       ...data, like_count: data.like_count +1
+      //     }
+      //     } else {
+      //       data
+      //     }
+      //   }
+      // like_count: Number(
+      //   storeData.like === false
+      //     ? storeData.like_count + 1
+      //     : storeData.like_count - 1
+      // ),
+      // like_state: !storeData.like
+    });
+    axios
+      .post(`${API}/store/like/${props.match.params.id}`)
+      .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+      .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+  };
 
   const metorKobbubakSlick = {
     dots: true,
