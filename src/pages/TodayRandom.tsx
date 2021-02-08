@@ -13,16 +13,29 @@ interface UserData {
 export default function TodayRandom() {
   const [store, setStore] = useState<UserData | any>({});
   const [clickedState, setClickedState] = useState<UserData | boolean>(false);
+
   const getRandomStore = () => {
     console.log("버튼 클릭됌");
-    axios
-      .get(`${API}/store/list?sort=random`)
-      .then((res: any) => {
-        console.log("res", res.data.store_list.random[0]);
-        setStore(res.data.store_list.random[0]);
-        setClickedState(true);
-      })
-      .catch((err: any) => console.log("Catched errors!", err));
+    if (localStorage.getItem("setRandomStore")) {
+    } else {
+      axios
+        .get(`${API}/store/list?sort=random`)
+        .then((res: any) => {
+          console.log("res", res.data.store_list.random[0]);
+          setStore(res.data.store_list.random[0]);
+          setClickedState(true);
+          localStorage.setItem("setRandomStore", res.data.store_list.random[0]);
+        })
+        .catch((err: any) => console.log("Catched errors!", err));
+    }
+  };
+
+  const getAgainRandomStore = () => {
+    if (localStorage.getItem("setRandomStore")) {
+      console.log("다시하기 같은 거 없어용~~~ 첫번째 것이 찐!");
+    } else {
+      getRandomStore();
+    }
   };
 
   return (
@@ -66,7 +79,7 @@ export default function TodayRandom() {
                 <VerticalText>가즈아</VerticalText>
               </Row>
               <div className="buttonSection">
-                <ReplayBtn>다시하기</ReplayBtn>
+                <ReplayBtn onClick={getAgainRandomStore}>다시하기</ReplayBtn>
               </div>
             </>
           )}
