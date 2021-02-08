@@ -8,6 +8,7 @@ interface Props {
   name: string;
   likeCount: number;
   likeState: boolean;
+  changeLikedState: (id: any) => void;
 }
 
 export default function StoreCard({
@@ -16,7 +17,8 @@ export default function StoreCard({
   image,
   name,
   likeCount,
-  likeState
+  likeState,
+  changeLikedState
 }: Props) {
   const [fullLike, setFullLike] = useState<boolean>(true);
   const history = useHistory();
@@ -24,7 +26,7 @@ export default function StoreCard({
   const heartLike = () => {
     setFullLike(!fullLike);
   };
-
+  console.log("state", likeState);
   const iconLike = fullLike ? "./images/heart.png" : "./images/fullheart.png";
   return (
     <>
@@ -49,7 +51,18 @@ export default function StoreCard({
           </div>
           <div className="storeFooter">
             <p className="foodName">{name}</p>
-            <img alt="Like" src={iconLike} onClick={heartLike}></img>
+            <span onClick={() => changeLikedState(id)}>
+              {likeState ? (
+                <img alt="Like" src="./images/fullheart.png"></img>
+              ) : (
+                <img alt="Like" src="./images/heart.png"></img>
+              )}
+            </span>
+            {/* <img
+              alt="Like"
+              src={iconLike}
+              onClick={() => changeLikedState(id)}
+            ></img> */}
             <p className="heartTotal">{likeCount}</p>
           </div>
         </div>

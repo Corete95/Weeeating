@@ -22,7 +22,7 @@ const RANKING = [
   { top: "TOP 5" }
 ];
 
-export default function MainPage({ props }: any) {
+export default function MainPage({ match }: any) {
   const [storeData, setStoreData] = useState<UserData | any>([]);
   const history = useHistory();
   const like = "like";
@@ -53,38 +53,40 @@ export default function MainPage({ props }: any) {
   }, []);
   console.log("storeData", storeData);
 
-  // ...state,
-  // userDrugsInfo: state.userDrugsInfo?.map((oneInfo: any, idx: number) =>
-  //   oneInfo.id === action.id && idx === action.idx
-  //     ? { ...oneInfo, drug: { ...oneInfo.drug, name: action.payload } }
-  //     : oneInfo
-  // ),
-
   const changeLikedState = (id: any) => {
-    setStoreData({
-      ...storeData
-      // like_count: storeData.map((data: any) => {
-      //   if(data.id === id){
-      //     if(data.like_state) {
-      //       ...data, like_count: data.like_count -1
-      //     } else {
-      //       ...data, like_count: data.like_count +1
-      //     }
-      //     } else {
-      //       data
-      //     }
-      //   }
-      // like_count: Number(
-      //   storeData.like === false
-      //     ? storeData.like_count + 1
-      //     : storeData.like_count - 1
-      // ),
-      // like_state: !storeData.like
-    });
-    axios
-      .post(`${API}/store/like/${props.match.params.id}`)
-      .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
-      .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    if (localStorage.getItem("token")) {
+      setStoreData(
+        storeData?.map((data: any) => {
+          if (data.id === id) {
+            if (data.like_state) {
+              return {
+                ...data,
+                like_state: !data.like_state,
+                like_count: data.like_count - 1
+              };
+            } else {
+              return {
+                ...data,
+                like_state: !data.like_state,
+                like_count: data.like_count + 1
+              };
+            }
+          } else {
+            return data;
+          }
+        })
+      );
+      axios
+        .post(`${API}/store/like/${id}`, "data", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    } else {
+      alert("로그인을 해주세요!");
+    }
   };
 
   const metorKobbubakSlick = {
@@ -167,6 +169,7 @@ export default function MainPage({ props }: any) {
                     image={store.image}
                     likeCount={store.like_count}
                     likeState={store.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
