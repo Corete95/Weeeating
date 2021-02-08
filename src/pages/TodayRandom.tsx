@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { mixin } from "../styles";
 import StoreCard2 from "./childComponents/StoreCard2";
+import axios from "axios";
+import { API } from "../config";
+
+interface UserData {
+  store: any;
+}
 
 export default function TodayRandom() {
+  const [store, setStore] = useState<UserData | any>({});
+  const getRandomStore = () => {
+    console.log("버튼 클릭됌");
+    axios
+      .get(`${API}/store/list?sort=random`)
+      .then((res: any) => {
+        console.log("res", res.data.store_list.random[0]);
+        setStore(res.data.store_list.random[0]);
+      })
+      .catch((err: any) => console.log("Catched errors!", err));
+  };
+
   return (
     <Container>
       <DescSection>
@@ -22,10 +40,12 @@ export default function TodayRandom() {
         <RandomComponent>
           <Row>
             <VerticalText>무얼먹을지</VerticalText>
-            <img
-              width="350rem"
-              src="https://www.clickimagination.com/wp-content/uploads/2018/06/click-logo-01.png"
-            />
+            <span onClick={getRandomStore}>
+              <img
+                width="350rem"
+                src="https://www.clickimagination.com/wp-content/uploads/2018/06/click-logo-01.png"
+              />
+            </span>
             <VerticalText>고민이라면</VerticalText>
           </Row>
         </RandomComponent>
@@ -33,11 +53,11 @@ export default function TodayRandom() {
           <Row>
             <VerticalText>여기로</VerticalText>
             <StoreCard2
-              id={1}
-              image={`https://images.unsplash.com/photo-1550950158-d0d960dff51b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80`}
-              name={`샌프란시스코 버거`}
-              likeCount={100}
-              likeState={true}
+              id={store.id}
+              image={store.image}
+              name={store.name}
+              likeCount={store.like_count}
+              likeState={store.like_state}
             />{" "}
             <VerticalText>가즈아</VerticalText>
           </Row>
