@@ -34,7 +34,8 @@ export default function StoreCard({
             className="storeHeader"
             onClick={() => history.push(`/store-detail/${id}`)}
           >
-            <p>Weeeating</p>
+            <img className="test" src="./images/test.png"></img>
+            {/* <p>Weeeating</p> */}
             <hr></hr>
             <img alt="storeImg" src={image}></img>
             <hr></hr>

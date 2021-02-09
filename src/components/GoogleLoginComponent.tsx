@@ -26,17 +26,20 @@ export default function GoogleLoginComponent() {
 
   const responseGoogle = (response: any) => {
     console.log("구글로그인");
-    console.log(response);
+    console.log("response", response);
     const { accessToken } = response;
 
     axios
-      .get(`${API}/user/login/social`, {
+      .post(`${API}/user/login/social`, "data", {
         headers: {
           Authorization: accessToken
         }
       })
       .then((res: any) => {
-        localStorage.setItem("token", res.access_token);
+        console.log("res", res);
+        localStorage.setItem("token", res.data.Authorization);
+        localStorage.setItem("user_id", res.data.user_id);
+        localStorage.setItem("isAuthenticated", "true");
         alert("구글 로그인 되었습니다");
 
         if (res.data.check === "FIRST VISIT") {
@@ -56,9 +59,9 @@ export default function GoogleLoginComponent() {
   return (
     <Container>
       <GoogleLogin
-        render={(renderProps) => (
-          <span className="googleBtn">구글로 로그인하기</span>
-        )}
+        // render={(renderProps) => (
+        //   <span className="googleBtn">구글로 로그인하기</span>
+        // )}
         className="googleLogin"
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
         buttonText="구글로 로그인하기"

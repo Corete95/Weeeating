@@ -269,8 +269,8 @@ export default function StoreDetail(props: any) {
           <Desc>
             <div className="deli">
               {info.store_info[0]?.delivery
-                ? "배달 가능 맛집 🛵"
-                : "배달 불가 맛집 🏃🏻‍♂️"}
+                ? "⭕ 배달 가능 맛집 ⭕"
+                : "❌ 배달 불가 맛집 ❌"}
             </div>
             <div className="desc">{info.store_info[0]?.description}</div>
           </Desc>

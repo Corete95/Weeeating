@@ -96,7 +96,7 @@ export default function MainPage({ match }: any) {
     slidesToShow: 1,
     slidesToScroll: 1,
     focusOnSelect: true,
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 2000
   };
 
@@ -107,6 +107,7 @@ export default function MainPage({ match }: any) {
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true,
+    centerPadding: "47px",
     centerMode: true,
     nextArrow: (
       <div>

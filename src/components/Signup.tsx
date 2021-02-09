@@ -32,8 +32,11 @@ export default function Signup() {
         .post(`${API}/user/signup`, JSON.stringify({ ...body }))
         .then((res) => {
           console.log("회원가입 통신 잘 됐음!", res);
-          if (res.data.MESSAGE === "SUCCESS") {
+          if (res.data.MESSAGE === "USER_SIGNUP_SUCCESS") {
             alert("회원가입이 완료되었습니다. :-)");
+            localStorage.setItem("token", res.data.Authorization);
+            localStorage.isAuthenticated = true;
+            window.location.reload();
           } else {
             alert("회원가입이 완료되지 않았습니다.");
           }
