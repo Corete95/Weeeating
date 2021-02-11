@@ -13,16 +13,19 @@ export default function PostWriting() {
   const [content, setContent] = useState("");
   const history = useHistory();
 
+  const contentResult = content.replace(/(<([^>]+)>)/gi, "")
+
   let data = {
     title: title,
-    content: content
+    content: contentResult
   };
 
   const uploadData = () => {
     axios
-      .post(`${API}`, JSON.stringify(data), {
+      .post(`${API}/board`, JSON.stringify(data), {
         headers: {
-          "Content-Type": `application/json`
+          "Content-Type": `application/json`,
+          Authorization: localStorage.getItem("token")
         }
       })
       .then((res) => {
@@ -30,10 +33,11 @@ export default function PostWriting() {
       });
   };
 
-  const createPost = (e: any): any => {
-    setContent(e.target.value);
+  const createPost = (value:string) => {    
+      setContent(value);
   };
-
+  
+  console.log(contentResult)
   return (
     <>
       <Container>
@@ -51,19 +55,10 @@ export default function PostWriting() {
           </TitleContainer>
           <ContentContainer>
             <TitleText>내용</TitleText>
-            <Content
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="내용을 입력하세요."
-            ></Content>
-            {/*             <QuillContainer>
+            <QuillContainer>
               <ReactQuill value={content} onChange={createPost} />
-            </QuillContainer> */}
+            </QuillContainer>
           </ContentContainer>
-          <TitleContainer>
-            <TitleText>첨부파일</TitleText>
-            <TitleInput></TitleInput>
-          </TitleContainer>
           <Button onClick={uploadData}>
             <Link to="/post-writing">작성</Link>
           </Button>
@@ -87,12 +82,14 @@ const InnerContainer = styled.div`
   padding-top: 2rem;
   width: 45.2rem;
   border: 4px solid ${COLORS.mainYellow};
+  height:30rem;
 `;
 
 const Img = styled.img`
   position: relative;
   top: 1rem;
   margin: 5rem 3.3rem 0 0;
+  width:49rem;
 `;
 
 const ImgText = styled.p`
@@ -122,11 +119,7 @@ const TitleInput = styled.input`
 
 const ContentContainer = styled.div`
   margin-top: 2rem;
-`;
-
-const Content = styled.input`
-  width: 36rem;
-  height: 20rem;
+  width:35rem;
 `;
 
 const Button = styled.button`
@@ -136,6 +129,8 @@ const Button = styled.button`
 `;
 
 const QuillContainer = styled.div`
+  height: 15rem;
+
   .quill {
     height: 10rem;
   }
