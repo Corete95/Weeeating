@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "image": "https://wecode.co.kr/static/media/kim-yeri.e5766bea.png",
+    "name": "김성태",
+    "position": "Backend Developer",
+    "store_id": 1,
+    "store": "의령전원",
+    "desc": "모듬생선구이, 생선조림 가격도 괜찮고 맛있어요! 양이 많으니 주말 점심에 가서 느긋하게 드세요!!"
+  },
+  {
+    "id": 2,
+    "image": "https://wecode.co.kr/static/media/yang.0aac1edb.png",
+    "name": "김예진",
+    "position": "Backend Developer",
+    "store_id": 40,
+    "store": "신동궁감자탕",
+    "desc": "뼈찜도 맛있고 감자탕도 맛있고 소맥과 소주가 호로로로로로록 들어가는 맛! 맵찔이라 뼈찜은 쪼꼼 매운데 쓰읍쓰읍하면서 다 먹는 맛!!!"
+  },
+  {
+    "id": 3,
+    "image": "https://wecode.co.kr/static/media/son.1887ee25.png",
+    "name": "김정현",
+    "position": "Frontend Developer",
+    "store_id": 41,
+    "store": "88노가리",
+    "desc": "혀를 사로잡는 맛있는 음식과 착한가격의 조화!! 여러가지 술이 있는 술탱크도 있어 코드에 지친 몸을 하루쯤 취하게 해줄수 있는...천국같은곳....."
+  },
+  {
+    "id": 4,
+    "image": "https://wecode.co.kr/static/media/lee-so.39e2a003.png",
+    "name": "백은진",
+    "position": "Frontend Developer",
+    "store_id": 58,
+    "store": "폴리스피자",
+    "desc": "바삭한 도우에 파마산 치즈랑 크러쉬드페퍼 뿌려 먹으면 을매나 맛있게요~ 시콤매콤한 맛의 특별한 핫윙도 좋고, 파스타랑 샐러드도 짱이에요!"
+  },
+  {
+    "id": 5,
+    "image": "https://wecode.co.kr/static/media/gwan.c332a03c.png",
+    "name": "신은선",
+    "position": "Frontend Developer",
+    "store_id": 32,
+    "store": "호천당",
+    "desc": "맛있는 돈까스가 먹고 싶을 때 가면 좋은 집! 모듬카츠와 치즈카츠를 추천합니다. 식사시간엔 서두르지 않으면 줄서야 할 수 있으니 서두르세요!!!"
+  },
+  {
+    "id": 6,
+    "image": "https://wecode.co.kr/static/media/park.2efd61a7.png",
+    "name": "전민승",
+    "position": "Frontend Developer",
+    "store_id": 4,
+    "store": "잇쇼우",
+    "desc": "존맛탱구리~~"
+  },
+  {
+    "id": 7,
+    "image": "https://wecode.co.kr/static/media/taeck.283abc8b.png",
+    "name": "허덕형",
+    "position": "Frontend Developer",
+    "store_id": 13,
+    "store": "꺼벙이",
+    "desc": "저렴한 맛, 한 달 뒤 식비를 돌아보면... 자연스레 이유를 알게 될 것이다."
+  },
+  {
+    "id": 8,
+    "image": "https://wecode.co.kr/static/media/min.cfcc09ee.png",
+    "name": "황채영",
+    "position": "Backend Developer",
+    "store_id": 51,
+    "store": "싸리골빈대떡파전",
+    "desc": "막걸리가 끝없이 들어가서 담날 삭제할 각오를 하고 가야하는 전집"
+  }
+]

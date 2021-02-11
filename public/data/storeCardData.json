@@ -1,0 +1,37 @@
+[
+  {
+    "id": 0,
+    "image": "./images/food1.jpeg",
+    "title": "소고기 존맛탱",
+    "heart": true,
+    "heart-count": 15
+  },
+  {
+    "id": 1,
+    "image": "./images/food1.jpeg",
+    "title": "소고기 존맛탱1",
+    "heart": true,
+    "heart-count": 4
+  },
+  {
+    "id": 2,
+    "image": "./images/food1.jpeg",
+    "title": "소고기 존맛탱2",
+    "heart": true,
+    "heart-count": 8
+  },
+  {
+    "id": 3,
+    "image": "./images/food1.jpeg",
+    "title": "소고기 존맛탱3",
+    "heart": true,
+    "heart-count": 12
+  },
+  {
+    "id": 4,
+    "image": "./images/food1.jpeg",
+    "title": "소고기 존맛탱4",
+    "heart": true,
+    "heart-count": 1
+  }
+]
