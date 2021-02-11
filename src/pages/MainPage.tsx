@@ -1,14 +1,18 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API } from "../config";
 import { useHistory } from "react-router-dom";
 import StoreCard from "./childComponents/StoreCard";
 import Slider from "react-slick";
+import axios from "axios";
 import KobbubakTheme from "../pages/childComponents/KobbubakTheme";
 import MetorTheme from "./childComponents/MetorTheme";
 import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
+interface UserData {
+  storeData: any;
+}
 
 const RANKING = [
   { top: "TOP 1" },
@@ -18,8 +22,8 @@ const RANKING = [
   { top: "TOP 5" }
 ];
 
-export default function MainPage({ props }: any) {
-  const [storeData, setStoreData] = useState([]);
+export default function MainPage({ match }: any) {
+  const [storeData, setStoreData] = useState<UserData | any>([]);
   const history = useHistory();
   const like = "like";
   const rankingData = storeData.map((data: any, index: number) => ({
@@ -27,58 +31,83 @@ export default function MainPage({ props }: any) {
     top: RANKING[index].top
   }));
 
-  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
   useEffect(() => {
-    const alcohol = async () => {
-      await axios
-        .get(`${API}/store/list?sort=${like}`, {
+    const ranking = async () => {
+      if (localStorage.getItem("token")) {
+        await axios
+          .get(`${API}/store/list?sort=${like}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+          .then((res) => {
+            setStoreData(res.data.store_list.like);
+          });
+      } else {
+        await axios.get(`${API}/store/list?sort=${like}`).then((res) => {
+          setStoreData(res.data.store_list.like);
+        });
+      }
+    };
+    ranking();
+  }, []);
+  console.log("storeData", storeData);
+
+  const changeLikedState = (id: any) => {
+    if (localStorage.getItem("token")) {
+      setStoreData(
+        storeData?.map((data: any) => {
+          if (data.id === id) {
+            if (data.like_state) {
+              return {
+                ...data,
+                like_state: !data.like_state,
+                like_count: data.like_count - 1
+              };
+            } else {
+              return {
+                ...data,
+                like_state: !data.like_state,
+                like_count: data.like_count + 1
+              };
+            }
+          } else {
+            return data;
+          }
+        })
+      );
+      axios
+        .post(`${API}/store/like/${id}`, "data", {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
-        .then((res) => {
-          console.log("res", res);
-          setStoreData(res.data.store_list.like);
-        });
-    };
-    alcohol();
-  }, []);
+        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    } else {
+      alert("로그인을 해주세요!");
+    }
+  };
 
-  // 백엔드와 맞추기위해 좋아요 로직 작업
-  // const changeLikedState = () => {
-  //   setStoreData({
-  //     ...storeData,
-  //     like_count: Number(
-  //       storeData.like === false
-  //         ? storeData.like_count + 1
-  //         : storeData.like_count - 1
-  //     ),
-  //     like: !storeData.like
-  //   });
-  //   axios
-  //     .post(`${API}/store/like/${props.match.params.id}`)
-  //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
-  //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-  // };
-
-  const settings = {
+  const metorKobbubakSlick = {
     dots: true,
     infinite: true,
     speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
     focusOnSelect: true,
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 2000
   };
 
-  const setting = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 1000,
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true,
+    centerPadding: "47px",
     centerMode: true,
     nextArrow: (
       <div>
@@ -98,22 +127,40 @@ export default function MainPage({ props }: any) {
         ></img>
       </div>
     ),
-    className: "slides"
+    className: "slides",
+    responsive: [
+      {
+        breakpoint: 1023,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 375,
+        settings: {
+          slidesToShow: 1
+        }
+      }
+    ]
   };
 
-  // useEffect(() => {
-  //   axios.get(`${API}`).then((response) => {
-  //     setStoreData(response.data);
-  //   });
-  // }, []);
-  console.log(storeData);
   return (
     <>
       <div className="mainTop5">
-        <img className="erankingImg" src="./images/e_ranking.png"></img>
+        <img
+          className="erankingImg"
+          src="./images/e_ranking.png"
+          alt="랭킹TOP5"
+        ></img>
         <div className="rankingDiv">
           <div className="storeCardDiv">
-            <Slider {...setting}>
+            <Slider {...settings}>
               {rankingData?.map((store: any) => {
                 return (
                   <StoreCard
@@ -123,6 +170,7 @@ export default function MainPage({ props }: any) {
                     image={store.image}
                     likeCount={store.like_count}
                     likeState={store.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
@@ -131,7 +179,7 @@ export default function MainPage({ props }: any) {
         </div>
         <div className="themList">
           <div className="themListDiv">
-            <Slider {...settings}>
+            <Slider {...metorKobbubakSlick}>
               <MetorTheme />
               <KobbubakTheme />
             </Slider>
@@ -148,7 +196,7 @@ export default function MainPage({ props }: any) {
                   <p>더 즐거워</p>
                 </div>
                 <div className="alcoholImg">
-                  <img src="./images/soju.png" />
+                  <img alt="메인소주" src="./images/soju.png" />
                 </div>
               </div>
               <div

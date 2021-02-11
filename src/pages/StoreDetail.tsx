@@ -36,7 +36,6 @@ export default function StoreDetail(props: any) {
     ]
   });
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
-  console.log("currentComment", currentComment);
   const [address, setAddress] = useState("");
   const [items, setItems] = useState<UserData | any[]>([]);
   const [like, setLike] = useState(false);
@@ -50,21 +49,45 @@ export default function StoreDetail(props: any) {
   // const userVerified = info.user.id === localStorage.getItem.user.id;
 
   useEffect(() => {
-    axios
-      .all([
-        axios.get(`${API}/store/detail/${props.match.params.id}`),
-        axios.get(`${API}/store/detail/${props.match.params.id}/comment`)
-      ])
-      .then(
-        axios.spread((res1, res2) => {
-          console.log("res1", res1);
-          setInfo(res1.data);
-          setAddress(res1.data.store_info[0].address);
-          setCurrentComment(res2.data.comment_list);
-          console.log("res2.data.comment_list", res2.data.comment_list);
-        })
-      )
-      .catch((err) => console.log("Catched erros!! >>>", err));
+    if (localStorage.getItem("token")) {
+      axios
+        .all([
+          axios.get(`${API}/store/detail/${props.match.params.id}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          }),
+          axios.get(`${API}/store/detail/${props.match.params.id}/comment`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            console.log("res1", res1);
+            setInfo(res1.data);
+            setAddress(res1.data.store_info[0].address);
+            setCurrentComment(res2.data.comment_list);
+            console.log("res2.data.comment_list", res2.data.comment_list);
+          })
+        );
+    } else {
+      axios
+        .all([
+          axios.get(`${API}/store/detail/${props.match.params.id}`),
+          axios.get(`${API}/store/detail/${props.match.params.id}/comment`)
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            console.log("res1", res1);
+            setInfo(res1.data);
+            setAddress(res1.data.store_info[0].address);
+            setCurrentComment(res2.data.comment_list);
+            console.log("res2.data.comment_list", res2.data.comment_list);
+          })
+        );
+    }
   }, [props.match.params.id]);
 
   useEffect(() => {
@@ -107,23 +130,31 @@ export default function StoreDetail(props: any) {
   }, [info]);
 
   const changeLikedState = () => {
-    setInfo({
-      ...info,
-      like_count: Number(
-        info.like === false ? info.like_count + 1 : info.like_count - 1
-      ),
-      like: !info.like
-    });
-    axios
-      .post(`${API}/store/like/${props.match.params.id}`)
-      .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
-      .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-    // setTimeout(
-    //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
-    //   axios.patch(`API${}`)
-    //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
-    //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
-    // , 1000)
+    if (localStorage.getItem("token")) {
+      setInfo({
+        ...info,
+        like_count: Number(
+          info.like === false ? info.like_count + 1 : info.like_count - 1
+        ),
+        like: !info.like
+      });
+      axios
+        .post(`${API}/store/like/${props.match.params.id}`, "data", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+      // setTimeout(
+      //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
+      //   axios.patch(`API${}`)
+      //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
+      //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
+      // , 1000)
+    } else {
+      alert("로그인을 해주세요!");
+    }
   };
 
   const submitChangedComment = (crud: string, commentId: number) => {
@@ -141,9 +172,9 @@ export default function StoreDetail(props: any) {
         .post(
           `${API}/store/detail/${props.match.params.id}/comment`,
           JSON.stringify({
-            header: { Authorization: localStorage.getItem("token") },
             comment: commentText.newComment
-          })
+          }),
+          { headers: { Authorization: localStorage.getItem("token") } }
         )
         .then((res) => {
           console.log(res);
@@ -165,9 +196,9 @@ export default function StoreDetail(props: any) {
         .patch(
           `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
           JSON.stringify({
-            header: { Authorization: localStorage.getItem("token") },
             comment: commentText.updatedComment.content
-          })
+          }),
+          { headers: { Authorization: localStorage.getItem("token") } }
         )
         .then((res) => {
           console.log(res);
@@ -184,7 +215,12 @@ export default function StoreDetail(props: any) {
       setDeleteModal(false);
       axios
         .delete(
-          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`
+          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          }
         )
         .then((res) => {
           console.log(res);
@@ -233,8 +269,8 @@ export default function StoreDetail(props: any) {
           <Desc>
             <div className="deli">
               {info.store_info[0]?.delivery
-                ? "배달 가능 맛집 🛵"
-                : "배달 불가 맛집 🏃🏻‍♂️"}
+                ? "⭕ 배달 가능 맛집 ⭕"
+                : "❌ 배달 불가 맛집 ❌"}
             </div>
             <div className="desc">{info.store_info[0]?.description}</div>
           </Desc>

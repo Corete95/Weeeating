@@ -50,7 +50,7 @@ export default function PostDetail({ match }: any) {
         });
     };
     fetchPosts();
-  }, []);
+  }, [match.params.id]);
 
   const onChangeComment = (e: any) => {
     setComment(e.target.value);
@@ -99,9 +99,9 @@ export default function PostDetail({ match }: any) {
         `${API}/board/${match.params.id}/${comment_id}`,
         JSON.stringify({
           // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
-          header: { Authorization: 1 },
-          comment: commentText.updatedComment.comment
-        })
+          comment: commentText.updatedComment.content
+        }),
+        { headers: { Authorization: localStorage.getItem("token") } }
       )
       .then((res) => {
         console.log(res);
@@ -184,7 +184,7 @@ export default function PostDetail({ match }: any) {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${API}?offset=${(pageNumber - 1) * 5}`, {
+      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }

@@ -24,8 +24,8 @@ export default function PostWriting() {
     axios
       .post(`${API}/board`, JSON.stringify(data), {
         headers: {
-          "Content-Type": `application/json`,
-          Authorization: localStorage.getItem("token")
+          Authorization: localStorage.getItem("token"),
+          "Content-Type": `application/json`
         }
       })
       .then((res) => {
