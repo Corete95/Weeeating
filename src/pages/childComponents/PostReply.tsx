@@ -31,11 +31,10 @@ export default function PostReply({
         }) => (
           <div>
             <li>{comment.comment_writer}</li>
-            <Bar>|</Bar>
+            {/* <Bar>|</Bar> */}
             <li>{comment.comment_content}</li>
             <li>({comment.comment_created_at})</li>
             <Button onClick={() => clickEdit(comment)}>수정</Button>
-            {console.log("댓글삭제", comment)}
             <Button onClick={() => deleteComment(comment.comment_id)}>
               삭제
             </Button>
@@ -47,10 +46,11 @@ export default function PostReply({
 }
 
 const ReplyContainer = styled.div`
-  width: 720px;
+  width: 35rem;
 
   div {
     display: flex;
+    align-items: center;
     border-bottom: 1px solid black;
 
     li {
