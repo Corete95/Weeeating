@@ -8,6 +8,7 @@ interface Props {
   name: string;
   likeCount: number;
   likeState: boolean;
+  changeLikedState: (id: any) => void;
 }
 
 export default function StoreCard({
@@ -16,7 +17,8 @@ export default function StoreCard({
   image,
   name,
   likeCount,
-  likeState
+  likeState,
+  changeLikedState
 }: Props) {
   const [fullLike, setFullLike] = useState<boolean>(true);
   const history = useHistory();
@@ -24,13 +26,17 @@ export default function StoreCard({
   const heartLike = () => {
     setFullLike(!fullLike);
   };
-
+  console.log("state", likeState);
   const iconLike = fullLike ? "./images/heart.png" : "./images/fullheart.png";
   return (
     <>
       <div className="storeCard">
         <div className="ranking">
-          <img className="iconCrown" src="./images/crown.png"></img>
+          <img
+            alt="CrownIcon"
+            className="iconCrown"
+            src="./images/crown.png"
+          ></img>
           <p>{top}</p>
         </div>
         <div className="rankingComponents">
@@ -40,12 +46,23 @@ export default function StoreCard({
           >
             <p>Weeeating</p>
             <hr></hr>
-            <img src={image}></img>
+            <img alt="storeImg" src={image}></img>
             <hr></hr>
           </div>
           <div className="storeFooter">
             <p className="foodName">{name}</p>
-            <img src={iconLike} onClick={heartLike}></img>
+            <span onClick={() => changeLikedState(id)}>
+              {likeState ? (
+                <img alt="Like" src="./images/fullheart.png"></img>
+              ) : (
+                <img alt="Like" src="./images/heart.png"></img>
+              )}
+            </span>
+            {/* <img
+              alt="Like"
+              src={iconLike}
+              onClick={() => changeLikedState(id)}
+            ></img> */}
             <p className="heartTotal">{likeCount}</p>
           </div>
         </div>
