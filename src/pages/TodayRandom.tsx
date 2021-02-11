@@ -88,8 +88,12 @@ export default function TodayRandom() {
   };
 
   useEffect(() => {
-    getRandomStore();
-  }, [getRandomStore]);
+    const store = getCookie("randomStore");
+    if (store) {
+      setStore(JSON.parse(store));
+      setClickedState(true);
+    }
+  }, []);
 
   return (
     <Container>
