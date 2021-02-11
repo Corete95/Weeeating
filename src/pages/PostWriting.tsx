@@ -20,8 +20,9 @@ export default function PostWriting() {
 
   const uploadData = () => {
     axios
-      .post(`${API}`, JSON.stringify(data), {
+      .post(`${API}/board`, JSON.stringify(data), {
         headers: {
+          Authorization: localStorage.getItem("token"),
           "Content-Type": `application/json`
         }
       })

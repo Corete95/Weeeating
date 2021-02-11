@@ -7,9 +7,11 @@ import "./AlcoholDetail.scss";
 import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+interface UserData {
+  alcoholData: any;
+}
 export default function AlcoholDetail({ match, props }: any) {
-  const [alcoholData, setAlcoholData] = useState<any>([]);
+  const [alcoholData, setAlcoholData] = useState<UserData | any>([]);
   const alcohol = "alcohol";
   const setting = {
     dots: false,
@@ -40,38 +42,59 @@ export default function AlcoholDetail({ match, props }: any) {
   };
   // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
   useEffect(() => {
-    axios
-      .get(`${API}/store/list?tag=${alcohol}`, {
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
-      })
-      .then((res) => {
+    if (localStorage.getItem("token")) {
+      axios
+        .get(`${API}/store/list?tag=${alcohol}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log("123", res.data.store_list);
+          setAlcoholData(res.data.store_list);
+        });
+    } else {
+      axios.get(`${API}/store/list?tag=${alcohol}`).then((res) => {
         setAlcoholData(res.data.store_list);
       });
+    }
   }, []);
 
-  // 백엔드와 맞추기위해 좋아요 로직 작업
-  // const changeLikedState = () => {
-  //   setAlcoholData({
-  //     ...info,
-  //     like_count: Number(
-  //       info.like === false ? info.like_count + 1 : info.like_count - 1
-  //     ),
-  //     like: !info.like
-  //   });
-  //   axios
-  //     .post(`${API}/store/like/${props.match.params.id}`)
-  //     .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
-  //     .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-
-  // };
-
-  // useEffect(() => {
-  //   axios.get(`${API}`).then((response) => {
-  //     setAlcoholData(response.data);
-  //   });
-  // }, []);
+  const changeLikedState = (id: any) => {
+    if (localStorage.getItem("token")) {
+      setAlcoholData(
+        alcoholData?.map((data: any) => {
+          if (data.id === id) {
+            if (data.like_state) {
+              return {
+                ...data,
+                like_state: !data.like_state,
+                like_count: data.like_count - 1
+              };
+            } else {
+              return {
+                ...data,
+                like_state: !data.like_state,
+                like_count: data.like_count + 1
+              };
+            }
+          } else {
+            return data;
+          }
+        })
+      );
+      axios
+        .post(`${API}/store/like/${id}`, "data", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    } else {
+      alert("로그인을 해주세요!");
+    }
+  };
   console.log(alcoholData);
   console.log(alcoholData.beer);
   return (
@@ -99,6 +122,7 @@ export default function AlcoholDetail({ match, props }: any) {
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
@@ -122,6 +146,7 @@ export default function AlcoholDetail({ match, props }: any) {
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
@@ -145,6 +170,7 @@ export default function AlcoholDetail({ match, props }: any) {
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
