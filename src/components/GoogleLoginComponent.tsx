@@ -40,20 +40,21 @@ export default function GoogleLoginComponent() {
         localStorage.setItem("token", res.data.Authorization);
         localStorage.setItem("user_id", res.data.user_id);
         localStorage.setItem("isAuthenticated", "true");
-        alert("구글 로그인 되었습니다");
 
-        // true일 때 회원가입 모달 창을 띄우면서 (INITIAL_STATE.first === true)면, 다른 API 주소로 통신하게끔 변경하기
-        if (res.data.first_visit === true) {
+        if (res.data.FRIST_VISIT === true) {
+          alert("구글 첫 로그인입니다. 회원가입을 해주세요.");
           dispatch(setFirstLogin(true));
           dispatch(setSignupActive(true));
           dispatch(setLoginActive(false));
         } else {
+          alert("구글 로그인 되었습니다.");
           history.push("/");
+          dispatch(setLoginActive(false));
         }
       })
       .catch((err: any) => {
         console.log("ERRORS! ===>", err);
-        alert("구글 로그인에 Error가 발생하였습니다");
+        alert("구글 로그인에 Error가 발생하였습니다.");
       });
   };
 

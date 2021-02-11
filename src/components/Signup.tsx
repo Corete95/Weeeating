@@ -42,16 +42,45 @@ export default function Signup() {
     return true;
   };
 
-  const submitSingup = async () => {
-    const checkValidation = await Promise.all([
-      isValidateEmail(user.email),
-      isValidatePassword(user.password)
-    ]).then((res) => res);
+  const submitSingup = async (type: string) => {
+    switch (type) {
+      case "login":
+        const checkValidation = await Promise.all([
+          isValidateEmail(user.email),
+          isValidatePassword(user.password)
+        ]).then((res) => res);
 
-    const isValid = !checkValidation.some((bool) => !bool);
+        const isValid = !checkValidation.some((bool) => !bool);
 
-    if (isValid) {
-      if (googleSignup) {
+        if (isValid) {
+          if (user.password === user.repassword || !user.password) {
+            const body = {
+              number: user.number,
+              name: user.userName,
+              email: user.email,
+              password: user.password
+            };
+            axios
+              .post(`${API}/user/signup`, JSON.stringify({ ...body }))
+              .then((res) => {
+                console.log("회원가입 통신 잘 됐음!", res);
+                if (res.data.MESSAGE === "SUCCESS") {
+                  alert("회원가입이 완료되었습니다. :-)");
+                } else {
+                  alert("회원가입이 완료되지 않았습니다.");
+                }
+              })
+              .catch((err) =>
+                console.log("회원가입 통신이 원활하지 않습니다.", err)
+              );
+          } else {
+            alert(
+              "재입력한 비밀번호가 일치하지 않습니다. 비밀번호를 다시 입력해주세요."
+            );
+          }
+        }
+        break;
+      case "login/google":
         const body = {
           number: user.number,
           name: user.userName
@@ -59,7 +88,6 @@ export default function Signup() {
         axios
           .post(`${API}/user/signup/google`, JSON.stringify({ ...body }))
           .then((res) => {
-            console.log("회원가입 통신 잘 됐음!", res);
             if (res.data.MESSAGE === "USER_SIGNUP_SUCCESS") {
               alert("회원가입이 완료되었습니다. :-)");
               localStorage.setItem("token", res.data.Authorization);
@@ -72,33 +100,9 @@ export default function Signup() {
           .catch((err) =>
             console.log("구글 회원가입 통신이 원활하지 않습니다.", err)
           );
-      } else {
-        if (user.password === user.repassword || !user.password) {
-          const body = {
-            number: user.number,
-            name: user.userName,
-            email: user.email,
-            password: user.password
-          };
-          axios
-            .post(`${API}/user/signup`, JSON.stringify({ ...body }))
-            .then((res) => {
-              console.log("회원가입 통신 잘 됐음!", res);
-              if (res.data.MESSAGE === "SUCCESS") {
-                alert("회원가입이 완료되었습니다. :-)");
-              } else {
-                alert("회원가입이 완료되지 않았습니다.");
-              }
-            })
-            .catch((err) =>
-              console.log("회원가입 통신이 원활하지 않습니다.", err)
-            );
-        } else {
-          alert(
-            "재입력한 비밀번호가 일치하지 않습니다. 비밀번호를 다시 입력해주세요."
-          );
-        }
-      }
+        break;
+      default:
+        break;
     }
   };
 
