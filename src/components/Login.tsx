@@ -43,10 +43,9 @@ export default function Login() {
       axios
         .post(`${API}/user/login`, JSON.stringify(data))
         .then((res) => {
-          console.log("res", res.data);
           if (res.data.MESSAGE === "SUCCESS") {
-            console.log("res.data.Authorization", res.data.Authorization);
             localStorage.setItem("token", res.data.Authorization);
+            localStorage.setItem("user_id_number", res.data.user_id);
             localStorage.isAuthenticated = true;
             window.location.reload();
           } else {

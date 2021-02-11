@@ -36,15 +36,17 @@ export default function StoreDetail(props: any) {
     ]
   });
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
-  const [address, setAddress] = useState("");
-  const [items, setItems] = useState<UserData | any[]>([]);
-  const [like, setLike] = useState(false);
+  // const [address, setAddress] = useState("");
+  // const [items, setItems] = useState<UserData | any[]>([]);
+  // const [like, setLike] = useState(false);
   const [commentText, setCommentText] = useState<UserData | any>({
     newComment: null,
     updatedComment: { id: null, content: "기존댓글~~~" }
   });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+
+  console.log("currentComment", currentComment);
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
 
@@ -67,7 +69,7 @@ export default function StoreDetail(props: any) {
           axios.spread((res1, res2) => {
             console.log("res1", res1);
             setInfo(res1.data);
-            setAddress(res1.data.store_info[0].address);
+            // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
             console.log("res2.data.comment_list", res2.data.comment_list);
           })
@@ -82,7 +84,7 @@ export default function StoreDetail(props: any) {
           axios.spread((res1, res2) => {
             console.log("res1", res1);
             setInfo(res1.data);
-            setAddress(res1.data.store_info[0].address);
+            // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
             console.log("res2.data.comment_list", res2.data.comment_list);
           })
@@ -180,7 +182,9 @@ export default function StoreDetail(props: any) {
           console.log(res);
           window.location.reload();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     }
     if (crud === "UPDATE") {
       // setCurrentComment(
@@ -316,37 +320,39 @@ export default function StoreDetail(props: any) {
                 <div className="right">
                   <Content>{comment.comment}</Content>
                   <UploadTime>( {comment.created_at} )</UploadTime>
-                  {/* 작성자에게만 수정, 삭제가 노출되도록 변경 예정*/}
-                  {/* {userVerified && ( */}
-                  <ModifyBtn
-                    onClick={() => {
-                      setEditModal(true);
-                      setCommentText({
-                        ...commentText,
-                        updatedComment: {
-                          id: comment.id,
-                          content: comment.comment
-                        }
-                      });
-                    }}
-                  >
-                    수정
-                  </ModifyBtn>
-                  <ModifyBtn
-                    onClick={() => {
-                      setDeleteModal(true);
-                      setCommentText({
-                        ...commentText,
-                        updatedComment: {
-                          ...commentText.updatedComment,
-                          id: comment.id
-                        }
-                      });
-                    }}
-                  >
-                    삭제
-                  </ModifyBtn>
-                  {/* )} */}
+                  {comment.writer_id ===
+                    Number(localStorage.getItem("user_id_number")) && (
+                    <>
+                      <ModifyBtn
+                        onClick={() => {
+                          setEditModal(true);
+                          setCommentText({
+                            ...commentText,
+                            updatedComment: {
+                              id: comment.id,
+                              content: comment.comment
+                            }
+                          });
+                        }}
+                      >
+                        수정
+                      </ModifyBtn>
+                      <ModifyBtn
+                        onClick={() => {
+                          setDeleteModal(true);
+                          setCommentText({
+                            ...commentText,
+                            updatedComment: {
+                              ...commentText.updatedComment,
+                              id: comment.id
+                            }
+                          });
+                        }}
+                      >
+                        삭제
+                      </ModifyBtn>
+                    </>
+                  )}
                 </div>
               </Comment>
             ))}

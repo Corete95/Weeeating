@@ -34,7 +34,8 @@ export default function Signup() {
 
   const isValidatePassword = (value: any) => {
     let password = value;
-    let regExp = /^[.]{6}$/;
+    console.log("password", password);
+    let regExp = /^.{6}/;
     if (!regExp.test(password)) {
       alert("비밀번호는 6글자 이상이어야 합니다.");
       return false;
@@ -63,9 +64,12 @@ export default function Signup() {
             axios
               .post(`${API}/user/signup`, JSON.stringify({ ...body }))
               .then((res) => {
-                console.log("회원가입 통신 잘 됐음!", res);
-                if (res.data.MESSAGE === "SUCCESS") {
-                  alert("회원가입이 완료되었습니다. :-)");
+                if (res.data.MESSAGE === "USER_SIGNUP_SUCCESS") {
+                  localStorage.setItem("token", res.data.Authorization);
+                  localStorage.setItem("user_id_number", res.data.user_id);
+                  localStorage.isAuthenticated = true;
+                  alert("회원가입과 로그인이 완료되었습니다. :-)");
+                  window.location.reload();
                 } else {
                   alert("회원가입이 완료되지 않았습니다.");
                 }
