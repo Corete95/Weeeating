@@ -5,7 +5,7 @@ import { API } from "../config";
 
 interface IProps {
   handleChange: (e: any) => void;
-  submitSingup: () => void;
+  submitSingup: (type: string) => Promise<void>;
 }
 
 interface StateForStyle {
@@ -17,6 +17,8 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
   const firstGoogle = useSelector(
     ({ setFirstReducer }) => setFirstReducer.first
   );
+
+  console.log("firstGoogle", firstGoogle);
 
   return (
     <Container>
@@ -82,7 +84,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
         type="submit"
         value="회원가입"
         className="button"
-        onClick={submitSingup}
+        onClick={() => submitSingup(firstGoogle ? "login/google" : "login")}
       ></Button>
       {/* </InfoSection> */}
     </Container>

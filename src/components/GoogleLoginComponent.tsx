@@ -28,6 +28,7 @@ export default function GoogleLoginComponent() {
     console.log("구글로그인");
     console.log("response", response);
     const { accessToken } = response;
+    console.log("accessToken", accessToken);
 
     axios
       .post(`${API}/user/login/social`, "data", {
@@ -38,21 +39,23 @@ export default function GoogleLoginComponent() {
       .then((res: any) => {
         console.log("res", res);
         localStorage.setItem("token", res.data.Authorization);
-        localStorage.setItem("user_id", res.data.user_id);
+        localStorage.setItem("user_id_number", res.data.user_id);
         localStorage.setItem("isAuthenticated", "true");
-        alert("구글 로그인 되었습니다");
 
-        if (res.data.check === "FIRST VISIT") {
+        if (res.data.FRIST_VISIT === true) {
+          alert("구글 첫 로그인입니다. 회원가입을 해주세요.");
           dispatch(setFirstLogin(true));
           dispatch(setSignupActive(true));
           dispatch(setLoginActive(false));
         } else {
+          alert("구글 로그인 되었습니다.");
           history.push("/");
+          dispatch(setLoginActive(false));
         }
       })
       .catch((err: any) => {
         console.log("ERRORS! ===>", err);
-        alert("Error가 발생하였습니다");
+        alert("구글 로그인에 Error가 발생하였습니다.");
       });
   };
 
