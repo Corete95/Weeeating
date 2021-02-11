@@ -52,13 +52,13 @@ export default function TodayRandom() {
         <RandomComponent>
           <Row>
             <VerticalText>여기로</VerticalText>
-            <StoreCard2
+            {/* <StoreCard2
               id={store.id}
               image={store.image}
               name={store.name}
               likeCount={store.like_count}
               likeState={store.like_state}
-            />{" "}
+            />{" "} */}
             <VerticalText>가즈아</VerticalText>
           </Row>
           <div className="buttonSection">
