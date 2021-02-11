@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -7,6 +8,11 @@ import { API } from "../config";
 import { mixin } from "../styles";
 import { EditCommentModal, DeleteCommentModal } from "../components";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
 
 declare global {
   interface Window {
@@ -20,6 +26,8 @@ interface UserData {
 }
 
 export default function StoreDetail(props: any) {
+  const dispatch = useDispatch();
+
   const [info, setInfo] = useState<UserData | any>({
     store_info: [
       {
@@ -133,20 +141,28 @@ export default function StoreDetail(props: any) {
 
   const changeLikedState = () => {
     if (localStorage.getItem("token")) {
-      setInfo({
-        ...info,
-        like_count: Number(
-          info.like === false ? info.like_count + 1 : info.like_count - 1
-        ),
-        like: !info.like
-      });
       axios
         .post(`${API}/store/like/${props.match.params.id}`, "data", {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
-        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 좋아요 등록이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setInfo({
+              ...info,
+              like_count: Number(
+                info.like === false ? info.like_count + 1 : info.like_count - 1
+              ),
+              like: !info.like
+            });
+          }
+          console.log("좋아요 통신이 완료되었습니다.", res);
+        })
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
       // setTimeout(
       //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
@@ -179,8 +195,14 @@ export default function StoreDetail(props: any) {
           { headers: { Authorization: localStorage.getItem("token") } }
         )
         .then((res) => {
-          console.log(res);
-          window.location.reload();
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            console.log(res);
+            window.location.reload();
+          }
         })
         .catch((err) => {
           console.log(err);

@@ -28,6 +28,7 @@ export default function GoogleLoginComponent() {
     console.log("구글로그인");
     console.log("response", response);
     const { accessToken } = response;
+    console.log("accessToken", accessToken);
 
     axios
       .post(`${API}/user/login/social`, "data", {
@@ -37,9 +38,9 @@ export default function GoogleLoginComponent() {
       })
       .then((res: any) => {
         console.log("res", res);
-        // localStorage.setItem("token", res.data.Authorization);
-        // localStorage.setItem("user_id_number", res.data.user_id);
-        // localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("token", res.data.Authorization);
+        localStorage.setItem("user_id_number", res.data.user_id);
+        localStorage.setItem("isAuthenticated", "true");
 
         if (res.data.FRIST_VISIT === true) {
           alert("구글 첫 로그인입니다. 회원가입을 해주세요.");

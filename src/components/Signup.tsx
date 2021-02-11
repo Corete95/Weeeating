@@ -90,9 +90,14 @@ export default function Signup() {
           name: user.userName
         };
         axios
-          .post(`${API}/user/signup/google`, JSON.stringify({ ...body }))
+          .post(`${API}/user/signup/google`, JSON.stringify({ ...body }), {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
           .then((res) => {
-            if (res.data.MESSAGE === "USER_SIGNUP_SUCCESS") {
+            console.log("res", res);
+            if (res.data.MESSAGE === "UPDATE_SUCCESS") {
               alert("회원가입이 완료되었습니다. :-)");
               localStorage.setItem("token", res.data.Authorization);
               localStorage.isAuthenticated = true;
