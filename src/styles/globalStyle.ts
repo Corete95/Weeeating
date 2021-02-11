@@ -9,12 +9,7 @@ export const GlobalStyle = createGlobalStyle`
   body{
     font-family: 'Noto Sans KR', sans-serif, serif;
     font-family: 'Yeon Sung', cursive;
-\@font-face {
-  font-family: 'Y_Spotlight';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/Y_Spotlight.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
+\
   * {
     box-sizing: border-box;
   }

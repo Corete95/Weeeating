@@ -1,7 +1,9 @@
 export { default as AboutPage } from "./AboutPage";
 export { default as AlcoholDetail } from "./AlcoholDetail";
 export { default as FeatherDetail } from "./FeatherDetail";
+export { default as KobbubakDetail } from "./KobbubakDetail";
 export { default as MainPage } from "./MainPage";
+export { default as MetorDetail } from "./MetorDetail";
 export { default as PostDetail } from "./PostDetail";
 export { default as PostList } from "./PostList";
 export { default as PostWriting } from "./PostWriting";
