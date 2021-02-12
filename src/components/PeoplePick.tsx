@@ -6,6 +6,9 @@ import {
   IoIosArrowForward,
   IoIosAddCircle
 } from "react-icons/io";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { mixin } from "../styles";
 
 interface IProps {
@@ -13,9 +16,61 @@ interface IProps {
   TITLE: string[];
 }
 
+function SampleNextArrow(props: any) {
+  const { className, style, onClick } = props;
+  return (
+    <img
+      alt="rightArrow"
+      src="./images/arrow-right.png"
+      className={className}
+      style={{
+        ...style,
+        display: "block",
+        width: "2.5rem",
+        height: "2.5rem",
+        top: "-43px",
+        left: "1001px"
+      }}
+      onClick={onClick}
+    ></img>
+  );
+}
+
+function SamplePrevArrow(props: any) {
+  const { className, style, onClick } = props;
+  return (
+    <img
+      alt="rightArrow"
+      src="./images/arrow-left.png"
+      className={className}
+      style={{
+        ...style,
+        display: "block",
+        width: "2.5rem",
+        height: "2.5rem",
+        top: "-43px",
+        left: "951px"
+      }}
+      onClick={onClick}
+    ></img>
+  );
+}
+
 export default function PeoplePick({ info, TITLE }: IProps) {
   const history = useHistory();
 
+  const settings = {
+    dots: false,
+    infinite: false,
+    speed: 1000,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    arrows: true,
+    // centerPadding: "47px",
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    className: "slides"
+  };
   return (
     <Wrapper>
       <Container>
@@ -35,35 +90,39 @@ export default function PeoplePick({ info, TITLE }: IProps) {
           </Arrow>
         </Header>
         <CardWrapper>
-          {info.length &&
-            info.map(
-              ({ id, image, name, position, store_id, store, desc }: any) => (
-                <CardEach id={id}>
-                  <Profile>
-                    <img src={image} />
-                    <div className="name">{name}</div>
-                    <div className="position">{position}</div>
-                  </Profile>
-                  <Desc>
-                    <div className="storeHeader">
-                      <span className="decoTitle">" </span>
-                      <span className="storeTitle">{store}</span>
-                      <span className="decoTitle"> "</span>
-                    </div>
-                    <div className="storeDesc">{desc}</div>
-                  </Desc>
-                  <MoreBtn>
-                    <span
-                      className="seeStoreInfo"
-                      onClick={() => history.push(`/store-detail/${store_id}`)}
-                    >
-                      맛집 구경하기
-                    </span>
-                    <IoIosAddCircle className="btnIcon" />
-                  </MoreBtn>
-                </CardEach>
-              )
-            )}
+          <Slider {...settings}>
+            {info.length &&
+              info.map(
+                ({ id, image, name, position, store_id, store, desc }: any) => (
+                  <CardEach id={id}>
+                    <Profile>
+                      <img src={image} />
+                      <div className="name">{name}</div>
+                      <div className="position">{position}</div>
+                    </Profile>
+                    <Desc>
+                      <div className="storeHeader">
+                        <span className="decoTitle">" </span>
+                        <span className="storeTitle">{store}</span>
+                        <span className="decoTitle"> "</span>
+                      </div>
+                      <div className="storeDesc">{desc}</div>
+                    </Desc>
+                    <MoreBtn>
+                      <span
+                        className="seeStoreInfo"
+                        onClick={() =>
+                          history.push(`/store-detail/${store_id}`)
+                        }
+                      >
+                        맛집 구경하기
+                      </span>
+                      <IoIosAddCircle className="btnIcon" />
+                    </MoreBtn>
+                  </CardEach>
+                )
+              )}
+          </Slider>
         </CardWrapper>
       </Container>
     </Wrapper>
@@ -72,7 +131,7 @@ export default function PeoplePick({ info, TITLE }: IProps) {
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 65rem;
+  height: 55rem;
   background-color: ${({ theme }) => theme.mentorBack};
   line-height: 1.3;
 `;
@@ -139,6 +198,7 @@ const CardEach = styled.div`
   width: 33.33%;
   height: 40rem;
   padding-right: 1rem;
+  outline: none;
 `;
 
 const Profile = styled.section`

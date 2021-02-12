@@ -3,7 +3,7 @@
   margin-left: auto;
   margin-right: auto;
   height: 100%;
-  width: 90vw;
+  width: 85rem;
 
   .logoBox {
     width: 400px;
@@ -25,5 +25,7 @@
     }
   }
   .featherFood {
+    display: inline-block;
+    margin-top: 60px;
   }
 }
