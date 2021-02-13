@@ -22,6 +22,57 @@
     border: 3px solid #ffd966;
     top: -8px;
     left: 262px;
+    .editListDiv {
+      padding: 35px 30px 30px 30px;
+
+      .writingTitle {
+        display: flex;
+
+        p {
+          width: 8%;
+          font-size: 30px;
+          margin-right: 6px;
+        }
+        input {
+          width: 100%;
+          height: 30px;
+          background: #f2f2f2;
+          border: 1px solid gray;
+          outline: none;
+          padding: 0px 20px;
+        }
+      }
+      .solidLine {
+        border-bottom: 2px solid black;
+        margin-top: 30px;
+      }
+      .writingCenter {
+        p {
+          margin: 40px 0px 25px 0px;
+          font-size: 30px;
+        }
+        .quill {
+          .ql-container {
+            height: 250px;
+            background: #f2f2f2;
+          }
+        }
+      }
+      .writerButton {
+        margin-top: 30px;
+        text-align: right;
+        button {
+          font-size: 17px;
+          background-color: #ffd966;
+          border-radius: 6px;
+          border: 1px solid black;
+          width: 70px;
+          height: 35px;
+          outline: none;
+          cursor: pointer;
+        }
+      }
+    }
     .listDiv {
       padding: 35px 30px 30px 30px;
 
@@ -136,5 +187,52 @@
         }
       }
     }
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0px 1.5rem 0px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 22px;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+  }
+
+  ul.pagination li.active a {
+    color: #ffd966;
+  }
+  ul.pagination li.active {
+    font-weight: 600;
+    color: #ffd966;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: #ffd966;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  ul.pagination li.prevPageText a,
+  ul.pagination li.nextPageText a {
+    color: #ffd966;
   }
 }

@@ -30,12 +30,14 @@ export default function PostReply({
       <p className="commentsWriter">{writer}</p>
       <p className="commentContent">{content}</p>
       <p className="commentCreated">({created_at})</p>
-      <div className="modifyDiv">
-        <p className="commentEdit">수정</p>
-        <p className="commentDelete" onClick={() => deleteComment(id)}>
-          삭제
-        </p>
-      </div>
+      {writer_id === Number(localStorage.getItem("user_id_number")) && (
+        <div className="modifyDiv">
+          <p className="commentEdit">수정</p>
+          <p className="commentDelete" onClick={() => deleteComment(id)}>
+            삭제
+          </p>
+        </div>
+      )}
     </div>
   );
 }

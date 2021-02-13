@@ -4,6 +4,7 @@ import { COLORS } from "../styles/themeColor";
 import PostReply from "../pages/childComponents/PostReply";
 import axios from "axios";
 import { API } from "../config";
+import Pagination from "react-js-pagination";
 import ReactPaginate from "react-paginate";
 import { useHistory } from "react-router-dom";
 import { EditCommentModal, DeleteCommentModal } from "../components";
@@ -21,6 +22,7 @@ export default function PostDetail({ match }: any) {
   const [comments, setComments] = useState<any>([]);
   const [comment, setComment] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -31,7 +33,8 @@ export default function PostDetail({ match }: any) {
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
   const [activeInput, setActiveInput] = useState(false);
   const [updatedPost, setUpdatedPost] = useState(posts[0]?.content);
-  const [countComments, setCountComments] = useState<Number>(0);
+  const [countComments, setCountComments] = useState(0);
+  const [activePage, setActivePage] = useState<any>(1);
   const history = useHistory();
 
   useEffect(() => {
@@ -190,11 +193,15 @@ export default function PostDetail({ match }: any) {
         }
       })
       .then((res) => {
-        setPosts(res.data);
+        console.log("1", res.data);
+        setComments(res.data);
       });
-    setCurrentPage(pageNumber);
+    setActivePage(pageNumber);
   };
-  console.log("123", comments);
+  console.log("id", posts);
+  const createPost = (value: string) => {
+    setContent(value);
+  };
   return (
     <>
       <div className="postDetail">
@@ -204,24 +211,74 @@ export default function PostDetail({ match }: any) {
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">
-            <div className="detailTitle">
-              <p className="titleBold">제목</p>
-              <p className="title">{posts[0]?.title}</p>
-            </div>
-            <div className="solidLine"></div>
-            <div className="writerCreated">
-              <p>{posts[0]?.writer}</p>
-              <p>|</p>
-              <p>{posts[0]?.created_at}</p>
-            </div>
-            <div className="contentDiv">{posts[0]?.content}</div>
-            <div className="editDeleteDiv">
-              <p className="edit">수정</p>
-              <p>|</p>
-              <p className="delete" onClick={deletePost}>
-                삭제
-              </p>
-            </div>
+            {activeInput ? (
+              <>
+                <div className="editListDiv">
+                  <div className="writingTitle">
+                    <p>제목</p>
+                    <input type="text/html"></input>
+                  </div>
+                  <div className="solidLine"></div>
+                  <div className="writerCreated">
+                    <p>{posts[0]?.writer}</p>
+                    <p>|</p>
+                    <p>{posts[0]?.created_at}</p>
+                  </div>
+                  <div className="writingCenter">
+                    <p>내용</p>
+                    <ReactQuill
+                      bounds={".quill"}
+                      theme="snow"
+                      value={content}
+                      onChange={createPost}
+                    />
+                  </div>
+                  <div className="writerButton">
+                    <button
+                      onClick={() => {
+                        patchPost();
+                        setActiveInput(false);
+                      }}
+                    >
+                      작성
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="detailTitle">
+                  <p className="titleBold">제목</p>
+                  <p className="title">{posts[0]?.title}</p>
+                </div>
+                <div className="solidLine"></div>
+                <div className="writerCreated">
+                  <p>{posts[0]?.writer}</p>
+                  <p>|</p>
+                  <p>{posts[0]?.created_at}</p>
+                </div>
+                <div className="contentDiv">{posts[0]?.content}</div>
+                {posts[0]?.writer_id ===
+                  Number(localStorage.getItem("user_id_number")) && (
+                  <>
+                    <div className="editDeleteDiv">
+                      <p
+                        className="edit"
+                        onClick={() => {
+                          setActiveInput(true);
+                        }}
+                      >
+                        수정
+                      </p>
+                      <p>|</p>
+                      <p className="delete" onClick={deletePost}>
+                        삭제
+                      </p>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
             <div className="solidLine"></div>
             <div className="commentsInputDiv">
               <p>댓글 ({countComments})</p>
@@ -241,10 +298,18 @@ export default function PostDetail({ match }: any) {
                 />
               );
             })}
-            {/* <div className="comments">
-              <p className="commentsWriter">13기_김정현</p>
-              <p className="commentContent">랄라블라 여기는 내용이 옵니다</p>
-            </div> */}
+            <Pagination
+              activePage={activePage}
+              itemsCountPerPage={5}
+              totalItemsCount={countComments}
+              pageRangeDisplayed={5}
+              hideFirstLastPages
+              itemClassPrev={"prevPageText"}
+              itemClassNext={"nextPageText"}
+              prevPageText={"◀"}
+              nextPageText={"▶"}
+              onChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
