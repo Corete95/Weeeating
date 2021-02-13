@@ -22,7 +22,7 @@ export default function PostDetail({ match }: any) {
   const [comments, setComments] = useState<any>([]);
   const [comment, setComment] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<any>({ newTitle: null });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -50,6 +50,7 @@ export default function PostDetail({ match }: any) {
           setPosts(res.data.board_info);
           setComments(res.data.board_comments);
           setCountComments(res.data.count_comments);
+          setTitle(res.data.board_info[0].title);
         });
     };
     fetchPosts();
@@ -193,15 +194,15 @@ export default function PostDetail({ match }: any) {
         }
       })
       .then((res) => {
-        console.log("1", res.data);
         setComments(res.data);
       });
     setActivePage(pageNumber);
   };
-  console.log("id", posts);
   const createPost = (value: string) => {
     setContent(value);
   };
+
+  console.log("1", comments);
   return (
     <>
       <div className="postDetail">
@@ -288,6 +289,7 @@ export default function PostDetail({ match }: any) {
             {comments?.map((comments: any) => {
               return (
                 <PostReply
+                  comments={comments}
                   id={comments.comment_id}
                   writer={comments.comment_writer}
                   content={comments.comment_content}
@@ -313,6 +315,24 @@ export default function PostDetail({ match }: any) {
           </div>
         </div>
       </div>
+      {editModal && (
+        <EditCommentModal
+          editModal={editModal}
+          setEditModal={setEditModal}
+          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
+          updatedComment={commentText.updatedComment}
+          submitChangedComment={patchComment}
+          updateComment={updateComment}
+        />
+      )}
+      {deleteModal && (
+        <DeleteCommentModal
+          deleteModal={deleteModal}
+          setDeleteModal={setDeleteModal}
+          submitChangedComment={deleteComment}
+          commentId={commentText.updatedComment.id}
+        />
+      )}
     </>
   );
 }

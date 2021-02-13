@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { mixin } from "../styles";
 
@@ -21,6 +21,13 @@ export default function DeleteCommentModal({
   submitChangedComment,
   commentId
 }: IProps) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   return (
     <ModalWrapper visible={deleteModal} tabIndex={-1}>
       <ModalInner tabIndex={0}>

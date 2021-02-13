@@ -10,14 +10,14 @@ import "react-quill/dist/quill.bubble.css";
 import "./PostWriting.scss";
 
 export default function PostWriting() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState<any>({ newTitle: null });
+  const [content, setContent] = useState<any>("");
   const history = useHistory();
 
   const contentResult = content.replace(/(<([^>]+)>)/gi, "");
 
   let data = {
-    title: title,
+    title: title.newTitle,
     content: contentResult
   };
 
@@ -38,7 +38,6 @@ export default function PostWriting() {
     setContent(value);
   };
 
-  console.log(contentResult);
   return (
     <>
       <div className="postWriting">
@@ -52,8 +51,9 @@ export default function PostWriting() {
               <p>제목</p>
               <input
                 type="text/html"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) =>
+                  setTitle({ ...title, newTitle: e.target.value })
+                }
               ></input>
             </div>
             <div className="solidLine"></div>
@@ -62,7 +62,7 @@ export default function PostWriting() {
               <ReactQuill
                 bounds={".quill"}
                 theme="snow"
-                value={content}
+                //value={content}
                 onChange={createPost}
               />
             </div>
