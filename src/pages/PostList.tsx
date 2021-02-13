@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import Posts from "./childComponents/Posts";
 import Pagination from "react-js-pagination";
 import axios from "axios";
-import styled from "styled-components";
 import wemeok from "../images/wemeoktalk_2.png";
-import { COLORS } from "../styles/themeColor";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { API } from "../config";
+import "./PostList.scss";
 
+interface PostData {
+  posts: any;
+}
 export default function App() {
-  const [posts, setPosts] = useState<any>([]);
+  const [posts, setPosts] = useState<PostData | any>([]);
   const [activePage, setActivePage] = useState<any>(1);
-
+  const history = useHistory();
   useEffect(() => {
     const fetchPosts = async () => {
       await axios
@@ -56,84 +58,55 @@ export default function App() {
       });
     setActivePage(pageNumber);
   };
+  console.log(posts);
 
   return (
-    <Container>
-      <Img src={wemeok} alt="" />
-      <InnerContainer>
-        <ImgText>개발자 공유문화 잊지말자, 그러니까 맛집도 공유하자</ImgText>
-        <Posts posts={posts} />
-        <StyledPaginateContainer>
-          <Pagination
-            activePage={activePage}
-            itemsCountPerPage={5}
-            totalItemsCount={posts.total_board}
-            pageRangeDisplayed={5}
-            hideFirstLastPages
-            itemClassPrev={"prevPageText"}
-            itemClassNext={"nextPageText"}
-            prevPageText={"<<"}
-            nextPageText={">>"}
-            onChange={handlePageChange}
-          />
-        </StyledPaginateContainer>
-        <Button>
-          <Link to="/post-writing">글 작성</Link>
-        </Button>
-      </InnerContainer>
-    </Container>
+    <>
+      <div className="postList">
+        <div className="weMeokTalkLogo">
+          <img src={wemeok}></img>
+          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
+        </div>
+        <div className="weMeokTalkList">
+          <div className="listDiv">
+            <div className="listTitleBold">
+              <p className="titleBold">제목</p>
+              <p className="writerBold">작성자</p>
+              <p className="createdAtBold">등록일</p>
+              <p className="commentsBold">댓글</p>
+            </div>
+            <div className="listSolidBold"></div>
+            {posts.board_list?.map((post: any) => {
+              return (
+                <Posts
+                  id={post.id}
+                  title={post.title}
+                  writer={post.writer}
+                  created_at={post.created_at}
+                  comments={post.comments}
+                />
+              );
+            })}
+            <div className="writerButton">
+              <button onClick={() => history.push("./post-writing")}>
+                글쓰기
+              </button>
+            </div>
+            <Pagination
+              activePage={activePage}
+              itemsCountPerPage={5}
+              totalItemsCount={posts.total_board}
+              pageRangeDisplayed={5}
+              hideFirstLastPages
+              itemClassPrev={"prevPageText"}
+              itemClassNext={"nextPageText"}
+              prevPageText={"◀"}
+              nextPageText={"▶"}
+              onChange={handlePageChange}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
-
-const Container = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-const InnerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2em;
-  width: 45.2rem;
-  border: 4px solid ${COLORS.mainYellow};
-  height:30rem
-`;
-
-const Img = styled.img`
-  position: relative;
-  top: 1rem;
-  margin: 5rem 3.3rem 0 0;
-  width:49rem;
-`;
-
-const ImgText = styled.p`
-  position: absolute;
-  top: 13rem;
-  z-index: 10;
-  font-size: 2rem;
-`;
-
-const Button = styled.button`
-  position: relative;
-  bottom: 1rem;
-  left: 15rem;
-  width: 5rem;
-  height: 2.5rem;
-  background: ${COLORS.mainYellow};
-
-`;
-
-const StyledPaginateContainer = styled.div`
-  ul {
-    display: flex;
-    margin: 1em;
-
-    li {
-      padding: .5em;
-    }
-  }
-`;

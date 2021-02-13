@@ -1,77 +1,41 @@
 import React, { useState } from "react";
 import { COLORS } from "../../styles/themeColor";
 import axios from "axios";
-import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { API } from "../../config";
 
-interface UserData {
-  info: any;
-  items: any[];
+interface PostReplyData {
+  id: number;
+  content: string;
+  writer: string;
+  created_at: string;
+  writer_id: number;
+  clickEdit: (comment: any) => void;
+  deleteComment: (comment_id: any) => void;
 }
 
 export default function PostReply({
-  comments,
-  match,
-  setEditModal,
+  id,
+  content,
+  writer,
+  created_at,
+  writer_id,
   clickEdit,
   deleteComment
-}: any) {
+}: PostReplyData) {
   const history = useHistory();
-
+  console.log("text", writer);
   return (
-    <ReplyContainer>
-      {comments?.map(
-        (comment: {
-          board_comments: any;
-          comment_writer: {} | null | undefined;
-          comment_content: any;
-          comment_created_at: any;
-          comment_id: any;
-        }) => (
-          <div>
-            <li>{comment.comment_writer}</li>
-            {/* <Bar>|</Bar> */}
-            <li>{comment.comment_content}</li>
-            <li>({comment.comment_created_at})</li>
-            <Button onClick={() => clickEdit(comment)}>수정</Button>
-            <Button onClick={() => deleteComment(comment.comment_id)}>
-              삭제
-            </Button>
-          </div>
-        )
-      )}
-    </ReplyContainer>
+    <div className="comments" key={id}>
+      <p className="commentsWriter">{writer}</p>
+      <p className="commentContent">{content}</p>
+      <p className="commentCreated">({created_at})</p>
+      <div className="modifyDiv">
+        <p className="commentEdit">수정</p>
+        <p className="commentDelete" onClick={() => deleteComment(id)}>
+          삭제
+        </p>
+      </div>
+    </div>
   );
 }
-
-const ReplyContainer = styled.div`
-  width: 35rem;
-
-  div {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid black;
-
-    li {
-      display: flex;
-      align-items: center;
-      margin: 0 1rem;
-      height: 2rem;
-      list-style: none;
-      font-size: 14px;
-    }
-  }
-`;
-
-const Bar = styled.div`
-  margin: 0;
-  line-height: 2rem;
-  font-size: 14px;
-`;
-
-const Button = styled.button`
-  width: 4rem;
-  height: 2rem;
-  background: ${COLORS.mainYellow};
-`;

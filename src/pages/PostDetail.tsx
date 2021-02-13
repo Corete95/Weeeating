@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import wemeok from "../images/wemeoktalk_2.png";
 import { COLORS } from "../styles/themeColor";
 import PostReply from "../pages/childComponents/PostReply";
@@ -10,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import { EditCommentModal, DeleteCommentModal } from "../components";
 import ReactQuill from "react-quill"; // Typescript
 import "react-quill/dist/quill.snow.css";
+import "./PostDetail.scss";
 
 interface UserData {
   info: any;
@@ -31,9 +31,8 @@ export default function PostDetail({ match }: any) {
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
   const [activeInput, setActiveInput] = useState(false);
   const [updatedPost, setUpdatedPost] = useState(posts[0]?.content);
+  const [countComments, setCountComments] = useState<Number>(0);
   const history = useHistory();
-
-  
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -47,6 +46,7 @@ export default function PostDetail({ match }: any) {
           console.log(res.data);
           setPosts(res.data.board_info);
           setComments(res.data.board_comments);
+          setCountComments(res.data.count_comments);
         });
     };
     fetchPosts();
@@ -149,11 +149,11 @@ export default function PostDetail({ match }: any) {
     });
   };
 
-  const contentResult = content.replace(/(<([^>]+)>)/gi, "")
+  const contentResult = content.replace(/(<([^>]+)>)/gi, "");
 
-  const updatePost = (value:string) => {    
+  const updatePost = (value: string) => {
     setContent(value);
-}
+  };
   const patchPost = (): void => {
     const data = {
       title: posts[0].title,
@@ -194,207 +194,60 @@ export default function PostDetail({ match }: any) {
       });
     setCurrentPage(pageNumber);
   };
-
+  console.log("123", comments);
   return (
-    <Container>
-      <Img src={wemeok} alt="" />
-      <InnerContainer>
-        <ImgText>개발자 공유문화 잊지말자, 그러니까 맛집도 공유하자</ImgText>
-        <TitleContainer>
-          <TitleText>제목</TitleText>
-          <TitleInput>{posts[0]?.title}</TitleInput>
-        </TitleContainer>
-        <ContentContainer>
-          <Writer>{posts[0]?.writer}</Writer>
-          {activeInput ? (
-            <>
-            <QuillContainer>
-              <ReactQuill value={content} onChange={updatePost} />
-            </QuillContainer>
-              <Edit
-                onClick={() => {
-                  patchPost();
-                  setActiveInput(false);
-                }}
-              >
-                완료
-              </Edit>
-            </>
-          ) : (
-            <>
-              <Content>{posts[0]?.content}</Content>
-              <Edit onClick={deletePost}>삭제</Edit>
-              <Edit
-                onClick={() => {
-                  setActiveInput(true);
-                }}
-              >
-                수정
-              </Edit>
-            </>
-          )}
-        </ContentContainer>
-        <ReplyContainer>
-          <ReplyText>댓글</ReplyText>
-          <ReplyInput value={comment} onChange={onChangeComment}></ReplyInput>
-          <Button onClick={addComment}>등록</Button>
-        </ReplyContainer>
-        <PostReply
-          comments={comments}
-          match={match}
-          setEditModal={setEditModal}
-          clickEdit={clickEdit}
-          deleteComment={deleteComment}
-        ></PostReply>
-        <StyledPaginateContainer>
-          <ReactPaginate
-            pageCount={Math.ceil(posts.total_comment / 10)}
-            pageRangeDisplayed={5}
-            marginPagesDisplayed={0}
-            breakLabel={""}
-            previousLabel={"이전"}
-            nextLabel={"다음"}
-            onPageChange={handlePageChange}
-            containerClassName={"pagination-ul"}
-            activeClassName={"currentPage"}
-            previousClassName={"pageLabel-btn"}
-            nextClassName={"pageLabel-btn"}
-          />
-        </StyledPaginateContainer>
-      </InnerContainer>
-      {editModal && (
-        <EditCommentModal
-          editModal={editModal}
-          setEditModal={setEditModal}
-          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
-          updatedComment={commentText.updatedComment}
-          submitChangedComment={patchComment}
-          updateComment={updateComment}
-        />
-      )}
-      {deleteModal && (
-        <DeleteCommentModal
-          deleteModal={deleteModal}
-          setDeleteModal={setDeleteModal}
-          submitChangedComment={deleteComment}
-          commentId={commentText.updatedComment.id}
-        />
-      )}
-    </Container>
+    <>
+      <div className="postDetail">
+        <div className="weMeokTalkLogo">
+          <img src={wemeok}></img>
+          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
+        </div>
+        <div className="weMeokTalkList">
+          <div className="listDiv">
+            <div className="detailTitle">
+              <p className="titleBold">제목</p>
+              <p className="title">{posts[0]?.title}</p>
+            </div>
+            <div className="solidLine"></div>
+            <div className="writerCreated">
+              <p>{posts[0]?.writer}</p>
+              <p>|</p>
+              <p>{posts[0]?.created_at}</p>
+            </div>
+            <div className="contentDiv">{posts[0]?.content}</div>
+            <div className="editDeleteDiv">
+              <p className="edit">수정</p>
+              <p>|</p>
+              <p className="delete" onClick={deletePost}>
+                삭제
+              </p>
+            </div>
+            <div className="solidLine"></div>
+            <div className="commentsInputDiv">
+              <p>댓글 ({countComments})</p>
+              <input value={comment} onChange={onChangeComment}></input>
+              <span onClick={addComment}>등록</span>
+            </div>
+            {comments?.map((comments: any) => {
+              return (
+                <PostReply
+                  id={comments.comment_id}
+                  writer={comments.comment_writer}
+                  content={comments.comment_content}
+                  created_at={comments.comment_created_at}
+                  writer_id={comments.comment_writer_id}
+                  clickEdit={clickEdit}
+                  deleteComment={deleteComment}
+                />
+              );
+            })}
+            {/* <div className="comments">
+              <p className="commentsWriter">13기_김정현</p>
+              <p className="commentContent">랄라블라 여기는 내용이 옵니다</p>
+            </div> */}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-const InnerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  width: 45.2rem;
-  border: 4px solid ${COLORS.mainYellow};
-`;
-
-const Img = styled.img`
-  position: relative;
-  top: 1rem;
-  margin: 5rem 3.3rem 0 0;
-  width: 49rem;
-`;
-
-const ImgText = styled.p`
-  position: absolute;
-  top: 13rem;
-  z-index: 10;
-  font-size: 2rem;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding-bottom: 0.3rem;
-  width: 35rem;
-  height: 1.5rem;
-  border-bottom: 2px solid black;
-`;
-
-const TitleText = styled.p`
-  width: 2rem;
-  height: 1.5rem;
-`;
-
-const TitleInput = styled.p`
-  margin-left: 1rem;
-  width: 33rem;
-  height: 1.5rem;
-`;
-
-const Writer = styled.div`
-  text-align: right;
-`;
-
-const ContentContainer = styled.div`
-  margin: 2rem 0;
-  border-bottom: 2px solid black;
-`;
-
-const Content = styled.p`
-  width: 36rem;
-  height: 20rem;
-`;
-
-const ContentInput = styled.input`
-  width: 36rem;
-  height: 20rem;
-`;
-
-const ReplyContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding-bottom: 1.5rem;
-  width: 35rem;
-`;
-
-const ReplyText = styled.p`
-  width: 2rem;
-  height: 1.5rem;
-`;
-
-const ReplyInput = styled.input`
-  margin-left: 1rem;
-  width: 35rem;
-  height: 1.5rem;
-`;
-
-const Button = styled.button`
-  width: 4rem;
-  height: 2rem;
-  background: ${COLORS.mainYellow};
-`;
-
-const Edit = styled.button`
-  width: 4rem;
-  height: 2rem;
-  background: ${COLORS.mainYellow};
-  float: right;
-`;
-
-const StyledPaginateContainer = styled.div`
-  ul {
-    display: flex;
-  }
-`;
-
-const QuillContainer = styled.div`
-  height: 15rem;
-  width: 35rem;
-
-  .quill {
-    height: 10rem;
-  }
-`

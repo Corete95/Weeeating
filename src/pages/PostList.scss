@@ -1,0 +1,142 @@
+.postList {
+  position: relative;
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  height: 100%;
+  width: 85rem;
+
+  .weMeokTalkLogo {
+    text-align: center;
+    p {
+      position: absolute;
+      top: 136px;
+      right: 361px;
+      font-size: 33px;
+    }
+  }
+
+  .weMeokTalkList {
+    position: relative;
+    width: 56.4rem;
+    border: 3px solid #ffd966;
+    top: -8px;
+    left: 262px;
+    .listDiv {
+      padding: 30px 30px 30px 30px;
+
+      .listTitleBold {
+        display: flex;
+        padding-top: 10px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+
+        .titleBold {
+          width: 450px;
+        }
+        .writerBold {
+          width: 130px;
+        }
+        .createdAtBold {
+          width: 200px;
+        }
+        .commentsBold {
+          width: 50px;
+        }
+      }
+      .listSolidBold {
+        margin-top: 15px;
+        border-bottom: 2px solid black;
+      }
+      .listTitle {
+        display: flex;
+        padding-top: 16px;
+        text-align: center;
+        font-size: 19px;
+        cursor: pointer;
+
+        .title {
+          width: 450px;
+          text-align: left;
+        }
+        .writer {
+          width: 130px;
+        }
+        .createdAt {
+          width: 200px;
+        }
+        .comments {
+          width: 50px;
+        }
+      }
+      .listSolid {
+        margin-top: 15px;
+        border-bottom: 1px solid black;
+      }
+      .writerButton {
+        margin-top: 20px;
+        text-align: right;
+        button {
+          font-size: 17px;
+          background-color: #ffd966;
+          border-radius: 6px;
+          border: 1px solid black;
+          width: 70px;
+          height: 35px;
+          outline: none;
+          cursor: pointer;
+        }
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 1.5rem;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      ul.pagination li {
+        display: inline-block;
+        width: 22px;
+        display: flex;
+        justify-content: center;
+        font-size: 25px;
+      }
+
+      ul.pagination li a {
+        text-decoration: none;
+        color: black;
+        font-size: 20px;
+      }
+
+      ul.pagination li.active a {
+        color: #ffd966;
+      }
+      ul.pagination li.active {
+        font-weight: 600;
+        color: #ffd966;
+      }
+
+      ul.pagination li a:hover,
+      ul.pagination li a.active {
+        color: #ffd966;
+      }
+
+      .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+      ul.pagination li.prevPageText a,
+      ul.pagination li.nextPageText a {
+        color: #ffd966;
+      }
+    }
+  }
+}
