@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import axios from "axios";
-import Pagination from "react-js-pagination";
 import { useHistory } from "react-router-dom";
-import ReactQuill, { Quill } from "react-quill"; // Typescript
-import wemeok from "../images/wemeoktalk_2.png";
-import { COLORS } from "../styles/themeColor";
-import PostReply from "../pages/childComponents/PostReply";
 import { API } from "../config";
 import { EditCommentModal, DeleteCommentModal } from "../components";
 import {
@@ -14,6 +8,11 @@ import {
   setLoginActive,
   setFirstLogin
 } from "../store/actions";
+import ReactQuill, { Quill } from "react-quill"; // Typescript
+import axios from "axios";
+import Pagination from "react-js-pagination";
+import wemeok from "../images/wemeoktalk_2.png";
+import PostReply from "../pages/childComponents/PostReply";
 import "react-quill/dist/quill.snow.css";
 import "./PostDetail.scss";
 
@@ -26,20 +25,16 @@ export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
   const [comment, setComment] = useState<string>("");
-  const [content, setContent] = useState<any>("");
   const [title, setTitle] = useState<any>({ newTitle: null });
   const [postTitle, setPostTitle] = useState<any>(null);
-  const [postContent, setPostContent] = useState<any>(null);
+  const [postContent, setPostContent] = useState<any>("");
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState<any>(1);
   const [commentText, setCommentText] = useState<UserData | any>({
     newComment: null,
     updatedComment: { id: null, content: "기존댓글~~~" }
   });
-  const [currentComment, setCurrentComment] = useState<UserData | any>([]);
   const [activeInput, setActiveInput] = useState(false);
-  const [updatedPost, setUpdatedPost] = useState(posts[0]?.content);
   const [countComments, setCountComments] = useState(0);
   const [activePage, setActivePage] = useState<any>(1);
   const history = useHistory();
@@ -98,12 +93,7 @@ export default function PostDetail({ match }: any) {
     setComment(e.target.value);
   };
 
-  let data = {
-    comment: comment
-  };
-
   const submitChangedComment = (crud: string, commentId: number) => {
-    console.log("match", match.params.id);
     if (localStorage.getItem("token")) {
       if (crud === "INSERT") {
         axios
@@ -128,6 +118,7 @@ export default function PostDetail({ match }: any) {
             console.log(err);
           });
       }
+
       if (crud === "UPDATE") {
         setEditModal(false);
 
@@ -140,11 +131,11 @@ export default function PostDetail({ match }: any) {
             { headers: { Authorization: localStorage.getItem("token") } }
           )
           .then((res) => {
-            console.log(res);
             window.location.reload();
           })
           .catch((err) => console.log(err));
       }
+
       if (crud === "DELETE") {
         setDeleteModal(false);
         axios
@@ -154,7 +145,6 @@ export default function PostDetail({ match }: any) {
             }
           })
           .then((res) => {
-            console.log(res);
             window.location.reload();
           })
           .catch((err) => console.log(err));
@@ -178,7 +168,6 @@ export default function PostDetail({ match }: any) {
 
   const clickEdit = (comment: any) => {
     setEditModal(true);
-    console.log("comment123", comment);
     setCommentText({
       ...commentText,
       updatedComment: {
@@ -199,12 +188,12 @@ export default function PostDetail({ match }: any) {
     });
   };
 
-  //const contentResult = content.replace(/(<([^>]+)>)/gi, "");
+  const contentResult = postContent.replace(/(<([^>]+)>)/gi, "");
 
   const patchPost = (): void => {
     const data = {
       title: postTitle,
-      content: postContent
+      content: contentResult
     };
 
     axios.patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
@@ -244,7 +233,6 @@ export default function PostDetail({ match }: any) {
 
   const changePostTitle = (e: any) => {
     const { value } = e.target;
-    console.log("changePostTitle value", value);
     setPostTitle(value);
   };
 
@@ -280,7 +268,6 @@ export default function PostDetail({ match }: any) {
                   </div>
                   <div className="writingCenter">
                     <p>내용</p>
-
                     <ReactQuill
                       bounds={".quill"}
                       theme={"snow"}
@@ -356,7 +343,6 @@ export default function PostDetail({ match }: any) {
                   writer_id={comments.comment_writer_id}
                   clickEdit={clickEdit}
                   clickDeleteComment={clickDeleteComment}
-                  // submitChangedComment={submitChangedComment}
                 />
               );
             })}
@@ -380,12 +366,12 @@ export default function PostDetail({ match }: any) {
         <EditCommentModal
           editModal={editModal}
           setEditModal={setEditModal}
-          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
           updatedComment={commentText.updatedComment}
           submitChangedComment={submitChangedComment}
           updateComment={updateComment}
         />
       )}
+
       {deleteModal && (
         <DeleteCommentModal
           deleteModal={deleteModal}

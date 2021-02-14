@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import Pagination from "react-js-pagination";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { API } from "../config";
@@ -53,7 +54,7 @@ export default function StoreDetail(props: any) {
   });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-
+  const [activePage, setActivePage] = useState<any>(1);
   console.log("currentComment", currentComment);
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
@@ -272,6 +273,18 @@ export default function StoreDetail(props: any) {
     });
   };
 
+  const handlePageChange = (pageNumber: any) => {
+    axios
+      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        //setComments(res.data);
+      });
+    setActivePage(pageNumber);
+  };
   const handleDragStart = (e: any) => e.preventDefault();
 
   return (
@@ -383,6 +396,20 @@ export default function StoreDetail(props: any) {
               </Comment>
             ))}
         </CommentsWrapper>
+        <PaginationCss>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={5}
+            totalItemsCount={400}
+            pageRangeDisplayed={5}
+            hideFirstLastPages
+            itemClassPrev={"prevPageText"}
+            itemClassNext={"nextPageText"}
+            prevPageText={"◀"}
+            nextPageText={"▶"}
+            onChange={handlePageChange}
+          />
+        </PaginationCss>
       </CommentSection>
       {editModal && (
         <EditCommentModal
@@ -406,7 +433,7 @@ export default function StoreDetail(props: any) {
 }
 
 const Container = styled.div`
-  margin: 10rem auto;
+  margin: 10rem auto 5rem auto;
   width: 65rem;
 `;
 
@@ -568,4 +595,54 @@ const ModifyBtn = styled.button`
   font-weight: 700;
   cursor: pointer;
   background-color: white;
+`;
+
+const PaginationCss = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0rem 0rem 0rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 22px;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+  }
+
+  ul.pagination li.active a {
+    color: #ffd966;
+  }
+  ul.pagination li.active {
+    font-weight: 600;
+    color: #ffd966;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: #ffd966;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  ul.pagination li.prevPageText a,
+  ul.pagination li.nextPageText a {
+    color: #ffd966;
+  }
 `;
