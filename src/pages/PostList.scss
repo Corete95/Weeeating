@@ -58,6 +58,9 @@
         cursor: pointer;
 
         .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           width: 450px;
           text-align: left;
         }

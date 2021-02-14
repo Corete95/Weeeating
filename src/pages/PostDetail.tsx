@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Pagination from "react-js-pagination";
-import ReactPaginate from "react-paginate";
 import { useHistory } from "react-router-dom";
-import ReactQuill from "react-quill"; // Typescript
+import ReactQuill, { Quill } from "react-quill"; // Typescript
 import wemeok from "../images/wemeoktalk_2.png";
 import { COLORS } from "../styles/themeColor";
 import PostReply from "../pages/childComponents/PostReply";
@@ -15,7 +14,6 @@ import {
   setLoginActive,
   setFirstLogin
 } from "../store/actions";
-
 import "react-quill/dist/quill.snow.css";
 import "./PostDetail.scss";
 
@@ -28,9 +26,10 @@ export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
   const [comment, setComment] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<any>("");
   const [title, setTitle] = useState<any>({ newTitle: null });
   const [postTitle, setPostTitle] = useState<any>(null);
+  const [postContent, setPostContent] = useState<any>(null);
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -46,6 +45,35 @@ export default function PostDetail({ match }: any) {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" }
+      ],
+      ["link"],
+      ["clean"]
+    ]
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image"
+  ];
+
   useEffect(() => {
     const fetchPosts = async () => {
       await axios
@@ -60,6 +88,7 @@ export default function PostDetail({ match }: any) {
           setComments(res.data.board_comments);
           setCountComments(res.data.count_comments);
           setTitle(res.data.board_info[0].title);
+          setPostContent(res.data.board_info[0].content);
         });
     };
     fetchPosts();
@@ -133,8 +162,6 @@ export default function PostDetail({ match }: any) {
 
   const updateComment = (e: any) => {
     const { value } = e.target;
-    console.log("updateComment 함수 실행된당");
-    console.log("value 함수 실행된당", value);
 
     setCommentText({
       ...commentText,
@@ -168,15 +195,12 @@ export default function PostDetail({ match }: any) {
     });
   };
 
-  const contentResult = content.replace(/(<([^>]+)>)/gi, "");
+  //const contentResult = content.replace(/(<([^>]+)>)/gi, "");
 
-  const updatePost = (value: string) => {
-    setContent(value);
-  };
   const patchPost = (): void => {
     const data = {
       title: postTitle,
-      content: contentResult
+      content: postContent
     };
 
     axios.patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
@@ -188,7 +212,7 @@ export default function PostDetail({ match }: any) {
   };
 
   const deletePost = (): void => {
-    if (window.confirm("삭제?")) {
+    if (window.confirm("게시물을 삭제하시겠습까?")) {
       axios
         .delete(`${API}/board/${match.params.id}`, {
           headers: {
@@ -213,17 +237,15 @@ export default function PostDetail({ match }: any) {
       });
     setActivePage(pageNumber);
   };
-  
-  
 
   const changePostTitle = (e: any) => {
-    const {value} = e.target;
-    console.log("changePostTitle value", value)
+    const { value } = e.target;
+    console.log("changePostTitle value", value);
     setPostTitle(value);
-  }
+  };
 
-  const changePostContent = (value: string) => {
-    setContent(value);
+  const changePostContent = (html: any) => {
+    setPostContent(html);
   };
 
   return (
@@ -240,7 +262,11 @@ export default function PostDetail({ match }: any) {
                 <div className="editListDiv">
                   <div className="writingTitle">
                     <p>제목</p>
-                    <input type="text/html" value={postTitle} onChange={changePostTitle}></input>
+                    <input
+                      type="text/html"
+                      value={postTitle}
+                      onChange={changePostTitle}
+                    ></input>
                   </div>
                   <div className="solidLine"></div>
                   <div className="writerCreated">
@@ -250,11 +276,14 @@ export default function PostDetail({ match }: any) {
                   </div>
                   <div className="writingCenter">
                     <p>내용</p>
+
                     <ReactQuill
                       bounds={".quill"}
-                      theme="snow"
-                      value={content}
+                      theme={"snow"}
+                      value={postContent}
                       onChange={changePostContent}
+                      modules={modules}
+                      formats={formats}
                     />
                   </div>
                   <div className="writerButton">
@@ -342,7 +371,7 @@ export default function PostDetail({ match }: any) {
           </div>
         </div>
       </div>
-      {console.log("PostDetail commentText", commentText)}
+
       {editModal && (
         <EditCommentModal
           editModal={editModal}

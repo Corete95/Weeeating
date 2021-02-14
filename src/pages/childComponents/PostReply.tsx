@@ -28,7 +28,7 @@ export default function PostReply({
 }: // submitChangedComment
 PostReplyData) {
   const history = useHistory();
-  console.log("text", writer);
+
   return (
     <div className="comments" key={id}>
       <p className="commentsWriter">{writer}</p>

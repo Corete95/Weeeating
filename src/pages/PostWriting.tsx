@@ -50,19 +50,20 @@ export default function PostWriting() {
             <div className="writingTitle">
               <p>제목</p>
               <input
+                maxLength={20}
                 type="text/html"
                 onChange={(e) =>
                   setTitle({ ...title, newTitle: e.target.value })
                 }
-              ></input>
+              />
             </div>
             <div className="solidLine"></div>
             <div className="writingCenter">
               <p>내용</p>
               <ReactQuill
                 bounds={".quill"}
-                theme="snow"
-                //value={content}
+                theme={"snow"}
+                value={content}
                 onChange={createPost}
               />
             </div>
