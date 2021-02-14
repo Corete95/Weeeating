@@ -12,7 +12,8 @@ interface PostReplyData {
   writer_id: number;
   comments: any;
   clickEdit: (comment: any) => void;
-  deleteComment: (comment_id: any) => void;
+  clickDeleteComment: (comment: any) => void
+  // submitChangedComment: (crud: string, commentId: number) => void
 }
 
 export default function PostReply({
@@ -23,8 +24,9 @@ export default function PostReply({
   writer_id,
   comments,
   clickEdit,
-  deleteComment
-}: PostReplyData) {
+  clickDeleteComment
+}: // submitChangedComment
+PostReplyData) {
   const history = useHistory();
   console.log("text", writer);
   return (
@@ -34,10 +36,15 @@ export default function PostReply({
       <p className="commentCreated">({created_at})</p>
       {writer_id === Number(localStorage.getItem("user_id_number")) && (
         <div className="modifyDiv">
-          <p className="commentEdit" onClick={() => clickEdit(comments)}>
+          <p
+            className="commentEdit"
+            onClick={() => {
+              clickEdit(comments);
+            }}
+          >
             수정
           </p>
-          <p className="commentDelete" onClick={() => deleteComment(id)}>
+          <p className="commentDelete" onClick={() => clickDeleteComment(id)}>
             삭제
           </p>
         </div>

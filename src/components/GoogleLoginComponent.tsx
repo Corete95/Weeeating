@@ -48,9 +48,9 @@ export default function GoogleLoginComponent() {
           dispatch(setSignupActive(true));
           dispatch(setLoginActive(false));
         } else {
-          alert("구글 로그인 되었습니다.");
-          history.push("/");
           dispatch(setLoginActive(false));
+          history.push("/");
+          alert("구글 로그인 되었습니다.");
         }
       })
       .catch((err: any) => {

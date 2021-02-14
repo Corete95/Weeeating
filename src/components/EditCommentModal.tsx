@@ -33,7 +33,7 @@ export default function EditCommentModal({
   
   return (
     <ModalWrapper visible={editModal} tabIndex={-1}>
-      {console.log("EditModal updatedComment", updatedComment)}
+      {console.log("수정 모달 리로드중 content", updatedComment.content)}
       <ModalInner tabIndex={0}>
         <Input
           type="text"
@@ -42,7 +42,6 @@ export default function EditCommentModal({
           onChange={updateComment}
         />
         <div className="buttons">
-          {console.log("updatedComment.id", updatedComment.id)}
           <Button
             onClick={() => submitChangedComment("UPDATE", updatedComment.id)}
           >

@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
-import wemeok from "../images/wemeoktalk_2.png";
-import { COLORS } from "../styles/themeColor";
-import PostReply from "../pages/childComponents/PostReply";
+import { useDispatch } from "react-redux";
 import axios from "axios";
-import { API } from "../config";
 import Pagination from "react-js-pagination";
 import ReactPaginate from "react-paginate";
 import { useHistory } from "react-router-dom";
-import { EditCommentModal, DeleteCommentModal } from "../components";
 import ReactQuill from "react-quill"; // Typescript
+import wemeok from "../images/wemeoktalk_2.png";
+import { COLORS } from "../styles/themeColor";
+import PostReply from "../pages/childComponents/PostReply";
+import { API } from "../config";
+import { EditCommentModal, DeleteCommentModal } from "../components";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
+
 import "react-quill/dist/quill.snow.css";
 import "./PostDetail.scss";
 
@@ -23,6 +30,7 @@ export default function PostDetail({ match }: any) {
   const [comment, setComment] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [title, setTitle] = useState<any>({ newTitle: null });
+  const [postTitle, setPostTitle] = useState<any>(null);
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState<any>(1);
@@ -36,6 +44,7 @@ export default function PostDetail({ match }: any) {
   const [countComments, setCountComments] = useState(0);
   const [activePage, setActivePage] = useState<any>(1);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -64,91 +73,97 @@ export default function PostDetail({ match }: any) {
     comment: comment
   };
 
-  const addComment = (): any => {
-    if (comment.length >= 1) {
-      setComments([
-        ...comments,
-        {
-          comment_content: comment,
-          comment_writer: "로그인된 사람",
-          comment_created_at: "방금 전"
-        }
-      ]);
-      setContent("");
+  const submitChangedComment = (crud: string, commentId: number) => {
+    console.log("match", match.params.id);
+    if (crud === "INSERT") {
       axios
-        .post(`${API}/board/${match.params.id}/comment`, JSON.stringify(data), {
-          headers: {
-            Authorization: localStorage.getItem("token")
+        .post(
+          `${API}/board/${match.params.id}/comment`,
+          JSON.stringify({
+            comment
+          }),
+          { headers: { Authorization: localStorage.getItem("token") } }
+        )
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            console.log(res);
+            window.location.reload();
           }
         })
-        .then((res) => {
-          window.location.reload();
+        .catch((err) => {
+          console.log(err);
         });
     }
-  };
+    if (crud === "UPDATE") {
+      setEditModal(false);
 
-  const patchComment = (crud: string, comment_id: number) => {
-    console.log("댓글수정", comment_id);
-    setCurrentComment(
-      currentComment.map((comment: any) =>
-        comment.id === comment_id
-          ? { ...comment, comment: commentText.updatedComment.comment }
-          : comment
-      )
-    );
-    setEditModal(false);
-
-    axios
-      .patch(
-        `${API}/board/${match.params.id}/${comment_id}`,
-        JSON.stringify({
-          // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
-          comment: commentText.updatedComment.content
-        }),
-        { headers: { Authorization: localStorage.getItem("token") } }
-      )
-      .then((res) => {
-        console.log(res);
-        window.location.reload();
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const deleteComment = (comment_id: any): void => {
-    if (window.confirm("삭제?")) {
       axios
-        .delete(`${API}/board/${match.params.id}/${comment_id}`, {
+        .patch(
+          `${API}/board/${match.params.id}/${commentId}`,
+          JSON.stringify({
+            comment: commentText.updatedComment.content
+          }),
+          { headers: { Authorization: localStorage.getItem("token") } }
+        )
+        .then((res) => {
+          console.log(res);
+          window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    }
+    if (crud === "DELETE") {
+      setDeleteModal(false);
+      axios
+        .delete(`${API}/board/${match.params.id}/${commentId}`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
         .then((res) => {
+          console.log(res);
           window.location.reload();
-        });
+        })
+        .catch((err) => console.log(err));
     }
   };
 
   const updateComment = (e: any) => {
     const { value } = e.target;
-    console.log("updateComment value", value);
+    console.log("updateComment 함수 실행된당");
+    console.log("value 함수 실행된당", value);
 
     setCommentText({
       ...commentText,
       updatedComment: {
         ...commentText.updatedComment,
-        comment: value
+        content: value
       }
     });
-    window.location.reload();
   };
 
   const clickEdit = (comment: any) => {
     setEditModal(true);
+    console.log("comment123", comment);
     setCommentText({
       ...commentText,
       updatedComment: {
         id: comment.comment_id,
-        comment: comment.comment_comment
+        content: comment.comment_content
+      }
+    });
+  };
+
+  const clickDeleteComment = (commentId: any) => {
+    setDeleteModal(true);
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        ...commentText.updatedComment,
+        id: commentId
       }
     });
   };
@@ -160,7 +175,7 @@ export default function PostDetail({ match }: any) {
   };
   const patchPost = (): void => {
     const data = {
-      title: posts[0].title,
+      title: postTitle,
       content: contentResult
     };
 
@@ -198,11 +213,19 @@ export default function PostDetail({ match }: any) {
       });
     setActivePage(pageNumber);
   };
-  const createPost = (value: string) => {
+  
+  
+
+  const changePostTitle = (e: any) => {
+    const {value} = e.target;
+    console.log("changePostTitle value", value)
+    setPostTitle(value);
+  }
+
+  const changePostContent = (value: string) => {
     setContent(value);
   };
 
-  console.log("1", comments);
   return (
     <>
       <div className="postDetail">
@@ -217,7 +240,7 @@ export default function PostDetail({ match }: any) {
                 <div className="editListDiv">
                   <div className="writingTitle">
                     <p>제목</p>
-                    <input type="text/html"></input>
+                    <input type="text/html" value={postTitle} onChange={changePostTitle}></input>
                   </div>
                   <div className="solidLine"></div>
                   <div className="writerCreated">
@@ -231,7 +254,7 @@ export default function PostDetail({ match }: any) {
                       bounds={".quill"}
                       theme="snow"
                       value={content}
-                      onChange={createPost}
+                      onChange={changePostContent}
                     />
                   </div>
                   <div className="writerButton">
@@ -241,7 +264,7 @@ export default function PostDetail({ match }: any) {
                         setActiveInput(false);
                       }}
                     >
-                      작성
+                      수정
                     </button>
                   </div>
                 </div>
@@ -267,6 +290,7 @@ export default function PostDetail({ match }: any) {
                         className="edit"
                         onClick={() => {
                           setActiveInput(true);
+                          setPostTitle(posts[0]?.title);
                         }}
                       >
                         수정
@@ -284,7 +308,9 @@ export default function PostDetail({ match }: any) {
             <div className="commentsInputDiv">
               <p>댓글 ({countComments})</p>
               <input value={comment} onChange={onChangeComment}></input>
-              <span onClick={addComment}>등록</span>
+              <span onClick={() => submitChangedComment("INSERT", 0)}>
+                등록
+              </span>
             </div>
             {comments?.map((comments: any) => {
               return (
@@ -296,7 +322,8 @@ export default function PostDetail({ match }: any) {
                   created_at={comments.comment_created_at}
                   writer_id={comments.comment_writer_id}
                   clickEdit={clickEdit}
-                  deleteComment={deleteComment}
+                  clickDeleteComment={clickDeleteComment}
+                  // submitChangedComment={submitChangedComment}
                 />
               );
             })}
@@ -315,13 +342,14 @@ export default function PostDetail({ match }: any) {
           </div>
         </div>
       </div>
+      {console.log("PostDetail commentText", commentText)}
       {editModal && (
         <EditCommentModal
           editModal={editModal}
           setEditModal={setEditModal}
           // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
           updatedComment={commentText.updatedComment}
-          submitChangedComment={patchComment}
+          submitChangedComment={submitChangedComment}
           updateComment={updateComment}
         />
       )}
@@ -329,7 +357,7 @@ export default function PostDetail({ match }: any) {
         <DeleteCommentModal
           deleteModal={deleteModal}
           setDeleteModal={setDeleteModal}
-          submitChangedComment={deleteComment}
+          submitChangedComment={submitChangedComment}
           commentId={commentText.updatedComment.id}
         />
       )}

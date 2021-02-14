@@ -43,13 +43,6 @@ export default function Signup() {
     return true;
   };
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
-
   const submitSingup = async (type: string) => {
     switch (type) {
       case "login":
