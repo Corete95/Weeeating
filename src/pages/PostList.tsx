@@ -59,7 +59,13 @@ export default function App() {
     setActivePage(pageNumber);
   };
   console.log(posts);
-
+  const loginCheck = () => {
+    if (localStorage.getItem("token")) {
+      history.push("./post-writing");
+    } else {
+      alert("로그인을 해주세요!");
+    }
+  };
   return (
     <>
       <div className="postList">
@@ -88,9 +94,7 @@ export default function App() {
               );
             })}
             <div className="writerButton">
-              <button onClick={() => history.push("./post-writing")}>
-                글쓰기
-              </button>
+              <button onClick={loginCheck}>글쓰기</button>
             </div>
             <Pagination
               activePage={activePage}

@@ -104,59 +104,63 @@ export default function PostDetail({ match }: any) {
 
   const submitChangedComment = (crud: string, commentId: number) => {
     console.log("match", match.params.id);
-    if (crud === "INSERT") {
-      axios
-        .post(
-          `${API}/board/${match.params.id}/comment`,
-          JSON.stringify({
-            comment
-          }),
-          { headers: { Authorization: localStorage.getItem("token") } }
-        )
-        .then((res) => {
-          if (res.data.MESSAGE === "NEED_USER_NAME") {
-            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
-            dispatch(setFirstLogin(true));
-            dispatch(setSignupActive(true));
-          } else {
+    if (localStorage.getItem("token")) {
+      if (crud === "INSERT") {
+        axios
+          .post(
+            `${API}/board/${match.params.id}/comment`,
+            JSON.stringify({
+              comment
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            if (res.data.MESSAGE === "NEED_USER_NAME") {
+              alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+              dispatch(setFirstLogin(true));
+              dispatch(setSignupActive(true));
+            } else {
+              console.log(res);
+              window.location.reload();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (crud === "UPDATE") {
+        setEditModal(false);
+
+        axios
+          .patch(
+            `${API}/board/${match.params.id}/${commentId}`,
+            JSON.stringify({
+              comment: commentText.updatedComment.content
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
             console.log(res);
             window.location.reload();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    if (crud === "UPDATE") {
-      setEditModal(false);
-
-      axios
-        .patch(
-          `${API}/board/${match.params.id}/${commentId}`,
-          JSON.stringify({
-            comment: commentText.updatedComment.content
-          }),
-          { headers: { Authorization: localStorage.getItem("token") } }
-        )
-        .then((res) => {
-          console.log(res);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
-    if (crud === "DELETE") {
-      setDeleteModal(false);
-      axios
-        .delete(`${API}/board/${match.params.id}/${commentId}`, {
-          headers: {
-            Authorization: localStorage.getItem("token")
-          }
-        })
-        .then((res) => {
-          console.log(res);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
+      }
+      if (crud === "DELETE") {
+        setDeleteModal(false);
+        axios
+          .delete(`${API}/board/${match.params.id}/${commentId}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+          .then((res) => {
+            console.log(res);
+            window.location.reload();
+          })
+          .catch((err) => console.log(err));
+      }
+    } else {
+      alert("로그인을 해주세요!");
     }
   };
 
