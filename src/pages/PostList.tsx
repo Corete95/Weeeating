@@ -72,8 +72,8 @@ export default function App() {
             hideFirstLastPages
             itemClassPrev={"prevPageText"}
             itemClassNext={"nextPageText"}
-            prevPageText={"<"}
-            nextPageText={">"}
+            prevPageText={"<<"}
+            nextPageText={">>"}
             onChange={handlePageChange}
           />
         </StyledPaginateContainer>
@@ -86,6 +86,7 @@ export default function App() {
 }
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,15 +97,17 @@ const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 2rem;
+  padding-top: 2em;
   width: 45.2rem;
   border: 4px solid ${COLORS.mainYellow};
+  height:30rem
 `;
 
 const Img = styled.img`
   position: relative;
   top: 1rem;
   margin: 5rem 3.3rem 0 0;
+  width:49rem;
 `;
 
 const ImgText = styled.p`
@@ -115,13 +118,22 @@ const ImgText = styled.p`
 `;
 
 const Button = styled.button`
-  width: 4rem;
-  height: 2rem;
+  position: relative;
+  bottom: 1rem;
+  left: 15rem;
+  width: 5rem;
+  height: 2.5rem;
   background: ${COLORS.mainYellow};
+
 `;
 
 const StyledPaginateContainer = styled.div`
   ul {
     display: flex;
+    margin: 1em;
+
+    li {
+      padding: .5em;
+    }
   }
 `;

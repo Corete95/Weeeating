@@ -31,7 +31,7 @@ export default function FeatherDetail() {
     }
   }, []);
 
-  const changeLikedState = (id: any) => {
+  const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {
       setFeatherFood(
         featherFood?.map((data: any) => {
@@ -81,6 +81,7 @@ export default function FeatherDetail() {
               <StoreCard2
                 id={feather.id}
                 name={feather.name}
+                type={"soju"}
                 image={feather.image}
                 likeCount={feather.like_count}
                 likeState={feather.like_state}

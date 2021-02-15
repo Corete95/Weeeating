@@ -194,6 +194,7 @@
   height: auto;
   margin: 0rem 3.25rem;
   padding: 1.25rem 0rem;
+  outline: none;
   hr {
     margin: 0px 0px;
   }
@@ -231,7 +232,8 @@
       }
 
       hr {
-        border: solid 0.0625rem black;
+        background-color: black;
+        //border: solid 0.0625rem black;
       }
       img {
         width: 100%;
@@ -245,6 +247,9 @@
       .foodName {
         width: 15.75rem;
       }
+      span {
+        cursor: pointer;
+      }
       img {
         width: 2rem;
         height: 2rem;
@@ -255,19 +260,16 @@
     }
   }
 }
-// .storeCard:hover {
-//   transition: transform 0.2s;
-//   transform: scale(1.1);
-//   z-index: 2;
-// }
-.slides {
-  .slick-prev {
-    left: -1.25rem !important;
-  }
 
-  .slick-prev {
-    right: -1.25rem !important;
-  }
+.slides {
+  outline: none;
+  // .slick-prev {
+  //   left: -1.25rem !important;
+  // }
+
+  // .slick-prev {
+  //   right: -1.25rem !important;
+  // }
 
   .slick-next:before,
   .slick-prev:before {
