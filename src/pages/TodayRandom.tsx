@@ -19,17 +19,20 @@ export default function TodayRandom() {
   const [store, setStore] = useState<UserData | any>({});
   const [clickedState, setClickedState] = useState<UserData | boolean>(false);
   const [againModal, setAgainModal] = useState(false);
+  const [restTime, setRestTime] = useState({ hour: 4, minute: 0 });
 
   const display = (value: any) => {
-    var now = new Date();
-    var time = now.getTime();
-    var expireTime = time + 14400000;
+    let now = new Date();
+    let time = now.getTime();
+    let expireTime = time + 14400000;
     now.setTime(expireTime);
+
     document.cookie = `randomStore=${value};expires="${now.toUTCString()}";path=/`;
+    document.cookie = `randomStoreExpireTime=${expireTime}`;
   };
 
   const getCookie = (name: string) => {
-    var value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
+    let value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
     return value ? value[2] : null;
   };
 
@@ -89,11 +92,30 @@ export default function TodayRandom() {
 
   useEffect(() => {
     const store = getCookie("randomStore");
+
     if (store) {
       setStore(JSON.parse(store));
       setClickedState(true);
     }
   }, []);
+
+  useEffect(() => {
+    let restTimer = () => {
+      let expireTime = Number(getCookie("randomStoreExpireTime"));
+      let nowDate = new Date();
+      let nowNumber = nowDate.getTime();
+      let restTime = expireTime - nowNumber;
+
+      let hour = Math.floor((restTime / (1000 * 60 * 60)) % 24),
+        minute = Math.floor((restTime / (1000 * 60)) % 60);
+
+      setRestTime({ hour, minute });
+    };
+    if (againModal) {
+      restTimer();
+      setInterval(restTimer, 60000);
+    }
+  }, [againModal]);
 
   return (
     <Container>
@@ -150,7 +172,9 @@ export default function TodayRandom() {
               <Header>
                 첫번째 나온 것이 찐!
                 <br />이 집으로 가시죠 😋
-                <div className="sub">4시간 후에 다시하기 가능</div>
+                <div className="sub">
+                  {restTime.hour}시간 {restTime.minute}분 후에 다시하기 가능
+                </div>
               </Header>
             </div>
             <div className="buttons">
@@ -201,6 +225,10 @@ const RandomComponent = styled.div`
 const Row = styled.div`
   display: flex;
   ${mixin.flexSet("space-evenly", "center", "row")}
+
+  img {
+    cursor: pointer;
+  }
 `;
 
 const VerticalText = styled.p`
