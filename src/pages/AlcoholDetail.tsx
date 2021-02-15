@@ -40,7 +40,7 @@ export default function AlcoholDetail({ match, props }: any) {
     ),
     className: "slides"
   };
-  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       axios
@@ -60,10 +60,11 @@ export default function AlcoholDetail({ match, props }: any) {
     }
   }, []);
 
-  const changeLikedState = (id: any) => {
+  const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {
-      setAlcoholData(
-        alcoholData?.map((data: any) => {
+      setAlcoholData({
+        ...alcoholData,
+        [type]: alcoholData[type].map((data: any) => {
           if (data.id === id) {
             if (data.like_state) {
               return {
@@ -82,7 +83,7 @@ export default function AlcoholDetail({ match, props }: any) {
             return data;
           }
         })
-      );
+      });
       axios
         .post(`${API}/store/like/${id}`, "data", {
           headers: {
@@ -95,8 +96,7 @@ export default function AlcoholDetail({ match, props }: any) {
       alert("로그인을 해주세요!");
     }
   };
-  console.log(alcoholData);
-  console.log(alcoholData.beer);
+
   return (
     <>
       <div className="alcohol">
@@ -119,6 +119,7 @@ export default function AlcoholDetail({ match, props }: any) {
                   <StoreCard2
                     id={alcohol.id}
                     name={alcohol.name}
+                    type={"soju"}
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
@@ -143,6 +144,7 @@ export default function AlcoholDetail({ match, props }: any) {
                   <StoreCard2
                     id={alcohol.id}
                     name={alcohol.name}
+                    type={"beer"}
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
@@ -166,6 +168,7 @@ export default function AlcoholDetail({ match, props }: any) {
                 return (
                   <StoreCard2
                     id={alcohol.id}
+                    type={"makgeolli"}
                     name={alcohol.name}
                     image={alcohol.image}
                     likeCount={alcohol.like_count}

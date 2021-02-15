@@ -31,7 +31,7 @@ export default function StoreList() {
     }
   }, []);
 
-  const changeLikedState = (id: any) => {
+  const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {
       setStoreList(
         storeList?.map((data: any) => {
@@ -69,11 +69,14 @@ export default function StoreList() {
   return (
     <>
       <div className="storeList">
-        <div className="logoBox">
+        <div className="storeListLogo">
+          <img src="./images/storelist.png"></img>
+        </div>
+        {/* <div className="logoBox">
           <div className="logoBox1">
             <p>위코더 맛집</p>
           </div>
-        </div>
+        </div> */}
         <div className="storeFood">
           {storeList?.map((feather: any) => {
             return (
@@ -81,6 +84,7 @@ export default function StoreList() {
                 id={feather.id}
                 name={feather.name}
                 image={feather.image}
+                type={"soju"}
                 likeCount={feather.like_count}
                 likeState={feather.like_state}
                 changeLikedState={changeLikedState}

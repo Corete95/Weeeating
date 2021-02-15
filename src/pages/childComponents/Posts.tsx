@@ -5,7 +5,7 @@ import styled from "styled-components";
 export default function Posts({ posts }: any) {
   return (
     <Ul>
-      <div>
+      <div className="title">
         <li>제목</li>
         <li>작성자</li>
         <li>등록일</li>
@@ -20,11 +20,11 @@ export default function Posts({ posts }: any) {
           comments: number;
         }) => (
           <Link to={`/post-detail/${post.id}`}>
-            <div key={post.id}>
-              <li>{post.title}</li>
-              <li>{post.writer}</li>
-              <li>{post.created_at}</li>
-              <li>{post.comments}</li>
+            <div className="content" key={post.id}>
+              <li className="postTitle">{post.title}</li>
+              <li className="postWriter">{post.writer}</li>
+              <li className="postCreatedAt">{post.created_at}</li>
+              <li className="postComments">{post.comments}</li>
             </div>
           </Link>
         )
@@ -34,17 +34,34 @@ export default function Posts({ posts }: any) {
 }
 
 const Ul = styled.ul`
-  width: 100%;
+  width: 90%;
 
-  div {
+  .title {
     display: flex;
-    justify-content: space-around;
-    border-bottom: 1px solid black;
+    justify-content: space-evenly;
+    border-bottom: 1px solid gray;
 
     li {
-      margin: 0 1rem;
-      line-height: 2rem;
-      flex: 1;
+      font-size: 1.5rem;
+      margin: .3em 1em;
+    }
+  }
+  
+  .content {
+    display: flex;
+    justify-content: space-evenly;
+    border-bottom: 1px solid gray;
+
+    .postTitle {
+      font-size: 1rem;
+      margin: 0 1em;
+      line-height: 3rem;
+    }
+
+    .postWriter, .postCreatedAt, .postComments {
+      font-size: 1rem;
+      line-height: 3rem;
+      margin: 0 1em;
     }
   }
 `;
