@@ -78,7 +78,7 @@ export default function PostDetail({ match }: any) {
           }
         })
         .then((res) => {
-          console.log(res.data);
+          console.log("test", res.data);
           setPosts(res.data.board_info);
           setComments(res.data.board_comments);
           setCountComments(res.data.count_comments);
@@ -220,13 +220,13 @@ export default function PostDetail({ match }: any) {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
+      .get(`${API}/board/${match.params.id}?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }
       })
       .then((res) => {
-        setComments(res.data);
+        setComments(res.data.board_comments);
       });
     setActivePage(pageNumber);
   };

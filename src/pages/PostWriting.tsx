@@ -50,7 +50,7 @@ export default function PostWriting() {
             <div className="writingTitle">
               <p>제목</p>
               <input
-                maxLength={20}
+                maxLength={50}
                 type="text/html"
                 onChange={(e) =>
                   setTitle({ ...title, newTitle: e.target.value })

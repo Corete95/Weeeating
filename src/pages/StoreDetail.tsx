@@ -55,6 +55,7 @@ export default function StoreDetail(props: any) {
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [activePage, setActivePage] = useState<any>(1);
+  const [countComments, setCountComments] = useState(0);
   console.log("currentComment", currentComment);
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
@@ -78,9 +79,9 @@ export default function StoreDetail(props: any) {
           axios.spread((res1, res2) => {
             console.log("res1", res1);
             setInfo(res1.data);
-            // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data.comment_list);
+            setCountComments(res2.data.count_comments);
+            console.log(res2.data);
           })
         );
     } else {
@@ -95,7 +96,7 @@ export default function StoreDetail(props: any) {
             setInfo(res1.data);
             // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data.comment_list);
+            console.log("res2.data.comment_list", res2.data);
           })
         );
     }
@@ -275,18 +276,24 @@ export default function StoreDetail(props: any) {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
-        headers: {
-          Authorization: localStorage.getItem("token")
+      .get(
+        `${API}/store/detail/${props.match.params.id}/comment?offset=${
+          (pageNumber - 1) * 5
+        }`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
         }
-      })
+      )
       .then((res) => {
-        //setComments(res.data);
+        console.log("1", res.data.comment_list);
+        setCurrentComment(res.data.comment_list);
       });
     setActivePage(pageNumber);
   };
   const handleDragStart = (e: any) => e.preventDefault();
-
+  console.log("pageNumber", activePage);
   return (
     <Container>
       <DescSection>
@@ -400,7 +407,7 @@ export default function StoreDetail(props: any) {
           <Pagination
             activePage={activePage}
             itemsCountPerPage={5}
-            totalItemsCount={400}
+            totalItemsCount={countComments}
             pageRangeDisplayed={5}
             hideFirstLastPages
             itemClassPrev={"prevPageText"}

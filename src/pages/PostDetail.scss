@@ -86,6 +86,8 @@
           margin-right: 6px;
         }
         .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
           align-items: center;
           display: flex;
           width: 100%;
@@ -157,7 +159,6 @@
       margin-bottom: 20px;
       .commentsWriter {
         display: flex;
-        align-items: center;
         width: 14%;
         font-size: 22px;
         margin-right: 10px;
@@ -167,7 +168,6 @@
         width: 47%;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
         font-size: 20px;
         margin-left: 10px;
       }
