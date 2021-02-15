@@ -30,7 +30,7 @@ export default function AboutPage() {
         </div>
         <div className="aboutCenter">
           <div className="aboutCenterImg">
-            <img src="./images/about.jpg"></img>
+            <img src="./images/weeeating_team.gif"></img>
           </div>
           <div className="aboutCenterText">
             <div className="centerTextTop">
