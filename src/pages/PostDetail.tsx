@@ -297,9 +297,8 @@ export default function PostDetail({ match }: any) {
                 </div>
                 <div className="solidLine"></div>
                 <div className="writerCreated">
-                  <p>{posts[0]?.writer}</p>
-                  <p>|</p>
-                  <p>{posts[0]?.created_at}</p>
+                  <p className="wirter">{posts[0]?.writer}</p>
+                  <p className="created">{posts[0]?.created_at}</p>
                 </div>
                 <div className="contentDiv">{posts[0]?.content}</div>
                 {posts[0]?.writer_id ===
@@ -315,7 +314,7 @@ export default function PostDetail({ match }: any) {
                       >
                         수정
                       </p>
-                      <p>|</p>
+
                       <p className="delete" onClick={deletePost}>
                         삭제
                       </p>
@@ -327,7 +326,11 @@ export default function PostDetail({ match }: any) {
             <div className="solidLine"></div>
             <div className="commentsInputDiv">
               <p>댓글 ({countComments})</p>
-              <input value={comment} onChange={onChangeComment}></input>
+              <input
+                maxLength={149}
+                value={comment}
+                onChange={onChangeComment}
+              ></input>
               <span onClick={() => submitChangedComment("INSERT", 0)}>
                 등록
               </span>

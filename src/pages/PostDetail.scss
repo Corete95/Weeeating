@@ -103,10 +103,12 @@
       display: flex;
       justify-content: flex-end;
       font-size: 20px;
-      margin: 20px;
+      margin: 20px 0px 20px 20px;
 
-      p {
-        margin-right: 15px;
+      .wirter {
+        width: 92px;
+        margin-right: 10px;
+        border-right: 2px solid black;
       }
     }
     .contentDiv {
@@ -118,13 +120,14 @@
       display: flex;
       justify-content: flex-end;
       font-size: 20px;
-      margin: 20px;
+      margin: 20px 0px 20px 20px;
       .edit {
-        margin-right: 15px;
+        width: 38px;
+        margin-right: 7px;
+        border-right: 2px solid black;
         cursor: pointer;
       }
       .delete {
-        margin-left: 15px;
         cursor: pointer;
       }
     }
@@ -133,14 +136,14 @@
       margin: 20px 0px;
 
       p {
-        width: 13%;
+        width: 14%;
         font-size: 30px;
         margin-right: 30px;
       }
       input {
         width: 100%;
         background: #f2f2f2;
-        border: 1px solid gray;
+        border: 2px solid gray;
         outline: none;
         padding: 0px 35px 0px 15px;
         font-size: 18px;
@@ -156,40 +159,45 @@
     }
     .comments {
       display: flex;
+      align-items: center;
       margin-bottom: 20px;
       .commentsWriter {
         display: flex;
-        width: 14%;
+        width: 9rem;
         font-size: 22px;
         margin-right: 10px;
-        border-right: 1px solid gray;
+        border-right: 2px solid black;
       }
-      .commentContent {
-        width: 47%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 20px;
-        margin-left: 10px;
-      }
-      .commentCreated {
-        font-size: 20px;
-        margin-left: 20px;
-      }
-      .modifyDiv {
+      .commentDiv {
+        width: 100%;
         display: flex;
-        flex: 1;
-        justify-content: flex-end;
-        margin-right: 25px;
-        .commentEdit {
-          width: 37px;
+        align-items: center;
+        .commentContent {
+          width: 57%;
           font-size: 20px;
-          margin-right: 10px;
-          border-right: 1px solid gray;
-          cursor: pointer;
+          margin-left: 10px;
         }
-        .commentDelete {
+        .commentCreated {
           font-size: 20px;
-          cursor: pointer;
+          margin-left: 20px;
+        }
+        .modifyDiv {
+          display: flex;
+          flex: 1;
+          justify-content: flex-end;
+          margin-right: 25px;
+          .commentEdit {
+            width: 38px;
+            font-size: 20px;
+            margin-right: 6px;
+            border-right: 2px solid black;
+            cursor: pointer;
+          }
+          .commentDelete {
+            width: 33px;
+            font-size: 20px;
+            cursor: pointer;
+          }
         }
       }
     }

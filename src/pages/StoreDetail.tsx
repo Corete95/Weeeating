@@ -347,6 +347,7 @@ export default function StoreDetail(props: any) {
           <form method="post">
             <CommentInput>
               <Input
+                maxLength={149}
                 onChange={(e) =>
                   setCommentText({ ...commentText, newComment: e.target.value })
                 }
@@ -369,34 +370,38 @@ export default function StoreDetail(props: any) {
                   {comment.writer_id ===
                     Number(localStorage.getItem("user_id_number")) && (
                     <>
-                      <ModifyBtn
-                        onClick={() => {
-                          setEditModal(true);
-                          setCommentText({
-                            ...commentText,
-                            updatedComment: {
-                              id: comment.id,
-                              content: comment.comment
-                            }
-                          });
-                        }}
-                      >
-                        수정
-                      </ModifyBtn>
-                      <ModifyBtn
-                        onClick={() => {
-                          setDeleteModal(true);
-                          setCommentText({
-                            ...commentText,
-                            updatedComment: {
-                              ...commentText.updatedComment,
-                              id: comment.id
-                            }
-                          });
-                        }}
-                      >
-                        삭제
-                      </ModifyBtn>
+                      <ModifyDiv>
+                        <p
+                          className="edit"
+                          onClick={() => {
+                            setEditModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                id: comment.id,
+                                content: comment.comment
+                              }
+                            });
+                          }}
+                        >
+                          수정
+                        </p>
+                        <p
+                          className="delete"
+                          onClick={() => {
+                            setDeleteModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                ...commentText.updatedComment,
+                                id: comment.id
+                              }
+                            });
+                          }}
+                        >
+                          삭제
+                        </p>
+                      </ModifyDiv>
                     </>
                   )}
                 </div>
@@ -564,38 +569,61 @@ const SubmitBtn = styled.span`
   right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 `;
 
 const CommentsWrapper = styled.ul``;
 
-const Comment = styled.li`
+const Comment = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 0.7rem;
+  align-items: center;
 
   .right {
+    display: flex;
+    align-items: center;
     width: 59.5rem;
     line-height: 1.4rem;
   }
 `;
 
 const User = styled.span`
-  width: 5.5rem;
+  width: 5.8rem;
   font-weight: 900;
-  border-right: 1px solid ${({ theme }) => theme.borderGray};
-  padding-right: 1rem;
+  border-right: 2px solid black;
   margin-right: 1rem;
 `;
 
 const Content = styled.p`
+  width: 75%;
   display: inline;
 `;
 
 const UploadTime = styled.span`
-  margin: 0 1rem;
+  margin: 0rem 0.1rem 0rem 0.9rem;
 `;
 
-const ModifyBtn = styled.button`
+const ModifyDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+
+  .edit {
+    width: 38px;
+    margin-right: 9px;
+    border-right: 2px solid black;
+    cursor: pointer;
+  }
+
+  .delete {
+    width: 26px;
+    cursor: pointer;
+  }
+`;
+
+const ModifyBtn = styled.p`
   margin: 0 0.2rem;
   outline: none;
   font-size: 0.75em;
