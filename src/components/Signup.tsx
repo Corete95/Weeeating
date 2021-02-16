@@ -42,7 +42,9 @@ export default function Signup() {
     return true;
   };
 
-  const submitSingup = async (type: string) => {
+  const submitSingup = async (event: any, type: string) => {
+    event.preventDefault();
+
     switch (type) {
       case "login":
         const checkValidation = await Promise.all([
