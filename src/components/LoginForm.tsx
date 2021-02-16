@@ -84,6 +84,7 @@ const BlockWrapper = styled.div<StateForStyle>`
 `;
 
 const Subject = styled.div<StateForStyle>`
+  font-family: sans-serif;
   text-align: center;
   font-size: 1.15em;
   font-weight: 500;
@@ -99,6 +100,7 @@ const Input = styled.input<StateForStyle>`
 `;
 
 const LoginBtn = styled.input`
+  outline: none;
   border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 2em;
   width: 28.6em;
