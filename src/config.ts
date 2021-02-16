@@ -1,2 +1,2 @@
 export const LOCALAPI = "http://localhost:3000";
-export const API = "http://10.167.104.187:8000";
+export const API = "http://192.168.0.12:8000";

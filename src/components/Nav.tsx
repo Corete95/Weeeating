@@ -136,7 +136,7 @@ const Button = styled.span<StateForStyle>`
   padding: 0 1.1em;
   border-right: 0.07rem solid
     ${({ theme, theLast }) => (theLast ? theme.white : theme.borderGray)};
-  font-size: 0.9em;
+  font-size: 1.2em;
   font-weight: ${({ present }) => (present ? 900 : 400)};
   text-align: center;
   cursor: pointer;
