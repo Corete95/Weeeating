@@ -8,6 +8,8 @@ import { API } from "../config";
 import ReactPaginate from "react-paginate";
 import { useHistory } from "react-router-dom";
 import { EditCommentModal, DeleteCommentModal } from "../components";
+import ReactQuill from "react-quill"; // Typescript
+import "react-quill/dist/quill.snow.css";
 
 interface UserData {
   info: any;
@@ -17,6 +19,7 @@ interface UserData {
 export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
+  const [comment, setComment] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -28,11 +31,9 @@ export default function PostDetail({ match }: any) {
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
   const [activeInput, setActiveInput] = useState(false);
   const [updatedPost, setUpdatedPost] = useState(posts[0]?.content);
-  /* const [updatedPost, setUpdatedPost] = useState({
-    id: posts[0]?.comment_id,
-    content: posts[0]?.content
-  }); */
   const history = useHistory();
+
+  
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -52,19 +53,19 @@ export default function PostDetail({ match }: any) {
   }, [match.params.id]);
 
   const onChangeComment = (e: any) => {
-    setContent(e.target.value);
+    setComment(e.target.value);
   };
 
   let data = {
-    comment: content
+    comment: comment
   };
 
   const addComment = (): any => {
-    if (content.length >= 1) {
+    if (comment.length >= 1) {
       setComments([
         ...comments,
         {
-          comment_content: content,
+          comment_content: comment,
           comment_writer: "로그인된 사람",
           comment_created_at: "방금 전"
         }
@@ -87,7 +88,7 @@ export default function PostDetail({ match }: any) {
     setCurrentComment(
       currentComment.map((comment: any) =>
         comment.id === comment_id
-          ? { ...comment, comment: commentText.updatedComment.content }
+          ? { ...comment, comment: commentText.updatedComment.comment }
           : comment
       )
     );
@@ -131,9 +132,10 @@ export default function PostDetail({ match }: any) {
       ...commentText,
       updatedComment: {
         ...commentText.updatedComment,
-        content: value
+        comment: value
       }
     });
+    window.location.reload();
   };
 
   const clickEdit = (comment: any) => {
@@ -142,15 +144,20 @@ export default function PostDetail({ match }: any) {
       ...commentText,
       updatedComment: {
         id: comment.comment_id,
-        content: comment.comment_comment
+        comment: comment.comment_comment
       }
     });
   };
 
+  const contentResult = content.replace(/(<([^>]+)>)/gi, "")
+
+  const updatePost = (value:string) => {    
+    setContent(value);
+}
   const patchPost = (): void => {
     const data = {
       title: posts[0].title,
-      content: updatedPost
+      content: contentResult
     };
 
     axios.patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
@@ -158,6 +165,7 @@ export default function PostDetail({ match }: any) {
         Authorization: localStorage.getItem("token")
       }
     });
+    window.location.reload();
   };
 
   const deletePost = (): void => {
@@ -198,12 +206,11 @@ export default function PostDetail({ match }: any) {
         </TitleContainer>
         <ContentContainer>
           <Writer>{posts[0]?.writer}</Writer>
-          {console.log("activeInput", activeInput)}
           {activeInput ? (
             <>
-              <ContentInput
-                onChange={(e) => setUpdatedPost(e.target.value)}
-              ></ContentInput>
+            <QuillContainer>
+              <ReactQuill value={content} onChange={updatePost} />
+            </QuillContainer>
               <Edit
                 onClick={() => {
                   patchPost();
@@ -229,7 +236,7 @@ export default function PostDetail({ match }: any) {
         </ContentContainer>
         <ReplyContainer>
           <ReplyText>댓글</ReplyText>
-          <ReplyInput value={content} onChange={onChangeComment}></ReplyInput>
+          <ReplyInput value={comment} onChange={onChangeComment}></ReplyInput>
           <Button onClick={addComment}>등록</Button>
         </ReplyContainer>
         <PostReply
@@ -297,6 +304,7 @@ const Img = styled.img`
   position: relative;
   top: 1rem;
   margin: 5rem 3.3rem 0 0;
+  width: 49rem;
 `;
 
 const ImgText = styled.p`
@@ -381,3 +389,12 @@ const StyledPaginateContainer = styled.div`
     display: flex;
   }
 `;
+
+const QuillContainer = styled.div`
+  height: 15rem;
+  width: 35rem;
+
+  .quill {
+    height: 10rem;
+  }
+`

@@ -2,29 +2,35 @@
   margin-top: 7rem;
   margin-left: auto;
   margin-right: auto;
+  width: 82rem;
 
-  width: 90vw;
-
-  .logoBox {
-    width: 400px;
-    
-    background-color: #f3f3f3;
-    .logoBox1 {
-      position: relative;
-      top: 19px;
-      left: 20px;
+  .storeListLogo {
+    text-align: center;
+    img {
+      width: 610px;
+    }
+    .logoBox {
       width: 400px;
-  
-      background-color: #d9d9d9;
-      text-align: center;
-      p {
-        padding-top: 10px;
-        font-size: 82px;
-        font-weight: 900;
+      height: 100px;
+      background-color: #f3f3f3;
+      .logoBox1 {
+        position: relative;
+        top: 19px;
+        left: 20px;
+        width: 400px;
+        height: 100px;
+        background-color: #d9d9d9;
+        text-align: center;
+        p {
+          padding-top: 10px;
+          font-size: 82px;
+          font-weight: 900;
+        }
       }
     }
-  }
-  .storeFood {
-    display: inline-block;
+    .storeFood {
+      display: inline-block;
+      margin-top: 60px;
+    }
   }
 }
