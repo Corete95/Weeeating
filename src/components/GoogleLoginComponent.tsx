@@ -20,15 +20,10 @@ export default function GoogleLoginComponent() {
     const oAuth2 = await localStorage.getItem(
       "oauth2_ss::http://localhost:3000::1::DEFAULT::_ss_"
     );
-
-    console.log("oAuth2", oAuth2);
   };
 
   const responseGoogle = (response: any) => {
-    console.log("구글로그인");
-    console.log("response", response);
     const { accessToken } = response;
-    console.log("accessToken", accessToken);
 
     axios
       .post(`${API}/user/login/social`, "data", {
@@ -37,7 +32,6 @@ export default function GoogleLoginComponent() {
         }
       })
       .then((res: any) => {
-        console.log("res", res);
         localStorage.setItem("token", res.data.Authorization);
         localStorage.setItem("user_id_number", res.data.user_id);
         localStorage.setItem("isAuthenticated", "true");
