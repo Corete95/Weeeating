@@ -18,8 +18,6 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
     ({ setFirstReducer }) => setFirstReducer.first
   );
 
-  console.log("firstGoogle", firstGoogle);
-
   return (
     <Container>
       <Title>회원가입</Title>
@@ -124,6 +122,7 @@ const BlockWrapper = styled.div`
 `;
 
 const Subject = styled.div<StateForStyle>`
+  font-family: sans-serif;
   text-align: center;
   font-size: 1.15em;
   font-weight: 500;
@@ -139,6 +138,7 @@ const Input = styled.input<StateForStyle>`
 `;
 
 const Button = styled.input`
+  outline: none;
   border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 2em;
   width: 25em;
