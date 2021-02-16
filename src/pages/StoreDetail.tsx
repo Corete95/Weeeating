@@ -209,13 +209,6 @@ export default function StoreDetail(props: any) {
         });
     }
     if (crud === "UPDATE") {
-      // setCurrentComment(
-      //   currentComment.map((comment: any) =>
-      //     comment.id === commentId
-      //       ? { ...comment, comment: commentText.updatedComment.content }
-      //       : comment
-      //   )
-      // );
       setEditModal(false);
 
       axios
@@ -233,11 +226,6 @@ export default function StoreDetail(props: any) {
         .catch((err) => console.log(err));
     }
     if (crud === "DELETE") {
-      // setCurrentComment(
-      //   currentComment.filter(
-      //     (comment: any) => comment.id !== Number(commentText.updatedComment.id)
-      //   )
-      // );
       setDeleteModal(false);
       axios
         .delete(
@@ -320,8 +308,8 @@ export default function StoreDetail(props: any) {
       <CommentSection>
         <InputWrapper>
           <CommentDesc>댓글 입력</CommentDesc>
-          <form method="post">
-            <CommentInput>
+          <CommentInput>
+            <form onSubmit={() => submitChangedComment("INSERT", 0)}>
               <Input
                 onChange={(e) =>
                   setCommentText({ ...commentText, newComment: e.target.value })
@@ -331,8 +319,8 @@ export default function StoreDetail(props: any) {
               <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
                 확인
               </SubmitBtn>
-            </CommentInput>
-          </form>
+            </form>
+          </CommentInput>
         </InputWrapper>
         <CommentsWrapper>
           {currentComment &&
