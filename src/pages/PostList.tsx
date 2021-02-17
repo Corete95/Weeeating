@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Posts from "./childComponents/Posts";
 import Pagination from "react-js-pagination";
 import axios from "axios";
-import wemeok from "../images/wemeoktalk_2.png";
+import wemeok from "../images/wemeoktalk3.png";
 import { Link, useHistory } from "react-router-dom";
 import { API } from "../config";
 import "./PostList.scss";
@@ -72,7 +72,6 @@ export default function App() {
       <div className="postList">
         <div className="weMeokTalkLogo">
           <img src={wemeok}></img>
-          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">

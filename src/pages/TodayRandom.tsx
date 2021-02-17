@@ -148,7 +148,7 @@ export default function TodayRandom() {
             <>
               <Row>
                 <VerticalText>여기로</VerticalText>
-                {/* <StoreCard2
+                <StoreCard2
                   id={store.id}
                   image={store.image}
                   name={store.name}
@@ -156,7 +156,7 @@ export default function TodayRandom() {
                   likeState={store.like_state}
                   changeLikedState={changeLikedState}
                   type={"random"}
-                />*/}
+                />
                 <VerticalText>가즈아</VerticalText>
               </Row>
               <div className="buttonSection">

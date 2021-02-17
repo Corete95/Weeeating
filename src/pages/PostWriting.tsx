@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { COLORS } from "../styles/themeColor";
 import { Link, useHistory } from "react-router-dom";
 import { API } from "../config";
-import wemeok from "../images/wemeoktalk_2.png";
+import wemeok from "../images/wemeoktalk3.png";
 import axios from "axios";
 import ReactQuill from "react-quill"; // Typescript
 import "react-quill/dist/quill.snow.css";
@@ -43,7 +43,6 @@ export default function PostWriting() {
       <div className="postWriting">
         <div className="weMeokTalkLogo">
           <img src={wemeok}></img>
-          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">

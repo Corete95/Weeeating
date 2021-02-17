@@ -11,7 +11,7 @@ import {
 import ReactQuill, { Quill } from "react-quill"; // Typescript
 import axios from "axios";
 import Pagination from "react-js-pagination";
-import wemeok from "../images/wemeoktalk_2.png";
+import wemeok from "../images/wemeoktalk3.png";
 import PostReply from "../pages/childComponents/PostReply";
 import "react-quill/dist/quill.snow.css";
 import "./PostDetail.scss";
@@ -262,7 +262,6 @@ export default function PostDetail({ match }: any) {
       <div className="postDetail">
         <div className="weMeokTalkLogo">
           <img src={wemeok}></img>
-          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">
@@ -284,7 +283,7 @@ export default function PostDetail({ match }: any) {
                     <p>{posts[0]?.created_at}</p>
                   </div>
                   <div className="writingCenter">
-                    <p>내용</p>
+                    <p className="textBold">내용</p>
                     {/* <CKEditor
                       editor={ClassicEditor}
                       data={postContent}

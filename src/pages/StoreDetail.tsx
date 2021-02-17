@@ -450,6 +450,7 @@ const Images = styled.div`
 `;
 
 const StoreDesc = styled.div`
+  font-family: "InkLipquid";
   width: 32rem;
 `;
 
@@ -488,11 +489,12 @@ const Desc = styled.article`
   }
 
   .desc {
-    font-family: sans-serif;
+    font-family: "KOTRA_GOTHIC";
   }
 `;
 
 const Liked = styled.p`
+  font-size: 20px;
   margin-top: 1.5rem;
   display: flex;
   align-items: center;
@@ -522,6 +524,7 @@ const Map = styled.div`
 `;
 
 const CommentSection = styled.div`
+  font-family: "Bazzi";
   width: 65rem;
 `;
 
@@ -535,7 +538,7 @@ const InputWrapper = styled.div`
 const CommentDesc = styled.span`
   width: 5.5rem;
   margin-right: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 `;
 
 const CommentInput = styled.form`
@@ -543,6 +546,7 @@ const CommentInput = styled.form`
 `;
 
 const Input = styled.input`
+  font-family: "Bazzi";
   padding: 0.5rem;
   outline: none;
   width: 59.5rem;
@@ -573,6 +577,7 @@ const Comment = styled.div`
 `;
 
 const User = styled.span`
+  font-size: 17px;
   width: 5.8rem;
   font-weight: 900;
   border-right: 2px solid black;
@@ -582,6 +587,7 @@ const User = styled.span`
 const Content = styled.p`
   width: 75%;
   display: inline;
+  word-break: break-all;
 `;
 
 const UploadTime = styled.span`
