@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import Pagination from "react-js-pagination";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { API } from "../config";
@@ -53,7 +54,8 @@ export default function StoreDetail(props: any) {
   });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-
+  const [activePage, setActivePage] = useState<any>(1);
+  const [countComments, setCountComments] = useState(0);
   console.log("currentComment", currentComment);
 
   // const userVerified = info.user.id === localStorage.getItem.user.id;
@@ -77,9 +79,9 @@ export default function StoreDetail(props: any) {
           axios.spread((res1, res2) => {
             console.log("res1", res1);
             setInfo(res1.data);
-            // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data.comment_list);
+            setCountComments(res2.data.count_comments);
+            console.log(res2.data);
           })
         );
     } else {
@@ -94,7 +96,7 @@ export default function StoreDetail(props: any) {
             setInfo(res1.data);
             // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data.comment_list);
+            console.log("res2.data.comment_list", res2.data);
           })
         );
     }
@@ -256,8 +258,26 @@ export default function StoreDetail(props: any) {
     });
   };
 
+  const handlePageChange = (pageNumber: any) => {
+    axios
+      .get(
+        `${API}/store/detail/${props.match.params.id}/comment?offset=${
+          (pageNumber - 1) * 5
+        }`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        }
+      )
+      .then((res) => {
+        console.log("1", res.data.comment_list);
+        setCurrentComment(res.data.comment_list);
+      });
+    setActivePage(pageNumber);
+  };
   const handleDragStart = (e: any) => e.preventDefault();
-
+  console.log("pageNumber", activePage);
   return (
     <Container>
       <DescSection>
@@ -311,6 +331,7 @@ export default function StoreDetail(props: any) {
           <CommentInput>
             <form onSubmit={() => submitChangedComment("INSERT", 0)}>
               <Input
+                maxLength={149}
                 onChange={(e) =>
                   setCommentText({ ...commentText, newComment: e.target.value })
                 }
@@ -333,40 +354,58 @@ export default function StoreDetail(props: any) {
                   {comment.writer_id ===
                     Number(localStorage.getItem("user_id_number")) && (
                     <>
-                      <ModifyBtn
-                        onClick={() => {
-                          setEditModal(true);
-                          setCommentText({
-                            ...commentText,
-                            updatedComment: {
-                              id: comment.id,
-                              content: comment.comment
-                            }
-                          });
-                        }}
-                      >
-                        수정
-                      </ModifyBtn>
-                      <ModifyBtn
-                        onClick={() => {
-                          setDeleteModal(true);
-                          setCommentText({
-                            ...commentText,
-                            updatedComment: {
-                              ...commentText.updatedComment,
-                              id: comment.id
-                            }
-                          });
-                        }}
-                      >
-                        삭제
-                      </ModifyBtn>
+                      <ModifyDiv>
+                        <p
+                          className="edit"
+                          onClick={() => {
+                            setEditModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                id: comment.id,
+                                content: comment.comment
+                              }
+                            });
+                          }}
+                        >
+                          수정
+                        </p>
+                        <p
+                          className="delete"
+                          onClick={() => {
+                            setDeleteModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                ...commentText.updatedComment,
+                                id: comment.id
+                              }
+                            });
+                          }}
+                        >
+                          삭제
+                        </p>
+                      </ModifyDiv>
                     </>
                   )}
                 </div>
               </Comment>
             ))}
         </CommentsWrapper>
+        <PaginationCss>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={5}
+            totalItemsCount={countComments}
+            pageRangeDisplayed={5}
+            hideFirstLastPages
+            itemClassPrev={"prevPageText"}
+            itemClassNext={"nextPageText"}
+            prevPageText={"◀"}
+            nextPageText={"▶"}
+            onChange={handlePageChange}
+          />
+        </PaginationCss>
       </CommentSection>
       {editModal && (
         <EditCommentModal
@@ -390,7 +429,7 @@ export default function StoreDetail(props: any) {
 }
 
 const Container = styled.div`
-  margin: 10rem auto;
+  margin: 10rem auto 5rem auto;
   width: 65rem;
 `;
 
@@ -514,42 +553,115 @@ const SubmitBtn = styled.span`
   right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 `;
 
 const CommentsWrapper = styled.ul``;
 
-const Comment = styled.li`
+const Comment = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 0.7rem;
+  align-items: center;
 
   .right {
+    display: flex;
+    align-items: center;
     width: 59.5rem;
     line-height: 1.4rem;
   }
 `;
 
 const User = styled.span`
-  width: 5.5rem;
+  width: 5.8rem;
   font-weight: 900;
-  border-right: 1px solid ${({ theme }) => theme.borderGray};
-  padding-right: 1rem;
+  border-right: 2px solid black;
   margin-right: 1rem;
 `;
 
 const Content = styled.p`
+  width: 75%;
   display: inline;
 `;
 
 const UploadTime = styled.span`
-  margin: 0 1rem;
+  margin: 0rem 0.1rem 0rem 0.9rem;
 `;
 
-const ModifyBtn = styled.button`
+const ModifyDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+
+  .edit {
+    width: 38px;
+    margin-right: 9px;
+    border-right: 2px solid black;
+    cursor: pointer;
+  }
+
+  .delete {
+    width: 26px;
+    cursor: pointer;
+  }
+`;
+
+const ModifyBtn = styled.p`
   margin: 0 0.2rem;
   outline: none;
   font-size: 0.75em;
   font-weight: 700;
   cursor: pointer;
   background-color: white;
+`;
+
+const PaginationCss = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0rem 0rem 0rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 22px;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+  }
+
+  ul.pagination li.active a {
+    color: #ffd966;
+  }
+  ul.pagination li.active {
+    font-weight: 600;
+    color: #ffd966;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: #ffd966;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  ul.pagination li.prevPageText a,
+  ul.pagination li.nextPageText a {
+    color: #ffd966;
+  }
 `;

@@ -155,7 +155,8 @@ export default function TodayRandom() {
                   likeCount={store.like_count}
                   likeState={store.like_state}
                   changeLikedState={changeLikedState}
-                />{" "} */}
+                  type={"random"}
+                />*/}
                 <VerticalText>가즈아</VerticalText>
               </Row>
               <div className="buttonSection">

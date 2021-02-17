@@ -1,0 +1,276 @@
+.postDetail {
+  position: relative;
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  height: 100%;
+  width: 85rem;
+
+  .weMeokTalkLogo {
+    text-align: center;
+    p {
+      position: absolute;
+      top: 136px;
+      right: 361px;
+      font-size: 33px;
+    }
+  }
+  .weMeokTalkList {
+    position: relative;
+    width: 56.4rem;
+    border: 3px solid #ffd966;
+    top: -8px;
+    left: 262px;
+    .editListDiv {
+      padding: 35px 30px 30px 30px;
+
+      .writingTitle {
+        display: flex;
+
+        p {
+          width: 8%;
+          font-size: 30px;
+          margin-right: 6px;
+        }
+        input {
+          width: 100%;
+          height: 30px;
+          background: #f2f2f2;
+          border: 1px solid gray;
+          outline: none;
+          padding: 0px 20px;
+        }
+      }
+      .solidLine {
+        border-bottom: 2px solid black;
+        margin-top: 30px;
+      }
+      .writingCenter {
+        p {
+          margin: 40px 0px 25px 0px;
+          font-size: 30px;
+        }
+        .quill {
+          .ql-container {
+            height: 250px;
+            background: #f2f2f2;
+          }
+        }
+      }
+      .writerButton {
+        margin-top: 30px;
+        text-align: right;
+        button {
+          font-size: 17px;
+          background-color: #ffd966;
+          border-radius: 6px;
+          border: 1px solid black;
+          width: 70px;
+          height: 35px;
+          outline: none;
+          cursor: pointer;
+        }
+      }
+    }
+    .listDiv {
+      padding: 35px 30px 30px 30px;
+
+      .detailTitle {
+        display: flex;
+
+        .titleBold {
+          width: 8%;
+          font-size: 30px;
+          font-weight: 600;
+          margin-right: 6px;
+        }
+        .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          align-items: center;
+          display: flex;
+          width: 100%;
+          font-size: 22px;
+        }
+      }
+      .solidLine {
+        margin-top: 20px;
+        border-bottom: 2px solid black;
+      }
+    }
+    .writerCreated {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 20px;
+      margin: 20px 0px 20px 20px;
+
+      .wirter {
+        width: 92px;
+        margin-right: 10px;
+        border-right: 2px solid black;
+      }
+    }
+    .contentDiv {
+      width: 100%;
+      height: 350px;
+      padding: 35px 35px;
+
+      h1 {
+        font-size: 40px;
+      }
+      h2 {
+        font-size: 30px;
+      }
+      h3 {
+        font-size: 20px;
+      }
+      b {
+        font-weight: bold;
+      }
+      em {
+        font-style: italic;
+      }
+    }
+    .editDeleteDiv {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 20px;
+      margin: 20px 0px 20px 20px;
+      .edit {
+        width: 38px;
+        margin-right: 7px;
+        border-right: 2px solid black;
+        cursor: pointer;
+      }
+      .delete {
+        cursor: pointer;
+      }
+    }
+    .commentsInputDiv {
+      display: flex;
+      margin: 20px 0px;
+
+      p {
+        width: 14%;
+        font-size: 30px;
+        margin-right: 30px;
+      }
+      input {
+        width: 100%;
+        background: #f2f2f2;
+        border: 2px solid gray;
+        outline: none;
+        padding: 0px 35px 0px 15px;
+        font-size: 18px;
+      }
+      span {
+        font-size: 20px;
+        position: relative;
+        left: -29px;
+        width: 31px;
+        bottom: -3px;
+        cursor: pointer;
+      }
+    }
+    .comments {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      .commentsWriter {
+        display: flex;
+        width: 9rem;
+        font-size: 22px;
+        margin-right: 10px;
+        border-right: 2px solid black;
+      }
+      .commentDiv {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        .commentContent {
+          width: 57%;
+          font-size: 20px;
+          margin-left: 10px;
+        }
+        .commentCreated {
+          font-size: 20px;
+          margin-left: 20px;
+        }
+        .modifyDiv {
+          display: flex;
+          flex: 1;
+          justify-content: flex-end;
+          margin-right: 25px;
+          .commentEdit {
+            width: 38px;
+            font-size: 20px;
+            margin-right: 6px;
+            border-right: 2px solid black;
+            cursor: pointer;
+          }
+          .commentDelete {
+            width: 33px;
+            font-size: 20px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0px 1.5rem 0px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 22px;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+  }
+
+  ul.pagination li.active a {
+    color: #ffd966;
+  }
+  ul.pagination li.active {
+    font-weight: 600;
+    color: #ffd966;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: #ffd966;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  ul.pagination li.prevPageText a,
+  ul.pagination li.nextPageText a {
+    color: #ffd966;
+  }
+  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+    min-height: 500px;
+  }
+  .quill {
+    ::ng-deep .ql-editor strong {
+      font-weight: bold;
+    }
+  }
+}
