@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { API } from "../config";
 
 interface IProps {
   handleChange: (e: any) => void;
-  submitSingup: (type: string) => Promise<void>;
+  submitSingup: (event: any, type: string) => Promise<void>;
 }
 
 interface StateForStyle {
@@ -18,75 +17,78 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
     ({ setFirstReducer }) => setFirstReducer.first
   );
 
-  console.log("firstGoogle", firstGoogle);
-
   return (
     <Container>
       <Title>회원가입</Title>
-      {/* <InfoSection action={`${API}/user/signup`} method="POST"> */}
-      {/* <InfoSection> */}
-      <BlockWrapper>
-        <Subject short={true}>기수</Subject>
-        <Input
-          type="number"
-          name="number"
-          placeholder="숫자만!"
-          onChange={handleChange}
-          required
-          short={true}
-        ></Input>
-        <Subject short={true} needSpace={true}>
-          이름
-        </Subject>
-        <Input
-          type="text"
-          name="userName"
-          placeholder="전체이름!"
-          onChange={handleChange}
-          required
-          short={true}
-        ></Input>
-      </BlockWrapper>
-      <BlockWrapper>
-        <Subject>이메일</Subject>
-        <Input
-          type="email"
-          name="email"
-          required
-          placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
-          disabled={firstGoogle ? true : false}
-          onChange={handleChange}
-        ></Input>
-      </BlockWrapper>
-      <BlockWrapper>
-        <Subject>비밀번호</Subject>
-        <Input
-          type="password"
-          name="password"
-          required
-          placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
-          disabled={firstGoogle ? true : false}
-          onChange={handleChange}
-        ></Input>
-      </BlockWrapper>
-      <BlockWrapper>
-        <Subject>비밀번호 확인</Subject>
-        <Input
-          type="password"
-          name="repassword"
-          required
-          placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
-          disabled={firstGoogle ? true : false}
-          onChange={handleChange}
-        ></Input>
-      </BlockWrapper>
-      <Button
-        type="submit"
-        value="회원가입"
-        className="button"
-        onClick={() => submitSingup(firstGoogle ? "login/google" : "login")}
-      ></Button>
-      {/* </InfoSection> */}
+      <InfoSection
+        onSubmit={(event) =>
+          submitSingup(event, firstGoogle ? "login/google" : "login")
+        }
+      >
+        <BlockWrapper>
+          <Subject short={true}>기수</Subject>
+          <Input
+            type="number"
+            name="number"
+            placeholder="숫자만!"
+            onChange={handleChange}
+            required
+            short={true}
+          ></Input>
+          <Subject short={true} needSpace={true}>
+            이름
+          </Subject>
+          <Input
+            type="text"
+            name="userName"
+            placeholder="전체이름!"
+            onChange={handleChange}
+            required
+            short={true}
+          ></Input>
+        </BlockWrapper>
+        <BlockWrapper>
+          <Subject>이메일</Subject>
+          <Input
+            type="email"
+            name="email"
+            required
+            placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
+            disabled={firstGoogle ? true : false}
+            onChange={handleChange}
+          ></Input>
+        </BlockWrapper>
+        <BlockWrapper>
+          <Subject>비밀번호</Subject>
+          <Input
+            type="password"
+            name="password"
+            required
+            placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
+            disabled={firstGoogle ? true : false}
+            onChange={handleChange}
+          ></Input>
+        </BlockWrapper>
+        <BlockWrapper>
+          <Subject>비밀번호 확인</Subject>
+          <Input
+            type="password"
+            name="repassword"
+            required
+            placeholder={firstGoogle && "구글 정보가 이미 입력되었습니다"}
+            disabled={firstGoogle ? true : false}
+            onChange={handleChange}
+          ></Input>
+        </BlockWrapper>
+        <Button
+          type="submit"
+          value="회원가입"
+          className="button"
+          onSubmit={(event) =>
+            submitSingup(event, firstGoogle ? "login/google" : "login")
+          }
+        ></Button>
+      </InfoSection>
     </Container>
   );
 }
@@ -124,6 +126,7 @@ const BlockWrapper = styled.div`
 `;
 
 const Subject = styled.div<StateForStyle>`
+  font-family: sans-serif;
   text-align: center;
   font-size: 1.15em;
   font-weight: 500;
@@ -139,6 +142,7 @@ const Input = styled.input<StateForStyle>`
 `;
 
 const Button = styled.input`
+  outline: none;
   border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 3em;
   margin-left: 10rem;

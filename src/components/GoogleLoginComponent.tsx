@@ -20,15 +20,10 @@ export default function GoogleLoginComponent() {
     const oAuth2 = await localStorage.getItem(
       "oauth2_ss::http://localhost:3000::1::DEFAULT::_ss_"
     );
-
-    console.log("oAuth2", oAuth2);
   };
 
   const responseGoogle = (response: any) => {
-    console.log("구글로그인");
-    console.log("response", response);
     const { accessToken } = response;
-    console.log("accessToken", accessToken);
 
     axios
       .post(`${API}/user/login/social`, "data", {
@@ -37,7 +32,6 @@ export default function GoogleLoginComponent() {
         }
       })
       .then((res: any) => {
-        console.log("res", res);
         localStorage.setItem("token", res.data.Authorization);
         localStorage.setItem("user_id_number", res.data.user_id);
         localStorage.setItem("isAuthenticated", "true");
@@ -62,10 +56,15 @@ export default function GoogleLoginComponent() {
   return (
     <Container>
       <GoogleLogin
-        // render={(renderProps) => (
-        //   <span className="googleBtn">구글로 로그인하기</span>
-        // )}
-        className="googleLogin"
+        render={(renderProps) => (
+          <button
+            onClick={renderProps.onClick}
+            className="googleLogin"
+            disabled={renderProps.disabled}
+          >
+            구글로 로그인하기
+          </button>
+        )}
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
         buttonText="구글로 로그인하기"
         onSuccess={responseGoogle}
@@ -77,8 +76,9 @@ export default function GoogleLoginComponent() {
 }
 
 const Container = styled.div`
+  font-family: sans-serif;
   margin-top: 2em;
-  margin-right: 0.7em;
+  margin-left: 0.7em;
   width: 28.6em;
   font-size: 1.15em;
   font-weight: 700;
@@ -89,9 +89,10 @@ const Container = styled.div`
   text-align: center;
   cursor: pointer;
 
-  .googleBtn {
-    /* border: 2px solid ${({ theme }) => theme.mainYellow}; */
-    /* background-color: ${({ theme }) => theme.lightYellow}; */
+  .googleLogin {
+    outline: none;
+    border: 2px solid ${({ theme }) => theme.mainYellow};
+    background-color: ${({ theme }) => theme.lightYellow};
     font-size: 1.05rem;
     font-weight: 700;
     color: black;

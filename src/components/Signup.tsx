@@ -34,7 +34,6 @@ export default function Signup() {
 
   const isValidatePassword = (value: any) => {
     let password = value;
-    console.log("password", password);
     let regExp = /^.{6}/;
     if (!regExp.test(password)) {
       alert("비밀번호는 6글자 이상이어야 합니다.");
@@ -43,7 +42,9 @@ export default function Signup() {
     return true;
   };
 
-  const submitSingup = async (type: string) => {
+  const submitSingup = async (event: any, type: string) => {
+    event.preventDefault();
+
     switch (type) {
       case "login":
         const checkValidation = await Promise.all([
@@ -96,10 +97,8 @@ export default function Signup() {
             }
           })
           .then((res) => {
-            console.log("res", res);
             if (res.data.MESSAGE === "UPDATE_SUCCESS") {
               alert("회원가입이 완료되었습니다. :-)");
-              localStorage.setItem("token", res.data.Authorization);
               localStorage.isAuthenticated = true;
               window.location.reload();
             } else {

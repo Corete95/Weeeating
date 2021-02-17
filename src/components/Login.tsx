@@ -31,7 +31,9 @@ export default function Login() {
     return true;
   };
 
-  const submitLogin = async () => {
+  const submitLogin = async (event: any) => {
+    event.preventDefault();
+
     const isValid = await isValidateEmail(user.email);
 
     if (isValid) {
