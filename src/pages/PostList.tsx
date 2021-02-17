@@ -66,6 +66,7 @@ export default function App() {
       alert("로그인을 해주세요!");
     }
   };
+  console.log("1", posts);
   return (
     <>
       <div className="postList">

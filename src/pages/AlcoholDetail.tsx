@@ -101,9 +101,7 @@ export default function AlcoholDetail({ match, props }: any) {
     <>
       <div className="alcohol">
         <div className="logoBox">
-          <div className="logoBox1">
-            <p>술과 함께</p>
-          </div>
+          <img src="./images/alcoholLogo.png" />
         </div>
         <div className="sojuDiv">
           <div className="sojuIcon">

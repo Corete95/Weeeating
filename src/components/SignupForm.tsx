@@ -92,12 +92,13 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
 }
 
 const Container = styled.div`
-  margin: 2em 1.5em;
+  margin: 2em 2.5em;
 `;
 
 const Title = styled.h1`
   color: ${({ theme }) => theme.mainYellow};
   height: 1em;
+  margin-left: 1rem;
   text-align: center;
   font-size: 6em;
   font-weight: 900;
@@ -114,10 +115,9 @@ const InfoSection = styled.form`
 const BlockWrapper = styled.div`
   margin: 2em 0;
   height: 2.5em;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
 
+  display: flex;
+  align-items: center;
   .button {
     background-color: ${({ theme }) => theme.lightYellow};
   }
@@ -133,21 +133,22 @@ const Subject = styled.div<StateForStyle>`
 `;
 
 const Input = styled.input<StateForStyle>`
-  width: ${({ short }) => (short ? "8.5em" : "30em")};
+  width: ${({ short }) => (short ? "8.8em" : "28em")};
   height: 4em;
   border: 2px solid ${({ theme }) => theme.mainYellow};
 `;
 
 const Button = styled.input`
   border: 2px solid ${({ theme }) => theme.mainYellow};
-  margin-top: 2em;
-  width: 25em;
+  margin-top: 3em;
+  margin-left: 10rem;
+  width: 12em;
   font-size: 1.15rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 3.5em;
+  height: 3em;
   text-align: center;
   background-color: ${({ theme }) => theme.lightYellow};
   cursor: pointer;

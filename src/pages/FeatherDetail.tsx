@@ -71,9 +71,7 @@ export default function FeatherDetail() {
     <>
       <div className="feather">
         <div className="logoBox">
-          <div className="logoBox1">
-            <p>GIT털 푸드</p>
-          </div>
+          <img src="./images/gitfoodLogo.png" />
         </div>
         <div className="featherFood">
           {featherFood?.map((feather: any) => {

@@ -6,22 +6,10 @@
   width: 85rem;
 
   .logoBox {
-    width: 400px;
-    height: 100px;
-    background-color: #f3f3f3;
-    .logoBox1 {
-      position: relative;
-      top: 19px;
-      left: 20px;
-      width: 400px;
-      height: 100px;
-      background-color: #d9d9d9;
-      text-align: center;
-      p {
-        padding-top: 10px;
-        font-size: 82px;
-        font-weight: 900;
-      }
+    margin-top: 140px;
+    text-align: center;
+    img {
+      width: 650px;
     }
   }
   .featherFood {
