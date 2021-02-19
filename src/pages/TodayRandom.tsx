@@ -28,7 +28,7 @@ export default function TodayRandom() {
     now.setTime(expireTime);
 
     document.cookie = `randomStore=${value};expires="${now.toUTCString()}";path=/`;
-    document.cookie = `randomStoreExpireTime=${expireTime};expires="${now.toUTCString()}";path=/`;
+    document.cookie = `randomStoreExpireTime=${expireTime}`;
   };
 
   const getCookie = (name: string) => {
@@ -98,14 +98,6 @@ export default function TodayRandom() {
       setClickedState(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (againModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [againModal]);
 
   useEffect(() => {
     let restTimer = () => {
