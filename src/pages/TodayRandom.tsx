@@ -100,14 +100,6 @@ export default function TodayRandom() {
   }, []);
 
   useEffect(() => {
-    if (againModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [againModal]);
-
-  useEffect(() => {
     let restTimer = () => {
       let expireTime = Number(getCookie("randomStoreExpireTime"));
       let nowDate = new Date();
