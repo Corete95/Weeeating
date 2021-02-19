@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { FiX } from "react-icons/fi";
@@ -33,6 +33,14 @@ export default function Nav({ weight, goToPage }: IProps) {
   const loginModal = useSelector(
     ({ setModalReducer }) => setModalReducer.loginModal
   );
+
+  useEffect(() => {
+    if (signupModal || loginModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [signupModal, loginModal]);
 
   const toLogout = () => {
     localStorage.clear();
