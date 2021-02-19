@@ -56,9 +56,6 @@ export default function StoreDetail(props: any) {
   const [deleteModal, setDeleteModal] = useState(false);
   const [activePage, setActivePage] = useState<any>(1);
   const [countComments, setCountComments] = useState(0);
-  console.log("currentComment", currentComment);
-
-  // const userVerified = info.user.id === localStorage.getItem.user.id;
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -77,11 +74,9 @@ export default function StoreDetail(props: any) {
         ])
         .then(
           axios.spread((res1, res2) => {
-            console.log("res1", res1);
             setInfo(res1.data);
             setCurrentComment(res2.data.comment_list);
             setCountComments(res2.data.count_comments);
-            console.log(res2.data);
           })
         );
     } else {
@@ -92,11 +87,8 @@ export default function StoreDetail(props: any) {
         ])
         .then(
           axios.spread((res1, res2) => {
-            console.log("res1", res1);
             setInfo(res1.data);
-            // setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data);
           })
         );
     }
@@ -116,7 +108,6 @@ export default function StoreDetail(props: any) {
 
     let callback = (result: any, status: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        console.log(result);
         let coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
         let marker = new window.kakao.maps.Marker({
           map: map,
@@ -166,12 +157,6 @@ export default function StoreDetail(props: any) {
           console.log("좋아요 통신이 완료되었습니다.", res);
         })
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-      // setTimeout(
-      //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
-      //   axios.patch(`API${}`)
-      //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
-      //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
-      // , 1000)
     } else {
       alert("로그인을 해주세요!");
     }
@@ -179,15 +164,6 @@ export default function StoreDetail(props: any) {
 
   const submitChangedComment = (crud: string, commentId: number) => {
     if (crud === "INSERT") {
-      // location.reload와 해당 방법 사이 고민중..
-      // setCurrentComment([
-      //   {
-      //     comment: commentText.newComment,
-      //     created_at: "방금 전",
-      //     writer_name: "작성자"
-      //   },
-      //   ...currentComment
-      // ]);
       axios
         .post(
           `${API}/store/detail/${props.match.params.id}/comment`,
@@ -202,12 +178,11 @@ export default function StoreDetail(props: any) {
             dispatch(setFirstLogin(true));
             dispatch(setSignupActive(true));
           } else {
-            console.log(res);
             window.location.reload();
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Catched errors!!", err);
         });
     }
     if (crud === "UPDATE") {
@@ -222,10 +197,11 @@ export default function StoreDetail(props: any) {
           { headers: { Authorization: localStorage.getItem("token") } }
         )
         .then((res) => {
-          console.log(res);
           window.location.reload();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log("Catched errors!!", err);
+        });
     }
     if (crud === "DELETE") {
       setDeleteModal(false);
@@ -239,10 +215,11 @@ export default function StoreDetail(props: any) {
           }
         )
         .then((res) => {
-          console.log(res);
           window.location.reload();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log("Catched errors!!", err);
+        });
     }
   };
 
@@ -271,13 +248,16 @@ export default function StoreDetail(props: any) {
         }
       )
       .then((res) => {
-        console.log("1", res.data.comment_list);
         setCurrentComment(res.data.comment_list);
+      })
+      .catch((err) => {
+        console.log("Catched errors!!", err);
       });
+
     setActivePage(pageNumber);
   };
   const handleDragStart = (e: any) => e.preventDefault();
-  console.log("pageNumber", activePage);
+
   return (
     <Container>
       <DescSection>
@@ -331,6 +311,9 @@ export default function StoreDetail(props: any) {
           <CommentInput>
             <form onSubmit={() => submitChangedComment("INSERT", 0)}>
               <Input
+                onKeyDown={(e) =>
+                  e.keyCode === 13 && submitChangedComment("INSERT", 0)
+                }
                 maxLength={149}
                 onChange={(e) =>
                   setCommentText({ ...commentText, newComment: e.target.value })
