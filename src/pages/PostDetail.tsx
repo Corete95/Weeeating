@@ -13,23 +13,15 @@ import axios from "axios";
 import Pagination from "react-js-pagination";
 import wemeok from "../images/wemeoktalk3.png";
 import PostReply from "../pages/childComponents/PostReply";
+import ReactHtmlParser from "react-html-parser";
 import "react-quill/dist/quill.snow.css";
 import "./PostDetail.scss";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import ReactHtmlParser from "react-html-parser";
-// import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
-// import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold";
-// import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic";
-// import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
+
 interface UserData {
   info: any;
   items: any[];
 }
-// const editorConfiguration = {
-//   plugins: [Essentials, Bold, Italic, Paragraph],
-//   toolbar: ["bold", "italic"]
-// };
+
 export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
@@ -61,7 +53,7 @@ export default function PostDetail({ match }: any) {
         { indent: "+1" }
       ],
       ["link", "image"],
-      [{ align: [] }, { color: [] }, { background: [] }], // dropdown with defaults from theme
+      [{ align: [] }, { color: [] }, { background: [] }],
       ["clean"]
     ]
   };
@@ -203,10 +195,6 @@ export default function PostDetail({ match }: any) {
     });
   };
 
-  // const contentResult = postContent.replace(/(<([^>]+)>)/gi, "");
-  // const test = postContent.replace(/<br\s*\/?>/gm, "\n");
-  // const test1 = postContent.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-
   const patchPost = (): void => {
     const data = {
       title: postTitle,
@@ -284,34 +272,11 @@ export default function PostDetail({ match }: any) {
                   </div>
                   <div className="writingCenter">
                     <p className="textBold">내용</p>
-                    {/* <CKEditor
-                      editor={ClassicEditor}
-                      data={postContent}
-                      onReady={(editor: any) => {
-                        // You can store the "editor" and use when it is needed.
-                        console.log("Editor is ready to use!", editor);
-                      }}
-                      onChange={(event: any, editor: any) => {
-                        const data = editor.getData();
-                        console.log({ event, editor, data });
-                        setPostContent(data);
-                        console.log("제발", postContent);
-                      }}
-                      onBlur={(event: any, editor: any) => {
-                        console.log("Blur.", editor);
-                      }}
-                      onFocus={(event: any, editor: any) => {
-                        console.log("Focus.", editor);
-                      }}
-                      config={custom_config}
-                    /> */}
                     <ReactQuill
                       bounds={".quill"}
                       theme={"snow"}
                       value={postContent}
-                      onChange={(content, delta, source, editor) =>
-                        changePostContent(editor.getHTML())
-                      }
+                      onChange={changePostContent}
                       modules={modules}
                       formats={formats}
                     />
@@ -346,7 +311,6 @@ export default function PostDetail({ match }: any) {
                 {/* <div className="contentDiv">
                   {ReactHtmlParser(posts[0]?.content)}
                 </div> */}
-                {/* <div className="contentDiv">{posts[0]?.content}</div> */}
                 {posts[0]?.writer_id ===
                   Number(localStorage.getItem("user_id_number")) && (
                   <>

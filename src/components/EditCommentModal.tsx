@@ -23,14 +23,13 @@ export default function EditCommentModal({
   submitChangedComment,
   updateComment
 }: IProps) {
-
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "unset";
     };
   }, []);
-  
+
   return (
     <ModalWrapper visible={editModal} tabIndex={-1}>
       {console.log("수정 모달 리로드중 content", updatedComment.content)}
@@ -40,6 +39,10 @@ export default function EditCommentModal({
           name="updatedCommentValue"
           value={updatedComment.content}
           onChange={updateComment}
+          onKeyDown={(e) =>
+            e.keyCode === 13 &&
+            submitChangedComment("UPDATE", updatedComment.id)
+          }
         />
         <div className="buttons">
           <Button

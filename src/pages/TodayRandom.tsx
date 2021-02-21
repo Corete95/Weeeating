@@ -28,7 +28,7 @@ export default function TodayRandom() {
     now.setTime(expireTime);
 
     document.cookie = `randomStore=${value};expires="${now.toUTCString()}";path=/`;
-    document.cookie = `randomStoreExpireTime=${expireTime}`;
+    document.cookie = `randomStoreExpireTime=${expireTime};expires=“${now.toUTCString()}“;path=/`;
   };
 
   const getCookie = (name: string) => {
