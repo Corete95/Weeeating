@@ -8,13 +8,14 @@ import {
   setLoginActive,
   setFirstLogin
 } from "../store/actions";
-import ReactQuill, { Quill } from "react-quill"; // Typescript
+import ReactQuill from "react-quill"; // Typescript
 import axios from "axios";
 import Pagination from "react-js-pagination";
 import wemeok from "../images/wemeoktalk3.png";
 import PostReply from "../pages/childComponents/PostReply";
 import ReactHtmlParser from "react-html-parser";
 import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
 import "./PostDetail.scss";
 
 interface UserData {
@@ -43,38 +44,11 @@ export default function PostDetail({ match }: any) {
 
   const modules = {
     toolbar: [
-      //[{ 'font': [] }],
       [{ header: [1, 2, 3, 4, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" }
-      ],
-      ["link", "image"],
-      [{ align: [] }, { color: [] }, { background: [] }],
+      ["bold", "italic", "underline", "strike"],
       ["clean"]
     ]
   };
-
-  const formats = [
-    //'font',
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "align",
-    "color",
-    "background"
-  ];
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -266,9 +240,8 @@ export default function PostDetail({ match }: any) {
                   </div>
                   <div className="solidLine"></div>
                   <div className="writerCreated">
-                    <p>{posts[0]?.writer}</p>
-                    <p>|</p>
-                    <p>{posts[0]?.created_at}</p>
+                    <p className="wirter">{posts[0]?.writer}</p>
+                    <p className="created">{posts[0]?.created_at}</p>
                   </div>
                   <div className="writingCenter">
                     <p className="textBold">내용</p>
@@ -278,7 +251,6 @@ export default function PostDetail({ match }: any) {
                       value={postContent}
                       onChange={changePostContent}
                       modules={modules}
-                      formats={formats}
                     />
                   </div>
                   <div className="writerButton">
@@ -292,6 +264,7 @@ export default function PostDetail({ match }: any) {
                     </button>
                   </div>
                 </div>
+                <div className="solidLine"></div>
               </>
             ) : (
               <>
@@ -308,9 +281,6 @@ export default function PostDetail({ match }: any) {
                   className="contentDiv"
                   dangerouslySetInnerHTML={{ __html: posts[0]?.content }}
                 />
-                {/* <div className="contentDiv">
-                  {ReactHtmlParser(posts[0]?.content)}
-                </div> */}
                 {posts[0]?.writer_id ===
                   Number(localStorage.getItem("user_id_number")) && (
                   <>
@@ -331,46 +301,49 @@ export default function PostDetail({ match }: any) {
                     </div>
                   </>
                 )}
+                <div className="solidLine"></div>
+                <div className="commentsInputDiv">
+                  <p>댓글 ({countComments})</p>
+                  <input
+                    onKeyDown={(e) =>
+                      e.keyCode === 13 && submitChangedComment("INSERT", 0)
+                    }
+                    maxLength={149}
+                    value={comment}
+                    onChange={onChangeComment}
+                  ></input>
+                  <span onClick={() => submitChangedComment("INSERT", 0)}>
+                    등록
+                  </span>
+                </div>
+                {comments?.map((comments: any) => {
+                  return (
+                    <PostReply
+                      comments={comments}
+                      id={comments.comment_id}
+                      writer={comments.comment_writer}
+                      content={comments.comment_content}
+                      created_at={comments.comment_created_at}
+                      writer_id={comments.comment_writer_id}
+                      clickEdit={clickEdit}
+                      clickDeleteComment={clickDeleteComment}
+                    />
+                  );
+                })}
+                <Pagination
+                  activePage={activePage}
+                  itemsCountPerPage={5}
+                  totalItemsCount={countComments}
+                  pageRangeDisplayed={5}
+                  hideFirstLastPages
+                  itemClassPrev={"prevPageText"}
+                  itemClassNext={"nextPageText"}
+                  prevPageText={"◀"}
+                  nextPageText={"▶"}
+                  onChange={handlePageChange}
+                />
               </>
             )}
-            <div className="solidLine"></div>
-            <div className="commentsInputDiv">
-              <p>댓글 ({countComments})</p>
-              <input
-                maxLength={149}
-                value={comment}
-                onChange={onChangeComment}
-              ></input>
-              <span onClick={() => submitChangedComment("INSERT", 0)}>
-                등록
-              </span>
-            </div>
-            {comments?.map((comments: any) => {
-              return (
-                <PostReply
-                  comments={comments}
-                  id={comments.comment_id}
-                  writer={comments.comment_writer}
-                  content={comments.comment_content}
-                  created_at={comments.comment_created_at}
-                  writer_id={comments.comment_writer_id}
-                  clickEdit={clickEdit}
-                  clickDeleteComment={clickDeleteComment}
-                />
-              );
-            })}
-            <Pagination
-              activePage={activePage}
-              itemsCountPerPage={5}
-              totalItemsCount={countComments}
-              pageRangeDisplayed={5}
-              hideFirstLastPages
-              itemClassPrev={"prevPageText"}
-              itemClassNext={"nextPageText"}
-              prevPageText={"◀"}
-              nextPageText={"▶"}
-              onChange={handlePageChange}
-            />
           </div>
         </div>
       </div>

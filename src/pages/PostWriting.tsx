@@ -14,24 +14,34 @@ export default function PostWriting() {
   const [content, setContent] = useState<any>("");
   const history = useHistory();
 
-  const contentResult = content.replace(/(<([^>]+)>)/gi, "");
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, false] }],
+      ["bold", "italic", "underline", "strike"],
+      ["clean"]
+    ]
+  };
 
   let data = {
     title: title.newTitle,
-    content: contentResult
+    content: content
   };
 
   const uploadData = () => {
-    axios
-      .post(`${API}/board`, JSON.stringify(data), {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-          "Content-Type": `application/json`
-        }
-      })
-      .then((res) => {
-        history.push("/post-list");
-      });
+    if (title.newTitle === null) {
+      alert("제목,내용을 입력해주세요");
+    } else {
+      axios
+        .post(`${API}/board`, JSON.stringify(data), {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": `application/json`
+          }
+        })
+        .then((res) => {
+          history.push("/post-list");
+        });
+    }
   };
 
   const createPost = (value: string) => {
@@ -49,6 +59,7 @@ export default function PostWriting() {
             <div className="writingTitle">
               <p>제목</p>
               <input
+                required
                 maxLength={50}
                 type="text/html"
                 onChange={(e) =>
@@ -58,12 +69,13 @@ export default function PostWriting() {
             </div>
             <div className="solidLine"></div>
             <div className="writingCenter">
-              <p>내용</p>
+              <p className="textBold"> 내용</p>
               <ReactQuill
                 bounds={".quill"}
                 theme={"snow"}
                 value={content}
                 onChange={createPost}
+                modules={modules}
               />
             </div>
             <div className="writerButton">
