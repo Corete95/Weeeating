@@ -13,49 +13,49 @@
   .weMeokTalkList {
     position: relative;
     width: 56.4rem;
-    border: 3px solid #ffd966;
-    top: -8px;
-    left: 262px;
+    border: 0.1875rem solid #ffd966;
+    top: -0.5rem;
+    left: 16.375rem;
     .editListDiv {
-      padding: 35px 30px 30px 30px;
+      padding: 2.1875rem 1.875rem 1.875rem;
 
       .writingTitle {
         display: flex;
 
         p {
           width: 8%;
-          font-size: 30px;
-          margin-right: 6px;
+          font-size: 1.875rem;
+          margin-right: 0.375rem;
         }
         input {
           width: 100%;
-          height: 30px;
+          height: 1.875rem;
           background: #f2f2f2;
-          border: 1px solid gray;
+          border: 0.0625rem solid gray;
           outline: none;
-          padding: 0px 20px;
+          padding: 0rem 1.25rem;
         }
       }
       .solidLine {
-        border-bottom: 2px solid black;
-        margin-top: 30px;
+        border-bottom: 0.125rem solid black;
+        margin-top: 1.875rem;
       }
       .writingCenter {
         .textBold {
-          margin: 40px 0px 25px 0px;
-          font-size: 30px;
+          margin: 2.5rem 0rem 1.5625rem;
+          font-size: 1.875rem;
         }
       }
       .writerButton {
-        margin-top: 30px;
+        margin-top: 1.875rem;
         text-align: right;
         button {
-          font-size: 17px;
+          font-size: 1.0625rem;
           background-color: #ffd966;
-          border-radius: 6px;
-          border: 1px solid black;
-          width: 70px;
-          height: 35px;
+          border-radius: 0.375rem;
+          border: 0.0625rem solid black;
+          width: 4.375rem;
+          height: 2.1875rem;
           outline: none;
           cursor: pointer;
         }
@@ -63,16 +63,16 @@
     }
     .listDiv {
       font-family: "777Balsamtint";
-      padding: 35px 30px 30px 30px;
+      padding: 2.1875rem 1.875rem 1.875rem;
 
       .detailTitle {
         display: flex;
 
         .titleBold {
           width: 8%;
-          font-size: 30px;
+          font-size: 1.875rem;
           font-weight: 600;
-          margin-right: 6px;
+          margin-right: 0.375rem;
         }
         .title {
           overflow: hidden;
@@ -80,31 +80,31 @@
           align-items: center;
           display: flex;
           width: 100%;
-          font-size: 30px;
+          font-size: 1.875rem;
         }
       }
       .solidLine {
-        margin-top: 20px;
-        border-bottom: 2px solid black;
+        margin-top: 1.25rem;
+        border-bottom: 0.125rem solid black;
       }
     }
     .writerCreated {
       display: flex;
       justify-content: flex-end;
-      font-size: 20px;
-      margin: 20px 0px 20px 20px;
+      font-size: 1.25rem;
+      margin: 1.25rem 0rem;
 
       .wirter {
-        width: 92px;
-        margin-right: 10px;
-        border-right: 2px solid black;
+        width: 5.75rem;
+        margin-right: 0.625rem;
+        border-right: 0.125rem solid black;
       }
     }
     .contentDiv {
       width: 100%;
       height: 100%;
-      padding: 35px 35px;
-      font-size: 25px;
+      padding: 2.25rem 2.25rem;
+      font-size: 1.5625rem;
       word-break: break-all;
       h1 {
         font-size: 3rem;
@@ -134,12 +134,12 @@
     .editDeleteDiv {
       display: flex;
       justify-content: flex-end;
-      font-size: 20px;
-      margin: 20px 0px 20px 20px;
+      font-size: 1.25rem;
+      margin: 1.25rem 0rem;
       .edit {
-        width: 38px;
-        margin-right: 7px;
-        border-right: 2px solid black;
+        width: 2.375rem;
+        margin-right: 0.4375rem;
+        border-right: 0.125rem solid black;
         cursor: pointer;
       }
       .delete {
@@ -148,28 +148,28 @@
     }
     .commentsInputDiv {
       display: flex;
-      margin: 20px 0px;
+      margin: 1.25rem 0rem;
       font-family: "Bazzi";
       p {
         width: 10%;
-        font-size: 23px;
+        font-size: 1.4375rem;
         font-weight: 600;
-        margin-right: 30px;
+        margin-right: 1.875rem;
       }
       input {
         width: 100%;
         background: #f2f2f2;
-        border: 2px solid gray;
+        border: 0.125rem solid gray;
         outline: none;
-        padding: 0px 35px 0px 15px;
-        font-size: 18px;
+        padding: 0rem 2.1875rem 0rem 0.9375rem;
+        font-size: 1.125rem;
       }
       span {
-        font-size: 20px;
+        font-size: 1.25rem;
         position: relative;
-        left: -29px;
-        width: 31px;
-        bottom: -3px;
+        left: -1.8125rem;
+        width: 1.9375rem;
+        bottom: -0.1875rem;
         cursor: pointer;
       }
     }
@@ -177,14 +177,14 @@
       font-family: "Bazzi";
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
       .commentsWriter {
         display: flex;
         width: 7.3rem;
-        font-size: 20px;
+        font-size: 1.25rem;
         font-weight: 600;
-        margin-right: 10px;
-        border-right: 2px solid black;
+        margin-right: 0.625rem;
+        border-right: 0.125rem solid black;
       }
       .commentDiv {
         width: 100%;
@@ -192,29 +192,29 @@
         align-items: center;
         .commentContent {
           width: 60%;
-          font-size: 20px;
-          margin-left: 10px;
+          font-size: 1.25rem;
+          margin-left: 0.625rem;
           word-break: break-all;
         }
         .commentCreated {
-          font-size: 20px;
-          margin-left: 31px;
+          font-size: 1.25rem;
+          margin-left: 2rem;
         }
         .modifyDiv {
           display: flex;
           flex: 1;
           justify-content: flex-end;
-          margin-right: 25px;
+          margin-right: 1.5625rem;
           .commentEdit {
-            width: 38px;
-            font-size: 20px;
-            margin-right: 6px;
-            border-right: 2px solid black;
+            width: 2.375rem;
+            font-size: 1.25rem;
+            margin-right: 0.375rem;
+            border-right: 0.125rem solid black;
             cursor: pointer;
           }
           .commentDelete {
-            width: 33px;
-            font-size: 20px;
+            width: 2.0625rem;
+            font-size: 1.25rem;
             cursor: pointer;
           }
         }
@@ -234,16 +234,16 @@
 
   ul.pagination li {
     display: inline-block;
-    width: 22px;
+    width: 1.375rem;
     display: flex;
     justify-content: center;
-    font-size: 25px;
+    font-size: 1.5625rem;
   }
 
   ul.pagination li a {
     text-decoration: none;
     color: black;
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 
   ul.pagination li.active a {
@@ -262,7 +262,7 @@
   .pagination-wrapper {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 0.625rem;
   }
   ul.pagination li.prevPageText a,
   ul.pagination li.nextPageText a {
@@ -274,7 +274,7 @@
 
   .quill {
     .ql-container {
-      height: 250px;
+      height: 15.625rem;
       background: #f2f2f2;
     }
     h1 {

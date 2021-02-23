@@ -7,30 +7,16 @@
   .storeListLogo {
     text-align: center;
     img {
-      width: 610px;
+      width: 38.125rem;
     }
     .logoBox {
-      width: 400px;
-      height: 100px;
+      width: 25rem;
+      height: 6.25rem;
       background-color: #f3f3f3;
-      .logoBox1 {
-        position: relative;
-        top: 19px;
-        left: 20px;
-        width: 400px;
-        height: 100px;
-        background-color: #d9d9d9;
-        text-align: center;
-        p {
-          padding-top: 10px;
-          font-size: 82px;
-          font-weight: 900;
-        }
-      }
     }
     .storeFood {
       display: inline-block;
-      margin-top: 60px;
+      margin-top: 3.75rem;
     }
   }
 }

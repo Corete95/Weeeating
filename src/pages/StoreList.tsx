@@ -85,11 +85,6 @@ export default function StoreList() {
         <div className="storeListLogo">
           <img src="./images/storelist.png"></img>
         </div>
-        {/* <div className="logoBox">
-          <div className="logoBox1">
-            <p>위코더 맛집</p>
-          </div>
-        </div> */}
         <div className="storeFood">
           {storeList?.map((feather: any) => {
             return (

@@ -6,7 +6,7 @@
   width: 85rem;
 
   .erankingImg {
-    width: 520px;
+    width: 32.5rem;
     margin-left: 100px;
   }
   .rankingDiv {
@@ -22,7 +22,7 @@
     width: 100%;
     height: 100%;
     margin-top: 6.25rem;
-    margin-left: 19px;
+    margin-left: 1.1875rem;
     .themListDiv {
       width: 88%;
       margin: 0rem auto;
@@ -43,7 +43,7 @@
             font-weight: 900;
           }
           .pick {
-            padding-left: 100px;
+            padding-left: 6.25rem;
             font-size: 6.7rem;
             font-weight: 900;
           }
@@ -142,7 +142,7 @@
             width: 50%;
             text-align: center;
             img {
-              width: 225px;
+              width: 14.0625rem;
             }
           }
         }
@@ -155,7 +155,7 @@
           background-image: url("feather.png");
           background-position: center center;
           background-repeat: no-repeat;
-          background-size: 250px 250px;
+          background-size: 15.625rem 15.625rem;
           .featherCenter {
             width: 100%;
             height: 100%;
@@ -230,7 +230,7 @@
       }
       .test {
         width: 100%;
-        height: 30px;
+        height: 1.875rem;
       }
 
       hr {
@@ -238,7 +238,7 @@
       }
       img {
         width: 100%;
-        height: 290px;
+        height: 18.125rem;
       }
     }
     .storeFooter {
@@ -246,7 +246,7 @@
       align-items: center;
       text-align: center;
       .foodName {
-        font-size: 23px;
+        font-size: 1.4375rem;
         width: 15.75rem;
       }
       span {
@@ -257,8 +257,8 @@
         height: 2rem;
       }
       .heartTotal {
-        font-size: 24px;
-        margin-left: 9px;
+        font-size: 1.5rem;
+        margin-left: 0.5625rem;
       }
     }
   }
@@ -266,13 +266,6 @@
 
 .slides {
   outline: none;
-  // .slick-prev {
-  //   left: -1.25rem !important;
-  // }
-
-  // .slick-prev {
-  //   right: -1.25rem !important;
-  // }
 
   .slick-next:before,
   .slick-prev:before {
