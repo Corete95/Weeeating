@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setSignupActive, setFirstLogin } from "../store/actions";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { API } from "../config";
 import Posts from "./childComponents/Posts";
 import Pagination from "react-js-pagination";
@@ -19,6 +19,7 @@ export default function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchPosts = async () => {
       await axios
         .get(`${API}/board`, {

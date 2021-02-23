@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import {
@@ -18,6 +18,11 @@ interface IProps {
 
 function SampleNextArrow(props: any) {
   const { className, style, onClick } = props;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
+
   return (
     <img
       alt="rightArrow"

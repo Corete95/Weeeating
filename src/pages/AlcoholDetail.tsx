@@ -46,6 +46,7 @@ export default function AlcoholDetail({ match, props }: any) {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (localStorage.getItem("token")) {
       axios
         .get(`${API}/store/list?tag=${alcohol}`, {
@@ -63,6 +64,8 @@ export default function AlcoholDetail({ match, props }: any) {
       });
     }
   }, []);
+
+ 
 
   const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {

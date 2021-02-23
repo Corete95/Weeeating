@@ -58,6 +58,7 @@ export default function StoreDetail(props: any) {
   const [countComments, setCountComments] = useState(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (localStorage.getItem("token")) {
       axios
         .all([

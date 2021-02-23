@@ -102,6 +102,7 @@ export default function TodayRandom() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const store = getCookie("randomStore");
 
     if (store) {

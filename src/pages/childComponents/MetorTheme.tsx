@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 function MetorTheme() {
   const history = useHistory();
+
   return (
     <>
       <div className="metorMain" onClick={() => history.push("./metor-detail")}>

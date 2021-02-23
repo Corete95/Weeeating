@@ -16,6 +16,7 @@ export default function FeatherDetail() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (localStorage.getItem("token")) {
       axios
         .get(`${API}/store/list?tag=${feather}`, {

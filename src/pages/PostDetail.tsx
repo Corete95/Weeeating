@@ -51,6 +51,7 @@ export default function PostDetail({ match }: any) {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchPosts = async () => {
       await axios
         .get(`${API}/board/${match.params.id}`, {

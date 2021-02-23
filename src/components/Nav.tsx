@@ -5,6 +5,7 @@ import { FiX } from "react-icons/fi";
 import { setSignupActive, setLoginActive } from "../store/actions";
 import { mixin } from "../styles";
 import { Signup, Login } from "./index";
+import wemeok from "../images/weeeating_Nav_logo.png";
 
 interface IProps {
   weight: {
@@ -51,7 +52,7 @@ export default function Nav({ weight, goToPage }: IProps) {
   return (
     <Container>
       <Logo onClick={() => goToPage("/", "main")}>
-        <img src="./images/weeeating_Nav_logo.png" />
+        <img src={wemeok} />
       </Logo>
       <Button
         present={weight.storeList}
