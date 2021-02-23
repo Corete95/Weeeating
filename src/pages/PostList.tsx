@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setSignupActive, setFirstLogin } from "../store/actions";
+import { Link, useHistory } from "react-router-dom";
+import { API } from "../config";
 import Posts from "./childComponents/Posts";
 import Pagination from "react-js-pagination";
 import axios from "axios";
 import wemeok from "../images/wemeoktalk3.png";
-import { Link, useHistory } from "react-router-dom";
-import { API } from "../config";
 import "./PostList.scss";
 
 interface PostData {
@@ -14,6 +16,8 @@ export default function App() {
   const [posts, setPosts] = useState<PostData | any>([]);
   const [activePage, setActivePage] = useState<any>(1);
   const history = useHistory();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchPosts = async () => {
       await axios
@@ -53,15 +57,29 @@ export default function App() {
       });
     setActivePage(pageNumber);
   };
-  console.log(posts);
+
   const loginCheck = () => {
     if (localStorage.getItem("token")) {
-      history.push("./post-writing");
+      axios
+        .get(`${API}/board/write`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            history.push("./post-writing");
+          }
+        });
     } else {
       alert("로그인을 해주세요!");
     }
   };
-  console.log("1", posts);
+
   return (
     <>
       <div className="postList">
