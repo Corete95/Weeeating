@@ -202,7 +202,7 @@ export default function TodayRandom() {
 
 const Container = styled.div`
   font-family: "777Balsamtint";
-  margin: 11rem auto 5rem;
+  margin: 11rem auto 2rem;
   width: 65rem;
 `;
 

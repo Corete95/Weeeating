@@ -37,9 +37,9 @@ export default function StoreCard({
             onClick={() => history.push(`/store-detail/${id}`)}
           >
             <p>Weeeating</p>
-            <hr></hr>
+            {/* <hr></hr> */}
             <img alt="storeImg" src={image}></img>
-            <hr></hr>
+            {/* <hr></hr> */}
           </div>
           <div className="storeFooter">
             <p className="foodName">{name}</p>

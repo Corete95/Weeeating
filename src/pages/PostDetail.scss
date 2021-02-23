@@ -149,7 +149,6 @@
     .commentsInputDiv {
       display: flex;
       margin: 1.25rem 0rem;
-      font-family: "Bazzi";
       p {
         width: 10%;
         font-size: 1.4375rem;
@@ -174,7 +173,6 @@
       }
     }
     .comments {
-      font-family: "Bazzi";
       display: flex;
       align-items: center;
       margin-bottom: 1.25rem;
@@ -192,7 +190,7 @@
         align-items: center;
         .commentContent {
           width: 60%;
-          font-size: 1.25rem;
+          font-size: 1rem;
           margin-left: 0.625rem;
           word-break: break-all;
         }

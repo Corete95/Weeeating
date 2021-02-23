@@ -6,7 +6,7 @@
   width: 85rem;
 
   .erankingImg {
-    width: 32.5rem;
+    width: 30rem;
     margin-left: 100px;
   }
   .rankingDiv {
@@ -189,7 +189,7 @@
 }
 
 .storeCard {
-  font-family: "InkLipquid";
+  font-family: "Bazzi";
   float: left;
   width: 20.75rem;
   height: auto;
@@ -215,7 +215,7 @@
     }
   }
   .rankingComponents {
-    border: solid 0.125rem black;
+    border: solid 0.0625rem black;
     height: 23.5rem;
     margin-top: 1rem;
     border-radius: 2rem;
@@ -246,6 +246,8 @@
       align-items: center;
       text-align: center;
       .foodName {
+        padding-top: 0.4375rem;
+        color: #1b1a1a;
         font-size: 1.4375rem;
         width: 15.75rem;
       }

@@ -306,10 +306,13 @@ export default function PostDetail({ match }: any) {
                 <div className="commentsInputDiv">
                   <p>댓글 ({countComments})</p>
                   <input
-                    onKeyDown={(e) =>
-                      e.keyCode === 13 && submitChangedComment("INSERT", 0)
-                    }
-                    maxLength={149}
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 13) {
+                        submitChangedComment("INSERT", 0);
+                        e.preventDefault();
+                      }
+                    }}
+                    maxLength={250}
                     value={comment}
                     onChange={onChangeComment}
                   ></input>

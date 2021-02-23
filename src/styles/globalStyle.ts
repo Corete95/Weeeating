@@ -9,21 +9,9 @@ export const GlobalStyle = createGlobalStyle`
   body{
     font-family: 'Noto Sans KR', sans-serif, serif;
     font-family: 'Yeon Sung', cursive;
-\@font-face {
+@font-face {
   font-family: 'Y_Spotlight';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/Y_Spotlight.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'S-CoreDream-3Light';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'designhouseOTFLight00';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/designhouseOTFLight00.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -58,6 +46,7 @@ export const GlobalStyle = createGlobalStyle`
   font-weight: normal;
   font-style: normal;
 }
+
 
   * {
     box-sizing: border-box;

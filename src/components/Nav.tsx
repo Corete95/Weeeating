@@ -122,7 +122,7 @@ export default function Nav({ weight, goToPage }: IProps) {
 }
 
 const Container = styled.header`
-  font-family: "designhouseOTFLight00";
+  font-family: "Bazzi";
   ${mixin.flexSet("flex-start", "center", "row")}
   position: fixed;
   z-index: 100;
