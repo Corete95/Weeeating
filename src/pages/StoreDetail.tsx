@@ -1,9 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import Pagination from "react-js-pagination";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { API } from "../config";
 import { mixin } from "../styles";
+import { EditCommentModal, DeleteCommentModal } from "../components";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
 
 declare global {
   interface Window {
@@ -11,7 +21,80 @@ declare global {
   }
 }
 
-export default function StoreDetail() {
+interface UserData {
+  info: any;
+  items: any[];
+}
+
+export default function StoreDetail(props: any) {
+  const dispatch = useDispatch();
+
+  const [info, setInfo] = useState<UserData | any>({
+    store_info: [
+      {
+        name: "매장명",
+        description: "로딩중 ~~~ 조금만 기다려주세요 !",
+        delivery: true,
+        address: "서울시 강남구 테헤란로 427"
+      }
+    ],
+    like_count: 0,
+    like: false,
+    store_images: [
+      "https://images.unsplash.com/photo-1607434472257-d9f8e57a643d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1952&q=80"
+    ]
+  });
+  const [currentComment, setCurrentComment] = useState<UserData | any>([]);
+  // const [address, setAddress] = useState("");
+  // const [items, setItems] = useState<UserData | any[]>([]);
+  // const [like, setLike] = useState(false);
+  const [commentText, setCommentText] = useState<UserData | any>({
+    newComment: null,
+    updatedComment: { id: null, content: "기존댓글~~~" }
+  });
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [activePage, setActivePage] = useState<any>(1);
+  const [countComments, setCountComments] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (localStorage.getItem("token")) {
+      axios
+        .all([
+          axios.get(`${API}/store/detail/${props.match.params.id}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          }),
+          axios.get(`${API}/store/detail/${props.match.params.id}/comment`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            setInfo(res1.data);
+            setCurrentComment(res2.data.comment_list);
+            setCountComments(res2.data.count_comments);
+          })
+        );
+    } else {
+      axios
+        .all([
+          axios.get(`${API}/store/detail/${props.match.params.id}`),
+          axios.get(`${API}/store/detail/${props.match.params.id}/comment`)
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            setInfo(res1.data);
+            setCurrentComment(res2.data.comment_list);
+          })
+        );
+    }
+  }, [props.match.params.id]);
+
   useEffect(() => {
     let container = document.getElementById("map");
     let options = {
@@ -24,18 +107,18 @@ export default function StoreDetail() {
 
     let map = new window.kakao.maps.Map(container, options);
 
-    var callback = (result: any, status: any) => {
+    let callback = (result: any, status: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        console.log(result);
-        var coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-        var marker = new window.kakao.maps.Marker({
+        let coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+        let marker = new window.kakao.maps.Marker({
           map: map,
           position: coords
         });
-        var infowindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="width:150px;text-align:center;padding:6px 0;"><div style="font-weight: bold;">"위코드"</div><div>"국내 최고 부트캠프"</div></div>`
-        });
-        infowindow.open(map, marker);
+        let infowindow = (info: any) =>
+          new window.kakao.maps.InfoWindow({
+            content: `<div style="width:10rem;height:2.5rem;display:flex;justify-content:center;align-items:center;padding:6px 0;"><div style="font-weight: bold;">"${info.store_info[0].name}"</div></div>`
+          });
+        infowindow(info).open(map, marker);
         map.setCenter(coords);
       }
       if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
@@ -46,29 +129,139 @@ export default function StoreDetail() {
       }
     };
 
-    var geocoder = new window.kakao.maps.services.Geocoder();
-    geocoder.addressSearch("서울특별시 강남구 테헤란로 427", callback);
-  }, []);
+    let geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.addressSearch(info.store_info[0]?.address, callback);
+  }, [info]);
 
+  const changeLikedState = () => {
+    if (localStorage.getItem("token")) {
+      axios
+        .post(`${API}/store/like/${props.match.params.id}`, "data", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 좋아요 등록이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setInfo({
+              ...info,
+              like_count: Number(
+                info.like === false ? info.like_count + 1 : info.like_count - 1
+              ),
+              like: !info.like
+            });
+          }
+          console.log("좋아요 통신이 완료되었습니다.", res);
+        })
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    } else {
+      alert("로그인을 해주세요!");
+    }
+  };
+
+  const submitChangedComment = (crud: string, commentId: number) => {
+    if (localStorage.getItem("token")) {
+      if (crud === "INSERT") {
+        axios
+          .post(
+            `${API}/store/detail/${props.match.params.id}/comment`,
+            JSON.stringify({
+              comment: commentText.newComment
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            if (res.data.MESSAGE === "NEED_USER_NAME") {
+              alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+              dispatch(setFirstLogin(true));
+              dispatch(setSignupActive(true));
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+      if (crud === "UPDATE") {
+        setEditModal(false);
+
+        axios
+          .patch(
+            `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+            JSON.stringify({
+              comment: commentText.updatedComment.content
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+      if (crud === "DELETE") {
+        setDeleteModal(false);
+        axios
+          .delete(
+            `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token")
+              }
+            }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+    } else {
+      alert("로그인을 해주세요!");
+    }
+  };
+
+  const updateComment = (e: any) => {
+    const { value } = e.target;
+
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        ...commentText.updatedComment,
+        content: value
+      }
+    });
+  };
+
+  const handlePageChange = (pageNumber: any) => {
+    axios
+      .get(
+        `${API}/store/detail/${props.match.params.id}/comment?offset=${
+          (pageNumber - 1) * 5
+        }`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        }
+      )
+      .then((res) => {
+        setCurrentComment(res.data.comment_list);
+      })
+      .catch((err) => {
+        console.log("Catched errors!!", err);
+      });
+
+    setActivePage(pageNumber);
+  };
   const handleDragStart = (e: any) => e.preventDefault();
-
-  const items = [
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />,
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />,
-    <img
-      src="https://dimg.donga.com/a/500/0/90/5/ugc/CDB/29STREET/Article/5e/b2/04/e8/5eb204e81752d2738236.jpg"
-      onDragStart={handleDragStart}
-      className="food"
-    />
-  ];
 
   return (
     <Container>
@@ -79,26 +272,36 @@ export default function StoreDetail() {
             infinite
             autoPlay
             animationDuration={1400}
-            items={items}
-          />
+            disableButtonsControls={true}
+          >
+            {info.store_images?.map((image: string) => (
+              <img src={image} onDragStart={handleDragStart} className="food" />
+            ))}
+          </AliceCarousel>
         </Images>
         <StoreDesc>
           <StoreTitle>
-            <DecoTitle>"</DecoTitle>
-            <Title>할머니 떡볶이</Title>
-            <DecoTitle>"</DecoTitle>
+            <DecoTitle>“</DecoTitle>
+            <Title>{info.store_info[0]?.name}</Title>
+            <DecoTitle>”</DecoTitle>
           </StoreTitle>
           <Desc>
-            <div className="deli">배달 가능 맛집 🛵</div>
-            겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로 어떻게 설명해야할지
-            모르겠네 나도 26년만에 먹어봤는데 진짜로 맛있어여 진짜로 맛있으니까
-            다들 꼭 먹어줘 … 겨울엔 방어가 제철이지 진짜 쫀맛탱인데 이걸 말로
-            어떻게 설명해야할지 모르겠네 나도 26년만에 먹어봤는데 진짜로
-            맛있어여 진짜로 맛있으니까 다들 꼭 먹어줘 …
+            <div className="deli">
+              {info.store_info[0]?.delivery
+                ? "⭕ 배달 가능 맛집 ⭕"
+                : "❌ 배달 불가 맛집 ❌"}
+            </div>
+            <div className="desc">{info.store_info[0]?.description}</div>
           </Desc>
           <Liked>
-            <IoIosHeartEmpty id="icon" />
-            <span className="amount">100</span>
+            <span onClick={changeLikedState}>
+              {info?.like ? (
+                <IoIosHeart className="like full" />
+              ) : (
+                <IoIosHeartEmpty className="like" />
+              )}
+            </span>
+            <span className="amount">{info?.like_count}</span>
             명의 위코더가 좋아해요 :-)
           </Liked>
         </StoreDesc>
@@ -111,36 +314,113 @@ export default function StoreDetail() {
         <InputWrapper>
           <CommentDesc>댓글 입력</CommentDesc>
           <CommentInput>
-            <Input placeholder="여러분의 이야기를 남겨주세요 !" />
-            <SubmitBtn>확인</SubmitBtn>
+            <form>
+              <Input
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    submitChangedComment("INSERT", 0);
+                    e.preventDefault();
+                  }
+                }}
+                maxLength={250}
+                onChange={(e) =>
+                  setCommentText({ ...commentText, newComment: e.target.value })
+                }
+                placeholder="여러분의 이야기를 남겨주세요 !"
+              />
+              <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
+                확인
+              </SubmitBtn>
+            </form>
           </CommentInput>
         </InputWrapper>
         <CommentsWrapper>
-          <Comment>
-            <User>13기_백은진</User>
-            <Content>떡볶이 너무 먹고싶다...</Content>
-            <UploadTime>(2021.01.22 3:10)</UploadTime>
-          </Comment>
-          <Comment>
-            <User>13기_백은진</User>
-            <div className="right">
-              <Content>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Laborum, labore quas quis optio suscipit voluptatum? Et a est in
-                ratione. Provident expedita eveniet vero quae dolores minus sint
-                commodi fuga.
-              </Content>
-              <UploadTime>(2021.01.22 3:10)</UploadTime>
-            </div>
-          </Comment>
+          {currentComment &&
+            currentComment.map((comment: any, idx: any) => (
+              <Comment key={idx}>
+                <User>{comment.writer_name}</User>
+                <div className="right">
+                  <Content>{comment.comment}</Content>
+                  <UploadTime>( {comment.created_at} )</UploadTime>
+                  {comment.writer_id ===
+                    Number(localStorage.getItem("user_id_number")) && (
+                    <>
+                      <ModifyDiv>
+                        <p
+                          className="edit"
+                          onClick={() => {
+                            setEditModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                id: comment.id,
+                                content: comment.comment
+                              }
+                            });
+                          }}
+                        >
+                          수정
+                        </p>
+                        <p
+                          className="delete"
+                          onClick={() => {
+                            setDeleteModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                ...commentText.updatedComment,
+                                id: comment.id
+                              }
+                            });
+                          }}
+                        >
+                          삭제
+                        </p>
+                      </ModifyDiv>
+                    </>
+                  )}
+                </div>
+              </Comment>
+            ))}
         </CommentsWrapper>
+        <PaginationCss>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={5}
+            totalItemsCount={countComments}
+            pageRangeDisplayed={5}
+            hideFirstLastPages
+            itemClassPrev={"prevPageText"}
+            itemClassNext={"nextPageText"}
+            prevPageText={"◀"}
+            nextPageText={"▶"}
+            onChange={handlePageChange}
+          />
+        </PaginationCss>
       </CommentSection>
+      {editModal && (
+        <EditCommentModal
+          editModal={editModal}
+          setEditModal={setEditModal}
+          updatedComment={commentText.updatedComment}
+          submitChangedComment={submitChangedComment}
+          updateComment={updateComment}
+        />
+      )}
+      {deleteModal && (
+        <DeleteCommentModal
+          deleteModal={deleteModal}
+          setDeleteModal={setDeleteModal}
+          submitChangedComment={submitChangedComment}
+          commentId={commentText.updatedComment.id}
+        />
+      )}
     </Container>
   );
 }
 
 const Container = styled.div`
-  margin: 10rem auto;
+  margin: 10rem auto 5rem auto;
   width: 65rem;
 `;
 
@@ -161,6 +441,7 @@ const Images = styled.div`
 `;
 
 const StoreDesc = styled.div`
+  font-family: "InkLipquid";
   width: 32rem;
 `;
 
@@ -197,16 +478,25 @@ const Desc = styled.article`
     text-align: center;
     margin-bottom: 1rem;
   }
+
+  .desc {
+    font-family: "KOTRA_GOTHIC";
+  }
 `;
 
 const Liked = styled.p`
+  font-size: 20px;
   margin-top: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  #icon {
+  .like {
     font-size: 2.2rem;
+  }
+
+  .full {
+    color: ${({ theme }) => theme.likedRed};
   }
 
   .amount {
@@ -225,6 +515,7 @@ const Map = styled.div`
 `;
 
 const CommentSection = styled.div`
+  font-family: "Bazzi";
   width: 65rem;
 `;
 
@@ -238,7 +529,7 @@ const InputWrapper = styled.div`
 const CommentDesc = styled.span`
   width: 5.5rem;
   margin-right: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 `;
 
 const CommentInput = styled.form`
@@ -246,7 +537,9 @@ const CommentInput = styled.form`
 `;
 
 const Input = styled.input`
-  padding: 0.5rem;
+  font-family: "Bazzi";
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  font-size: 1rem;
   outline: none;
   width: 59.5rem;
 `;
@@ -256,32 +549,117 @@ const SubmitBtn = styled.span`
   right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 `;
 
 const CommentsWrapper = styled.ul``;
 
-const Comment = styled.li`
+const Comment = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 0.7rem;
+  align-items: center;
 
   .right {
+    display: flex;
+    align-items: center;
     width: 59.5rem;
     line-height: 1.4rem;
   }
 `;
 
 const User = styled.span`
-  width: 5.5rem;
+  font-size: 1.0625rem;
+  width: 5.8rem;
   font-weight: 900;
-  border-right: 1px solid ${({ theme }) => theme.borderGray};
-  padding-right: 1rem;
+  border-right: 0.125rem solid black;
   margin-right: 1rem;
 `;
 
 const Content = styled.p`
+  width: 75%;
   display: inline;
-  margin-right: 1rem;
+  word-break: break-all;
 `;
 
-const UploadTime = styled.span``;
+const UploadTime = styled.span`
+  margin: 0rem 0.1rem 0rem 0.9rem;
+`;
+
+const ModifyDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+
+  .edit {
+    width: 2.375rem;
+    margin-right: 0.5625rem;
+    border-right: 0.125rem solid black;
+    cursor: pointer;
+  }
+
+  .delete {
+    width: 1.625rem;
+    cursor: pointer;
+  }
+`;
+
+const ModifyBtn = styled.p`
+  margin: 0 0.2rem;
+  outline: none;
+  font-size: 0.75em;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: white;
+`;
+
+const PaginationCss = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0rem 0rem 0rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 22px;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+  }
+
+  ul.pagination li.active a {
+    color: #ffd966;
+  }
+  ul.pagination li.active {
+    font-weight: 600;
+    color: #ffd966;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: #ffd966;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  ul.pagination li.prevPageText a,
+  ul.pagination li.nextPageText a {
+    color: #ffd966;
+  }
+`;

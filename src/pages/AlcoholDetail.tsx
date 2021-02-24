@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { API1 } from "../config";
+import { API } from "../config";
+import { useDispatch } from "react-redux";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 import axios from "axios";
 import StoreCard2 from "./childComponents/StoreCard2";
 import Slider from "react-slick";
@@ -7,9 +9,13 @@ import "./AlcoholDetail.scss";
 import "./MainPage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-export default function AlcoholDetail() {
-  const [alcoholData, setAlcoholData] = useState([]);
+interface UserData {
+  alcoholData: any;
+}
+export default function AlcoholDetail({ match, props }: any) {
+  const [alcoholData, setAlcoholData] = useState<UserData | any>([]);
+  const alcohol = "alcohol";
+  const dispatch = useDispatch();
 
   const setting = {
     dots: false,
@@ -40,18 +46,77 @@ export default function AlcoholDetail() {
   };
 
   useEffect(() => {
-    axios.get(`${API1}`).then((response) => {
-      setAlcoholData(response.data);
-    });
+    window.scrollTo(0, 0);
+    if (localStorage.getItem("token")) {
+      axios
+        .get(`${API}/store/list?tag=${alcohol}`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          console.log("123", res.data.store_list);
+          setAlcoholData(res.data.store_list);
+        });
+    } else {
+      axios.get(`${API}/store/list?tag=${alcohol}`).then((res) => {
+        setAlcoholData(res.data.store_list);
+      });
+    }
   }, []);
+
+ 
+
+  const changeLikedState = (id: any, type: string) => {
+    if (localStorage.getItem("token")) {
+      axios
+        .post(`${API}/store/like/${id}`, "data", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setAlcoholData({
+              ...alcoholData,
+              [type]: alcoholData[type].map((data: any) => {
+                if (data.id === id) {
+                  if (data.like_state) {
+                    return {
+                      ...data,
+                      like_state: !data.like_state,
+                      like_count: data.like_count - 1
+                    };
+                  } else {
+                    return {
+                      ...data,
+                      like_state: !data.like_state,
+                      like_count: data.like_count + 1
+                    };
+                  }
+                } else {
+                  return data;
+                }
+              })
+            });
+            console.log("좋아요 통신이 완료되었습니다.", res);
+          }
+        })
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    } else {
+      alert("로그인을 해주세요!");
+    }
+  };
 
   return (
     <>
       <div className="alcohol">
         <div className="logoBox">
-          <div className="logoBox1">
-            <p>술과 함께</p>
-          </div>
+          <img src="./images/alcoholLogo.png" />
         </div>
         <div className="sojuDiv">
           <div className="sojuIcon">
@@ -62,12 +127,16 @@ export default function AlcoholDetail() {
         <div className="sojuListDiv">
           <div className="sojuCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.soju?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
+                    name={alcohol.name}
+                    type={"soju"}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
@@ -83,12 +152,16 @@ export default function AlcoholDetail() {
         <div className="beerListDiv">
           <div className="beerCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.beer?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
+                    name={alcohol.name}
+                    type={"beer"}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}
@@ -104,12 +177,16 @@ export default function AlcoholDetail() {
         <div className="riceWineDiv">
           <div className="riceWineCardDiv">
             <Slider {...setting}>
-              {alcoholData?.map((alcohol: any) => {
+              {alcoholData.makgeolli?.map((alcohol: any) => {
                 return (
                   <StoreCard2
+                    id={alcohol.id}
+                    type={"makgeolli"}
+                    name={alcohol.name}
                     image={alcohol.image}
-                    title={alcohol.title}
-                    heart={alcohol.heart}
+                    likeCount={alcohol.like_count}
+                    likeState={alcohol.like_state}
+                    changeLikedState={changeLikedState}
                   />
                 );
               })}

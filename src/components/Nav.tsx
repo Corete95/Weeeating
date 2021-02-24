@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { FiX } from "react-icons/fi";
+import { setSignupActive, setLoginActive } from "../store/actions";
 import { mixin } from "../styles";
 import { Signup, Login } from "./index";
+import wemeok from "../images/weeeating_Nav_logo.png";
 
 interface IProps {
   weight: {
@@ -10,10 +14,7 @@ interface IProps {
     postList: boolean;
     aboutPage: boolean;
   };
-  modalActive: { signup: boolean; login: boolean };
   goToPage: (path: string, page: string) => void;
-  changeModalActive: (domain: string) => void;
-  closeModal: () => void;
 }
 
 interface StateForStyle {
@@ -22,16 +23,37 @@ interface StateForStyle {
   visible?: boolean;
 }
 
-export default function Nav({
-  weight,
-  modalActive,
-  goToPage,
-  changeModalActive,
-  closeModal
-}: IProps) {
+export default function Nav({ weight, goToPage }: IProps) {
+  const dispatch = useDispatch();
+  const loggedIn =
+    localStorage.getItem("isAuthenticated") === "true" ? true : false;
+
+  const signupModal = useSelector(
+    ({ setModalReducer }) => setModalReducer.signupModal
+  );
+  const loginModal = useSelector(
+    ({ setModalReducer }) => setModalReducer.loginModal
+  );
+
+  useEffect(() => {
+    if (signupModal || loginModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [signupModal, loginModal]);
+
+  const toLogout = () => {
+    localStorage.clear();
+    localStorage.isAuthenticated = false;
+    window.location.reload();
+  };
+
   return (
     <Container>
-      <Logo onClick={() => goToPage("/", "main")}>Weeeating</Logo>
+      <Logo onClick={() => goToPage("/", "main")}>
+        <img src={wemeok} />
+      </Logo>
       <Button
         present={weight.storeList}
         onClick={() => goToPage("/store-list", "storeList")}
@@ -58,28 +80,41 @@ export default function Nav({
         About Weeeating
       </Button>
       <ModalBtnWrapper>
-        <Button
-          present={modalActive.signup}
-          onClick={() => changeModalActive("signup")}
-        >
-          회원가입
-        </Button>
-        <Button
-          theLast={true}
-          present={modalActive.login}
-          onClick={() => changeModalActive("login")}
-        >
-          로그인
-        </Button>
+        {loggedIn ? (
+          <Button theLast={true} onClick={toLogout}>
+            로그아웃
+          </Button>
+        ) : (
+          <>
+            <Button
+              present={signupModal}
+              onClick={() => dispatch(setSignupActive(true))}
+            >
+              회원가입
+            </Button>
+            <Button
+              theLast={true}
+              present={loginModal}
+              onClick={() => dispatch(setLoginActive(true))}
+            >
+              로그인
+            </Button>
+          </>
+        )}
       </ModalBtnWrapper>
-      <ModalOverlay visible={modalActive.signup || modalActive.login} />
-      <ModalWrapper
-        visible={modalActive.signup || modalActive.login}
-        tabIndex={-1}
-      >
+
+      <ModalOverlay visible={signupModal || loginModal} />
+      <ModalWrapper visible={signupModal || loginModal} tabIndex={-1}>
         <ModalInner tabIndex={0}>
-          <CloseBtn onClick={closeModal}>삭제</CloseBtn>
-          {modalActive.signup || !modalActive.login ? <Signup /> : <Login />}
+          <CloseBtn
+            onClick={() => {
+              dispatch(setSignupActive(false));
+              dispatch(setLoginActive(false));
+            }}
+          >
+            <FiX className="icon" />
+          </CloseBtn>
+          {signupModal || !loginModal ? <Signup /> : <Login />}
         </ModalInner>
       </ModalWrapper>
     </Container>
@@ -87,6 +122,7 @@ export default function Nav({
 }
 
 const Container = styled.header`
+  font-family: "Bazzi";
   ${mixin.flexSet("flex-start", "center", "row")}
   position: fixed;
   z-index: 100;
@@ -101,10 +137,15 @@ const Container = styled.header`
   background-color: ${({ theme }) => theme.white};
 `;
 
-const Logo = styled.span`
-  margin-right: 4rem;
+const Logo = styled.div`
+  margin-right: 3rem;
   font-size: 3em;
   cursor: pointer;
+
+  img {
+    width: 228px;
+    height: 63px;
+  }
 `;
 
 const Button = styled.span<StateForStyle>`
@@ -112,7 +153,7 @@ const Button = styled.span<StateForStyle>`
   padding: 0 1.1em;
   border-right: 0.07rem solid
     ${({ theme, theLast }) => (theLast ? theme.white : theme.borderGray)};
-  font-size: 0.9em;
+  font-size: 1.2em;
   font-weight: ${({ present }) => (present ? 900 : 400)};
   text-align: center;
   cursor: pointer;
@@ -161,8 +202,12 @@ const ModalInner = styled.div`
 
 const CloseBtn = styled.span`
   position: absolute;
-  top: 0;
-  right: 1rem;
+  top: 0.5rem;
+  right: 0.8rem;
   padding: 1rem;
   cursor: pointer;
+
+  .icon {
+    font-size: 1.8rem;
+  }
 `;

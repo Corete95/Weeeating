@@ -1,0 +1,141 @@
+.postList {
+  position: relative;
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  height: 100%;
+  width: 85rem;
+
+  .weMeokTalkLogo {
+    text-align: center;
+  }
+
+  .weMeokTalkList {
+    position: relative;
+    width: 56.4rem;
+    border: 0.1875rem solid #ffd966;
+    top: -0.5rem;
+    left: 16.375rem;
+    .listDiv {
+      font-family: "777Balsamtint";
+      padding: 1.875rem 1.875rem;
+
+      .listTitleBold {
+        display: flex;
+        padding-top: 0.625rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+
+        .titleBold {
+          width: 28.125rem;
+        }
+        .writerBold {
+          width: 8.125rem;
+        }
+        .createdAtBold {
+          width: 12.5rem;
+        }
+        .commentsBold {
+          width: 3.125rem;
+        }
+      }
+      .listSolidBold {
+        margin-top: 1rem;
+        border-bottom: 0.125rem solid black;
+      }
+      .listTitle {
+        display: flex;
+        padding-top: 1rem;
+        text-align: center;
+        font-size: 1.1875rem;
+        cursor: pointer;
+
+        .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 28.125rem;
+          text-align: left;
+        }
+        .writer {
+          width: 8.125rem;
+        }
+        .createdAt {
+          width: 12.5rem;
+        }
+        .comments {
+          width: 3.125rem;
+        }
+      }
+      .listSolid {
+        margin-top: 1rem;
+        border-bottom: 0.0625rem solid black;
+      }
+      .writerButton {
+        margin-top: 1.25rem;
+        text-align: right;
+        button {
+          font-family: "777Balsamtint";
+          font-size: 1.0625rem;
+          background-color: #ffd966;
+          border-radius: 0.375rem;
+          border: 0.0625rem solid black;
+          width: 4.375rem;
+          height: 2.25rem;
+          outline: none;
+          cursor: pointer;
+        }
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 1.5rem;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      ul.pagination li {
+        display: inline-block;
+        width: 1.375rem;
+        display: flex;
+        justify-content: center;
+        font-size: 1.5625rem;
+      }
+
+      ul.pagination li a {
+        text-decoration: none;
+        color: black;
+        font-size: 1.25rem;
+      }
+
+      ul.pagination li.active a {
+        color: #ffd966;
+      }
+      ul.pagination li.active {
+        font-weight: 600;
+        color: #ffd966;
+      }
+
+      ul.pagination li a:hover,
+      ul.pagination li a.active {
+        color: #ffd966;
+      }
+
+      .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.625rem;
+      }
+      ul.pagination li.prevPageText a,
+      ul.pagination li.nextPageText a {
+        color: #ffd966;
+      }
+    }
+  }
+}

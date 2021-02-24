@@ -1,0 +1,17 @@
+.storeList {
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 82rem;
+  height: 100%;
+  .storeListLogo {
+    text-align: center;
+    img {
+      width: 38.125rem;
+    }
+  }
+  .storeFood {
+    display: inline-block;
+    margin-top: 3.75rem;
+  }
+}
