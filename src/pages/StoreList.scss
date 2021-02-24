@@ -3,20 +3,15 @@
   margin-left: auto;
   margin-right: auto;
   width: 82rem;
-
+  height: 100%;
   .storeListLogo {
     text-align: center;
     img {
       width: 38.125rem;
     }
-    .logoBox {
-      width: 25rem;
-      height: 6.25rem;
-      background-color: #f3f3f3;
-    }
-    .storeFood {
-      display: inline-block;
-      margin-top: 3.75rem;
-    }
+  }
+  .storeFood {
+    display: inline-block;
+    margin-top: 3.75rem;
   }
 }
