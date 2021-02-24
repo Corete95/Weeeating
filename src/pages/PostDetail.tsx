@@ -176,12 +176,15 @@ export default function PostDetail({ match }: any) {
       content: postContent
     };
 
-    axios.patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
-      headers: {
-        Authorization: localStorage.getItem("token")
-      }
-    });
-    window.location.reload();
+    axios
+      .patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        window.location.reload();
+      });
   };
 
   const deletePost = (): void => {

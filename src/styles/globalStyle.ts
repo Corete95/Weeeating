@@ -49,6 +49,13 @@ export const GlobalStyle = createGlobalStyle`
   font-style: normal;
 }
 
+//하나손글씨 (어바웃페이지)
+@font-face {
+  font-family: 'Hana_handwriting';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_05@1.0/Hana_handwriting.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
   * {
     box-sizing: border-box;

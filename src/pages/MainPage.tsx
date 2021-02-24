@@ -97,9 +97,6 @@ export default function MainPage({ match }: any) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
-
-  useEffect(() => {
     const ranking = async () => {
       if (localStorage.getItem("token")) {
         await axios
