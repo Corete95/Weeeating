@@ -6,7 +6,7 @@
   width: 90rem;
 
   .aboutTop {
-    width: 50rem;
+    width: 100%;
     height: 100%;
     border-left: 6px solid #cccccc;
     .aboutTopText {
@@ -77,14 +77,49 @@
         }
       }
       .centerTextBottom {
-        margin-top: 108px;
+        margin-top: 20px;
         border-bottom: 2px solid black;
+      }
+    }
+  }
+  .clickLink {
+    margin-top: 50px;
+    .clickTop {
+      width: 100%;
+      height: 100%;
+      border-left: 6px solid #cccccc;
+      padding: 0px 40px;
+
+      .clickTopText {
+        .subwayText {
+          display: flex;
+          align-items: center;
+
+          img {
+            margin-left: 130px;
+            width: 600px;
+            height: 120px;
+          }
+        }
+        p {
+          font-size: 100px;
+          line-height: 120px;
+          color: #cccccc;
+        }
+        .click {
+          margin-left: 20px;
+          color: #ffd966;
+          margin-right: 20px;
+        }
+        .goodFood {
+          color: #ff9900;
+        }
       }
     }
   }
   .aboutBottom {
     width: 100%;
-    margin-top: 150px;
+    margin: 50px 0px;
     .thanksTo {
       display: flex;
       align-items: center;
@@ -106,5 +141,26 @@
       border-bottom: 2px solid black;
       margin-right: 12px;
     }
+  }
+}
+.footer {
+  background-color: red;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  .logoDiv {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  .logoText {
+    width: 100%;
+    height: 100%;
   }
 }
