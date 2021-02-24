@@ -45,6 +45,7 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
             onChange={handleChange}
             required
             short={true}
+            maxLength={4}
           ></Input>
         </BlockWrapper>
         <BlockWrapper>
@@ -130,13 +131,13 @@ const Subject = styled.div<StateForStyle>`
   text-align: center;
   font-size: 1.15em;
   font-weight: 500;
-  width: 4.5em;
+  width: 4.6em;
   margin-right: 1.5em;
   margin-left: ${({ needSpace }) => (needSpace ? "1.5em" : "0")};
 `;
 
 const Input = styled.input<StateForStyle>`
-  width: ${({ short }) => (short ? "8.8em" : "28em")};
+  width: ${({ short }) => (short ? "7.4em" : "28em")};
   height: 4em;
   border: 2px solid ${({ theme }) => theme.mainYellow};
 `;
@@ -145,8 +146,8 @@ const Button = styled.input`
   outline: none;
   border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 3em;
-  margin-left: 10rem;
-  width: 12em;
+  margin-left: 6.5rem;
+  width: 13em;
   font-size: 1.15rem;
   font-weight: 700;
   display: flex;

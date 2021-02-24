@@ -5,6 +5,7 @@ import { FiX } from "react-icons/fi";
 import { setSignupActive, setLoginActive } from "../store/actions";
 import { mixin } from "../styles";
 import { Signup, Login } from "./index";
+import wemeok from "../images/weeeating_Nav_logo.png";
 
 interface IProps {
   weight: {
@@ -50,7 +51,9 @@ export default function Nav({ weight, goToPage }: IProps) {
 
   return (
     <Container>
-      <Logo onClick={() => goToPage("/", "main")}>Weeeating</Logo>
+      <Logo onClick={() => goToPage("/", "main")}>
+        <img src={wemeok} />
+      </Logo>
       <Button
         present={weight.storeList}
         onClick={() => goToPage("/store-list", "storeList")}
@@ -119,6 +122,7 @@ export default function Nav({ weight, goToPage }: IProps) {
 }
 
 const Container = styled.header`
+  font-family: "Bazzi";
   ${mixin.flexSet("flex-start", "center", "row")}
   position: fixed;
   z-index: 100;
@@ -133,10 +137,15 @@ const Container = styled.header`
   background-color: ${({ theme }) => theme.white};
 `;
 
-const Logo = styled.span`
-  margin-right: 4rem;
+const Logo = styled.div`
+  margin-right: 3rem;
   font-size: 3em;
   cursor: pointer;
+
+  img {
+    width: 228px;
+    height: 63px;
+  }
 `;
 
 const Button = styled.span<StateForStyle>`

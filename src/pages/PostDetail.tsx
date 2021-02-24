@@ -8,28 +8,21 @@ import {
   setLoginActive,
   setFirstLogin
 } from "../store/actions";
-import ReactQuill, { Quill } from "react-quill"; // Typescript
+import ReactQuill from "react-quill"; // Typescript
 import axios from "axios";
 import Pagination from "react-js-pagination";
-import wemeok from "../images/wemeoktalk_2.png";
+import wemeok from "../images/wemeoktalk3.png";
 import PostReply from "../pages/childComponents/PostReply";
-import "react-quill/dist/quill.snow.css";
-import "./PostDetail.scss";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactHtmlParser from "react-html-parser";
-// import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
-// import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold";
-// import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic";
-// import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
+import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
+import "./PostDetail.scss";
+
 interface UserData {
   info: any;
   items: any[];
 }
-// const editorConfiguration = {
-//   plugins: [Essentials, Bold, Italic, Paragraph],
-//   toolbar: ["bold", "italic"]
-// };
+
 export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
@@ -51,40 +44,14 @@ export default function PostDetail({ match }: any) {
 
   const modules = {
     toolbar: [
-      //[{ 'font': [] }],
       [{ header: [1, 2, 3, 4, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" }
-      ],
-      ["link", "image"],
-      [{ align: [] }, { color: [] }, { background: [] }], // dropdown with defaults from theme
+      ["bold", "italic", "underline", "strike"],
       ["clean"]
     ]
   };
 
-  const formats = [
-    //'font',
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "align",
-    "color",
-    "background"
-  ];
-
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchPosts = async () => {
       await axios
         .get(`${API}/board/${match.params.id}`, {
@@ -203,10 +170,6 @@ export default function PostDetail({ match }: any) {
     });
   };
 
-  // const contentResult = postContent.replace(/(<([^>]+)>)/gi, "");
-  // const test = postContent.replace(/<br\s*\/?>/gm, "\n");
-  // const test1 = postContent.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-
   const patchPost = (): void => {
     const data = {
       title: postTitle,
@@ -262,7 +225,6 @@ export default function PostDetail({ match }: any) {
       <div className="postDetail">
         <div className="weMeokTalkLogo">
           <img src={wemeok}></img>
-          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">
@@ -279,42 +241,17 @@ export default function PostDetail({ match }: any) {
                   </div>
                   <div className="solidLine"></div>
                   <div className="writerCreated">
-                    <p>{posts[0]?.writer}</p>
-                    <p>|</p>
-                    <p>{posts[0]?.created_at}</p>
+                    <p className="wirter">{posts[0]?.writer}</p>
+                    <p className="created">{posts[0]?.created_at}</p>
                   </div>
                   <div className="writingCenter">
-                    <p>내용</p>
-                    {/* <CKEditor
-                      editor={ClassicEditor}
-                      data={postContent}
-                      onReady={(editor: any) => {
-                        // You can store the "editor" and use when it is needed.
-                        console.log("Editor is ready to use!", editor);
-                      }}
-                      onChange={(event: any, editor: any) => {
-                        const data = editor.getData();
-                        console.log({ event, editor, data });
-                        setPostContent(data);
-                        console.log("제발", postContent);
-                      }}
-                      onBlur={(event: any, editor: any) => {
-                        console.log("Blur.", editor);
-                      }}
-                      onFocus={(event: any, editor: any) => {
-                        console.log("Focus.", editor);
-                      }}
-                      config={custom_config}
-                    /> */}
+                    <p className="textBold">내용</p>
                     <ReactQuill
                       bounds={".quill"}
                       theme={"snow"}
                       value={postContent}
-                      onChange={(content, delta, source, editor) =>
-                        changePostContent(editor.getHTML())
-                      }
+                      onChange={changePostContent}
                       modules={modules}
-                      formats={formats}
                     />
                   </div>
                   <div className="writerButton">
@@ -328,6 +265,7 @@ export default function PostDetail({ match }: any) {
                     </button>
                   </div>
                 </div>
+                <div className="solidLine"></div>
               </>
             ) : (
               <>
@@ -344,10 +282,6 @@ export default function PostDetail({ match }: any) {
                   className="contentDiv"
                   dangerouslySetInnerHTML={{ __html: posts[0]?.content }}
                 />
-                {/* <div className="contentDiv">
-                  {ReactHtmlParser(posts[0]?.content)}
-                </div> */}
-                {/* <div className="contentDiv">{posts[0]?.content}</div> */}
                 {posts[0]?.writer_id ===
                   Number(localStorage.getItem("user_id_number")) && (
                   <>
@@ -368,46 +302,52 @@ export default function PostDetail({ match }: any) {
                     </div>
                   </>
                 )}
+                <div className="solidLine"></div>
+                <div className="commentsInputDiv">
+                  <p>댓글 ({countComments})</p>
+                  <input
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 13) {
+                        submitChangedComment("INSERT", 0);
+                        e.preventDefault();
+                      }
+                    }}
+                    maxLength={250}
+                    value={comment}
+                    onChange={onChangeComment}
+                  ></input>
+                  <span onClick={() => submitChangedComment("INSERT", 0)}>
+                    등록
+                  </span>
+                </div>
+                {comments?.map((comments: any) => {
+                  return (
+                    <PostReply
+                      comments={comments}
+                      id={comments.comment_id}
+                      writer={comments.comment_writer}
+                      content={comments.comment_content}
+                      created_at={comments.comment_created_at}
+                      writer_id={comments.comment_writer_id}
+                      clickEdit={clickEdit}
+                      clickDeleteComment={clickDeleteComment}
+                    />
+                  );
+                })}
+                <Pagination
+                  activePage={activePage}
+                  itemsCountPerPage={5}
+                  totalItemsCount={countComments}
+                  pageRangeDisplayed={5}
+                  hideFirstLastPages
+                  itemClassPrev={"prevPageText"}
+                  itemClassNext={"nextPageText"}
+                  prevPageText={"◀"}
+                  nextPageText={"▶"}
+                  onChange={handlePageChange}
+                />
               </>
             )}
-            <div className="solidLine"></div>
-            <div className="commentsInputDiv">
-              <p>댓글 ({countComments})</p>
-              <input
-                maxLength={149}
-                value={comment}
-                onChange={onChangeComment}
-              ></input>
-              <span onClick={() => submitChangedComment("INSERT", 0)}>
-                등록
-              </span>
-            </div>
-            {comments?.map((comments: any) => {
-              return (
-                <PostReply
-                  comments={comments}
-                  id={comments.comment_id}
-                  writer={comments.comment_writer}
-                  content={comments.comment_content}
-                  created_at={comments.comment_created_at}
-                  writer_id={comments.comment_writer_id}
-                  clickEdit={clickEdit}
-                  clickDeleteComment={clickDeleteComment}
-                />
-              );
-            })}
-            <Pagination
-              activePage={activePage}
-              itemsCountPerPage={5}
-              totalItemsCount={countComments}
-              pageRangeDisplayed={5}
-              hideFirstLastPages
-              itemClassPrev={"prevPageText"}
-              itemClassNext={"nextPageText"}
-              prevPageText={"◀"}
-              nextPageText={"▶"}
-              onChange={handlePageChange}
-            />
           </div>
         </div>
       </div>

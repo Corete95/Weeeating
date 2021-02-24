@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { COLORS } from "../styles/themeColor";
 import { Link, useHistory } from "react-router-dom";
 import { API } from "../config";
-import wemeok from "../images/wemeoktalk_2.png";
+import wemeok from "../images/wemeoktalk3.png";
 import axios from "axios";
 import ReactQuill from "react-quill"; // Typescript
 import "react-quill/dist/quill.snow.css";
@@ -14,24 +14,34 @@ export default function PostWriting() {
   const [content, setContent] = useState<any>("");
   const history = useHistory();
 
-  const contentResult = content.replace(/(<([^>]+)>)/gi, "");
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, false] }],
+      ["bold", "italic", "underline", "strike"],
+      ["clean"]
+    ]
+  };
 
   let data = {
     title: title.newTitle,
-    content: contentResult
+    content: content
   };
 
   const uploadData = () => {
-    axios
-      .post(`${API}/board`, JSON.stringify(data), {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-          "Content-Type": `application/json`
-        }
-      })
-      .then((res) => {
-        history.push("/post-list");
-      });
+    if (title.newTitle === null) {
+      alert("제목,내용을 입력해주세요");
+    } else {
+      axios
+        .post(`${API}/board`, JSON.stringify(data), {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": `application/json`
+          }
+        })
+        .then((res) => {
+          history.push("/post-list");
+        });
+    }
   };
 
   const createPost = (value: string) => {
@@ -43,13 +53,13 @@ export default function PostWriting() {
       <div className="postWriting">
         <div className="weMeokTalkLogo">
           <img src={wemeok}></img>
-          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">
             <div className="writingTitle">
               <p>제목</p>
               <input
+                required
                 maxLength={50}
                 type="text/html"
                 onChange={(e) =>
@@ -59,12 +69,13 @@ export default function PostWriting() {
             </div>
             <div className="solidLine"></div>
             <div className="writingCenter">
-              <p>내용</p>
+              <p className="textBold"> 내용</p>
               <ReactQuill
                 bounds={".quill"}
                 theme={"snow"}
                 value={content}
                 onChange={createPost}
+                modules={modules}
               />
             </div>
             <div className="writerButton">

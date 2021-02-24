@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setSignupActive, setFirstLogin } from "../store/actions";
+import { useHistory } from "react-router-dom";
+import { API } from "../config";
 import Posts from "./childComponents/Posts";
 import Pagination from "react-js-pagination";
 import axios from "axios";
-import wemeok from "../images/wemeoktalk_2.png";
-import { Link, useHistory } from "react-router-dom";
-import { API } from "../config";
+import wemeok from "../images/wemeoktalk3.png";
 import "./PostList.scss";
 
 interface PostData {
@@ -14,7 +16,10 @@ export default function App() {
   const [posts, setPosts] = useState<PostData | any>([]);
   const [activePage, setActivePage] = useState<any>(1);
   const history = useHistory();
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchPosts = async () => {
       await axios
         .get(`${API}/board`, {
@@ -27,17 +32,12 @@ export default function App() {
         })
         .catch(function (error) {
           if (error.response) {
-            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
             console.log(error.response.data);
             console.log(error.response.status);
             console.log(error.response.headers);
           } else if (error.request) {
-            // 요청이 이루어 졌으나 응답을 받지 못했습니다.
-            // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
-            // Node.js의 http.ClientRequest 인스턴스입니다.
             console.log(error.request);
           } else {
-            // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
             console.log("Error", error.message);
           }
           console.log(error.config);
@@ -58,21 +58,34 @@ export default function App() {
       });
     setActivePage(pageNumber);
   };
-  console.log(posts);
+
   const loginCheck = () => {
     if (localStorage.getItem("token")) {
-      history.push("./post-writing");
+      axios
+        .get(`${API}/board/write`, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            history.push("./post-writing");
+          }
+        });
     } else {
       alert("로그인을 해주세요!");
     }
   };
-  console.log("1", posts);
+
   return (
     <>
       <div className="postList">
         <div className="weMeokTalkLogo">
           <img src={wemeok}></img>
-          <p>개발자 공유 문화 잊지 말자. 그러니까 맛집도 공유하자.</p>
         </div>
         <div className="weMeokTalkList">
           <div className="listDiv">

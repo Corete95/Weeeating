@@ -58,6 +58,7 @@ export default function StoreDetail(props: any) {
   const [countComments, setCountComments] = useState(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (localStorage.getItem("token")) {
       axios
         .all([
@@ -163,63 +164,67 @@ export default function StoreDetail(props: any) {
   };
 
   const submitChangedComment = (crud: string, commentId: number) => {
-    if (crud === "INSERT") {
-      axios
-        .post(
-          `${API}/store/detail/${props.match.params.id}/comment`,
-          JSON.stringify({
-            comment: commentText.newComment
-          }),
-          { headers: { Authorization: localStorage.getItem("token") } }
-        )
-        .then((res) => {
-          if (res.data.MESSAGE === "NEED_USER_NAME") {
-            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
-            dispatch(setFirstLogin(true));
-            dispatch(setSignupActive(true));
-          } else {
-            window.location.reload();
-          }
-        })
-        .catch((err) => {
-          console.log("Catched errors!!", err);
-        });
-    }
-    if (crud === "UPDATE") {
-      setEditModal(false);
-
-      axios
-        .patch(
-          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
-          JSON.stringify({
-            comment: commentText.updatedComment.content
-          }),
-          { headers: { Authorization: localStorage.getItem("token") } }
-        )
-        .then((res) => {
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.log("Catched errors!!", err);
-        });
-    }
-    if (crud === "DELETE") {
-      setDeleteModal(false);
-      axios
-        .delete(
-          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token")
+    if (localStorage.getItem("token")) {
+      if (crud === "INSERT") {
+        axios
+          .post(
+            `${API}/store/detail/${props.match.params.id}/comment`,
+            JSON.stringify({
+              comment: commentText.newComment
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            if (res.data.MESSAGE === "NEED_USER_NAME") {
+              alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+              dispatch(setFirstLogin(true));
+              dispatch(setSignupActive(true));
+            } else {
+              window.location.reload();
             }
-          }
-        )
-        .then((res) => {
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.log("Catched errors!!", err);
-        });
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+      if (crud === "UPDATE") {
+        setEditModal(false);
+
+        axios
+          .patch(
+            `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+            JSON.stringify({
+              comment: commentText.updatedComment.content
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+      if (crud === "DELETE") {
+        setDeleteModal(false);
+        axios
+          .delete(
+            `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token")
+              }
+            }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+    } else {
+      alert("로그인을 해주세요!");
     }
   };
 
@@ -309,12 +314,15 @@ export default function StoreDetail(props: any) {
         <InputWrapper>
           <CommentDesc>댓글 입력</CommentDesc>
           <CommentInput>
-            <form onSubmit={() => submitChangedComment("INSERT", 0)}>
+            <form>
               <Input
-                onKeyDown={(e) =>
-                  e.keyCode === 13 && submitChangedComment("INSERT", 0)
-                }
-                maxLength={149}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    submitChangedComment("INSERT", 0);
+                    e.preventDefault();
+                  }
+                }}
+                maxLength={250}
                 onChange={(e) =>
                   setCommentText({ ...commentText, newComment: e.target.value })
                 }
@@ -433,6 +441,7 @@ const Images = styled.div`
 `;
 
 const StoreDesc = styled.div`
+  font-family: "InkLipquid";
   width: 32rem;
 `;
 
@@ -471,11 +480,12 @@ const Desc = styled.article`
   }
 
   .desc {
-    font-family: sans-serif;
+    font-family: "KOTRA_GOTHIC";
   }
 `;
 
 const Liked = styled.p`
+  font-size: 20px;
   margin-top: 1.5rem;
   display: flex;
   align-items: center;
@@ -505,6 +515,7 @@ const Map = styled.div`
 `;
 
 const CommentSection = styled.div`
+  font-family: "Bazzi";
   width: 65rem;
 `;
 
@@ -518,7 +529,7 @@ const InputWrapper = styled.div`
 const CommentDesc = styled.span`
   width: 5.5rem;
   margin-right: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 `;
 
 const CommentInput = styled.form`
@@ -526,7 +537,9 @@ const CommentInput = styled.form`
 `;
 
 const Input = styled.input`
-  padding: 0.5rem;
+  font-family: "Bazzi";
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  font-size: 1rem;
   outline: none;
   width: 59.5rem;
 `;
@@ -556,15 +569,17 @@ const Comment = styled.div`
 `;
 
 const User = styled.span`
+  font-size: 1.0625rem;
   width: 5.8rem;
   font-weight: 900;
-  border-right: 2px solid black;
+  border-right: 0.125rem solid black;
   margin-right: 1rem;
 `;
 
 const Content = styled.p`
   width: 75%;
   display: inline;
+  word-break: break-all;
 `;
 
 const UploadTime = styled.span`
@@ -578,14 +593,14 @@ const ModifyDiv = styled.div`
   justify-content: flex-end;
 
   .edit {
-    width: 38px;
-    margin-right: 9px;
-    border-right: 2px solid black;
+    width: 2.375rem;
+    margin-right: 0.5625rem;
+    border-right: 0.125rem solid black;
     cursor: pointer;
   }
 
   .delete {
-    width: 26px;
+    width: 1.625rem;
     cursor: pointer;
   }
 `;
