@@ -129,6 +129,14 @@ export default function TodayRandom() {
     }
   }, [againModal]);
 
+  useEffect(() => {
+    if (againModal) {
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "scroll";
+    }
+  }, [againModal]);
+
   return (
     <Container>
       <DescSection>
