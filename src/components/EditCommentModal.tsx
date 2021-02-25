@@ -43,6 +43,7 @@ export default function EditCommentModal({
             e.keyCode === 13 &&
             submitChangedComment("UPDATE", updatedComment.id)
           }
+          maxLength={250}
         />
         <div className="buttons">
           <Button

@@ -80,7 +80,7 @@ export default function AboutPage() {
                 <p>
                   사용한 저작권 무료 아이콘 목록
                   <span className="down" onClick={iconClick}>
-                    ▼
+                    ▲
                   </span>
                 </p>
                 <div className="cpyright">
