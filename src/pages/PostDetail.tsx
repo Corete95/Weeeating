@@ -71,7 +71,7 @@ export default function PostDetail({ match }: any) {
     fetchPosts();
   }, [match.params.id]);
 
-  const onChangeComment = (e: any) => {
+  const onChangeComment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
 

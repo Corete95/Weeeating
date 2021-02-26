@@ -4,7 +4,19 @@ const INITIAL_STATE = {
   first: false
 };
 
-const setFirstReducer = (state = INITIAL_STATE, action: any): any => {
+interface actionInterface {
+  type: string;
+  payload: boolean;
+}
+
+interface StateInterface {
+  first: boolean;
+}
+
+const setFirstReducer = (
+  state = INITIAL_STATE,
+  action: actionInterface
+): StateInterface => {
   switch (action.type) {
     case SETORDER.SET_FIRST:
       return { ...state, first: action.payload };
