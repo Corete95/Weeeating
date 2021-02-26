@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
 import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { API } from "../config";
@@ -14,13 +14,6 @@ import {
 export default function GoogleLoginComponent() {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  // 구글 로그인 백엔드 통신 확인 후, 필요여부 재확인 예정
-  const getGoogleOAuth2 = async () => {
-    const oAuth2 = await localStorage.getItem(
-      "oauth2_ss::http://localhost:3000::1::DEFAULT::_ss_"
-    );
-  };
 
   const responseGoogle = (response: any) => {
     const { accessToken } = response;
@@ -36,7 +29,7 @@ export default function GoogleLoginComponent() {
         localStorage.setItem("user_id_number", res.data.user_id);
         localStorage.setItem("isAuthenticated", "true");
 
-        if (res.data.FRIST_VISIT === true) {
+        if (res.data.FIRST_VISIT === true) {
           alert("구글 첫 로그인입니다. 회원가입을 해주세요.");
           dispatch(setFirstLogin(true));
           dispatch(setSignupActive(true));
