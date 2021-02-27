@@ -45,9 +45,6 @@ export default function StoreDetail(props: any) {
     ]
   });
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
-  // const [address, setAddress] = useState("");
-  // const [items, setItems] = useState<UserData | any[]>([]);
-  // const [like, setLike] = useState(false);
   const [commentText, setCommentText] = useState<UserData | any>({
     newComment: null,
     updatedComment: { id: null, content: "기존댓글~~~" }

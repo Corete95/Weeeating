@@ -24,7 +24,7 @@ const RANKING = [
   { top: "TOP 5" }
 ];
 
-export default function MainPage({ match }: any) {
+export default function MainPage() {
   const [storeData, setStoreData] = useState<UserData | any>([]);
   const history = useHistory();
   const like = "like";
@@ -106,7 +106,6 @@ export default function MainPage({ match }: any) {
             }
           })
           .then((res) => {
-            console.log("test", res);
             setStoreData(res.data.store_list.like);
           });
       } else {
@@ -117,7 +116,6 @@ export default function MainPage({ match }: any) {
     };
     ranking();
   }, []);
-  console.log("storeData", storeData);
 
   const changeLikedState = (id: any) => {
     if (localStorage.getItem("token")) {

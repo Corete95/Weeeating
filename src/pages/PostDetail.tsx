@@ -3,11 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { API } from "../config";
 import { EditCommentModal, DeleteCommentModal } from "../components";
-import {
-  setSignupActive,
-  setLoginActive,
-  setFirstLogin
-} from "../store/actions";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 import ReactQuill from "react-quill"; // Typescript
 import axios from "axios";
 import Pagination from "react-js-pagination";
@@ -60,7 +56,6 @@ export default function PostDetail({ match }: any) {
           }
         })
         .then((res) => {
-          console.log("test", res.data);
           setPosts(res.data.board_info);
           setComments(res.data.board_comments);
           setCountComments(res.data.count_comments);
@@ -92,7 +87,6 @@ export default function PostDetail({ match }: any) {
               dispatch(setFirstLogin(true));
               dispatch(setSignupActive(true));
             } else {
-              console.log(res);
               window.location.reload();
             }
           })
@@ -222,7 +216,7 @@ export default function PostDetail({ match }: any) {
   const changePostContent = (html: any) => {
     setPostContent(html);
   };
-  console.log("test", postContent);
+
   return (
     <>
       <div className="postDetail">

@@ -25,7 +25,6 @@ export default function FeatherDetail() {
           }
         })
         .then((res) => {
-          console.log("res", res);
           setFeatherFood(res.data.store_list.feather);
         });
     } else {

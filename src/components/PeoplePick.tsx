@@ -9,7 +9,6 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { mixin } from "../styles";
 
 interface IProps {
   info: never[];
@@ -71,7 +70,6 @@ export default function PeoplePick({ info, TITLE }: IProps) {
     slidesToShow: 3,
     slidesToScroll: 3,
     arrows: true,
-    // centerPadding: "47px",
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     className: "slides"
