@@ -12,7 +12,7 @@ import "slick-carousel/slick/slick-theme.css";
 interface UserData {
   alcoholData: any;
 }
-export default function AlcoholDetail({ match, props }: any) {
+export default function AlcoholDetail() {
   const [alcoholData, setAlcoholData] = useState<UserData | any>([]);
   const alcohol = "alcohol";
   const dispatch = useDispatch();
@@ -55,7 +55,6 @@ export default function AlcoholDetail({ match, props }: any) {
           }
         })
         .then((res) => {
-          console.log("123", res.data.store_list);
           setAlcoholData(res.data.store_list);
         });
     } else {
@@ -64,8 +63,6 @@ export default function AlcoholDetail({ match, props }: any) {
       });
     }
   }, []);
-
- 
 
   const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {
