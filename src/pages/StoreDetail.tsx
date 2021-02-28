@@ -438,7 +438,7 @@ const Images = styled.div`
 `;
 
 const StoreDesc = styled.div`
-  font-family: "InkLipquid";
+  font-family: "Bazzi";
   width: 32rem;
 `;
 

@@ -178,6 +178,7 @@ export default function PostDetail({ match }: any) {
       })
       .then((res) => {
         window.location.reload();
+        setActiveInput(false);
       });
   };
 
@@ -255,7 +256,6 @@ export default function PostDetail({ match }: any) {
                     <button
                       onClick={() => {
                         patchPost();
-                        setActiveInput(false);
                       }}
                     >
                       수정

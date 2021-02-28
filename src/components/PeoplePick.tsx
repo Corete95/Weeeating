@@ -140,6 +140,7 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
+  font-family: "Bazzi";
   margin: 5rem auto;
   padding-top: 3rem;
   width: 65rem;
