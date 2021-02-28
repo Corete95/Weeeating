@@ -4,7 +4,7 @@ import { GoogleLoginComponent } from "./index";
 
 interface IProps {
   handleChange: (e: any) => void;
-  submitLogin: () => void;
+  submitLogin: (event: any) => void;
 }
 
 interface StateForStyle {
@@ -17,35 +17,35 @@ export default function LoginForm({ handleChange, submitLogin }: IProps) {
   return (
     <Container>
       <Title>로그인</Title>
-      {/* <InfoSection method="POST"> */}
-      <BlockWrapper>
-        <Subject>이메일</Subject>
-        <Input
-          onChange={handleChange}
-          type="email"
-          name="email"
-          required
-        ></Input>
-      </BlockWrapper>
-      <BlockWrapper>
-        <Subject>비밀번호</Subject>
-        <Input
-          onChange={handleChange}
-          type="password"
-          name="password"
-          required
-        ></Input>
-      </BlockWrapper>
-      <BlockWrapper buttons>
-        <GoogleLoginComponent />
-        <LoginBtn
-          onClick={submitLogin}
-          type="submit"
-          value="로그인"
-          className="button"
-        ></LoginBtn>
-      </BlockWrapper>
-      {/* </InfoSection> */}
+      <InfoSection onSubmit={(event) => submitLogin(event)}>
+        <BlockWrapper>
+          <Subject>이메일</Subject>
+          <Input
+            onChange={handleChange}
+            type="email"
+            name="email"
+            required
+          ></Input>
+        </BlockWrapper>
+        <BlockWrapper>
+          <Subject>비밀번호</Subject>
+          <Input
+            onChange={handleChange}
+            type="password"
+            name="password"
+            required
+          ></Input>
+        </BlockWrapper>
+        <BlockWrapper buttons>
+          <LoginBtn
+            onClick={(event) => submitLogin(event)}
+            type="submit"
+            value="로그인"
+            className="button"
+          />
+          <GoogleLoginComponent />
+        </BlockWrapper>
+      </InfoSection>
     </Container>
   );
 }
@@ -84,6 +84,7 @@ const BlockWrapper = styled.div<StateForStyle>`
 `;
 
 const Subject = styled.div<StateForStyle>`
+  font-family: sans-serif;
   text-align: center;
   font-size: 1.15em;
   font-weight: 500;
@@ -99,6 +100,7 @@ const Input = styled.input<StateForStyle>`
 `;
 
 const LoginBtn = styled.input`
+  outline: none;
   border: 2px solid ${({ theme }) => theme.mainYellow};
   margin-top: 2em;
   width: 28.6em;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { mixin } from "../styles";
 
@@ -23,18 +23,29 @@ export default function EditCommentModal({
   submitChangedComment,
   updateComment
 }: IProps) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   return (
     <ModalWrapper visible={editModal} tabIndex={-1}>
-      {console.log("EditModal updatedComment", updatedComment)}
+      {console.log("수정 모달 리로드중 content", updatedComment.content)}
       <ModalInner tabIndex={0}>
         <Input
           type="text"
           name="updatedCommentValue"
           value={updatedComment.content}
           onChange={updateComment}
+          onKeyDown={(e) =>
+            e.keyCode === 13 &&
+            submitChangedComment("UPDATE", updatedComment.id)
+          }
+          maxLength={250}
         />
         <div className="buttons">
-          {console.log("updatedComment.id", updatedComment.id)}
           <Button
             onClick={() => submitChangedComment("UPDATE", updatedComment.id)}
           >

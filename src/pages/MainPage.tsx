@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { API } from "../config";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 import StoreCard from "./childComponents/StoreCard";
 import Slider from "react-slick";
 import axios from "axios";
@@ -22,7 +24,7 @@ const RANKING = [
   { top: "TOP 5" }
 ];
 
-export default function MainPage({ match }: any) {
+export default function MainPage() {
   const [storeData, setStoreData] = useState<UserData | any>([]);
   const history = useHistory();
   const like = "like";
@@ -30,64 +32,7 @@ export default function MainPage({ match }: any) {
     ...data,
     top: RANKING[index].top
   }));
-
-  useEffect(() => {
-    const ranking = async () => {
-      if (localStorage.getItem("token")) {
-        await axios
-          .get(`${API}/store/list?sort=${like}`, {
-            headers: {
-              Authorization: localStorage.getItem("token")
-            }
-          })
-          .then((res) => {
-            setStoreData(res.data.store_list.like);
-          });
-      } else {
-        await axios.get(`${API}/store/list?sort=${like}`).then((res) => {
-          setStoreData(res.data.store_list.like);
-        });
-      }
-    };
-    ranking();
-  }, []);
-  console.log("storeData", storeData);
-
-  const changeLikedState = (id: any) => {
-    if (localStorage.getItem("token")) {
-      setStoreData(
-        storeData?.map((data: any) => {
-          if (data.id === id) {
-            if (data.like_state) {
-              return {
-                ...data,
-                like_state: !data.like_state,
-                like_count: data.like_count - 1
-              };
-            } else {
-              return {
-                ...data,
-                like_state: !data.like_state,
-                like_count: data.like_count + 1
-              };
-            }
-          } else {
-            return data;
-          }
-        })
-      );
-      axios
-        .post(`${API}/store/like/${id}`, "data", {
-          headers: {
-            Authorization: localStorage.getItem("token")
-          }
-        })
-        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
-        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-    } else {
-      alert("로그인을 해주세요!");
-    }
-  };
+  const dispatch = useDispatch();
 
   const metorKobbubakSlick = {
     dots: true,
@@ -96,7 +41,7 @@ export default function MainPage({ match }: any) {
     slidesToShow: 1,
     slidesToScroll: 1,
     focusOnSelect: true,
-    autoplay: false,
+    autoplay: true,
     autoplaySpeed: 2000
   };
 
@@ -148,6 +93,72 @@ export default function MainPage({ match }: any) {
         }
       }
     ]
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const ranking = async () => {
+      if (localStorage.getItem("token")) {
+        await axios
+          .get(`${API}/store/list?sort=${like}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+          .then((res) => {
+            setStoreData(res.data.store_list.like);
+          });
+      } else {
+        await axios.get(`${API}/store/list?sort=${like}`).then((res) => {
+          setStoreData(res.data.store_list.like);
+        });
+      }
+    };
+    ranking();
+  }, []);
+
+  const changeLikedState = (id: any) => {
+    if (localStorage.getItem("token")) {
+      axios
+        .post(`${API}/store/like/${id}`, "data", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setStoreData(
+              storeData?.map((data: any) => {
+                if (data.id === id) {
+                  if (data.like_state) {
+                    return {
+                      ...data,
+                      like_state: !data.like_state,
+                      like_count: data.like_count - 1
+                    };
+                  } else {
+                    return {
+                      ...data,
+                      like_state: !data.like_state,
+                      like_count: data.like_count + 1
+                    };
+                  }
+                } else {
+                  return data;
+                }
+              })
+            );
+            console.log("좋아요 통신이 완료되었습니다.", res);
+          }
+        })
+        .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
+    } else {
+      alert("로그인을 해주세요!");
+    }
   };
 
   return (

@@ -20,14 +20,8 @@ export default function StoreCard({
   likeState,
   changeLikedState
 }: Props) {
-  const [fullLike, setFullLike] = useState<boolean>(true);
   const history = useHistory();
 
-  const heartLike = () => {
-    setFullLike(!fullLike);
-  };
-  console.log("state", likeState);
-  const iconLike = fullLike ? "./images/heart.png" : "./images/fullheart.png";
   return (
     <>
       <div className="storeCard">
@@ -45,9 +39,7 @@ export default function StoreCard({
             onClick={() => history.push(`/store-detail/${id}`)}
           >
             <p>Weeeating</p>
-            <hr></hr>
             <img alt="storeImg" src={image}></img>
-            <hr></hr>
           </div>
           <div className="storeFooter">
             <p className="foodName">{name}</p>
@@ -58,11 +50,6 @@ export default function StoreCard({
                 <img alt="Like" src="./images/heart.png"></img>
               )}
             </span>
-            {/* <img
-              alt="Like"
-              src={iconLike}
-              onClick={() => changeLikedState(id)}
-            ></img> */}
             <p className="heartTotal">{likeCount}</p>
           </div>
         </div>

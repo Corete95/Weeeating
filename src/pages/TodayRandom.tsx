@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 import { mixin } from "../styles";
+import { API } from "../config";
+import styled from "styled-components";
 import StoreCard2 from "./childComponents/StoreCard2";
 import axios from "axios";
-import { API } from "../config";
 
 interface UserData {
   store: any;
@@ -19,17 +21,21 @@ export default function TodayRandom() {
   const [store, setStore] = useState<UserData | any>({});
   const [clickedState, setClickedState] = useState<UserData | boolean>(false);
   const [againModal, setAgainModal] = useState(false);
+  const [restTime, setRestTime] = useState({ hour: 4, minute: 0 });
+  const dispatch = useDispatch();
 
   const display = (value: any) => {
-    var now = new Date();
-    var time = now.getTime();
-    var expireTime = time + 14400000;
+    let now = new Date();
+    let time = now.getTime();
+    let expireTime = time + 14400000;
     now.setTime(expireTime);
+
     document.cookie = `randomStore=${value};expires="${now.toUTCString()}";path=/`;
+    document.cookie = `randomStoreExpireTime=${expireTime};expires=“${now.toUTCString()}“;path=/`;
   };
 
   const getCookie = (name: string) => {
-    var value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
+    let value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
     return value ? value[2] : null;
   };
 
@@ -53,26 +59,34 @@ export default function TodayRandom() {
 
   const changeLikedState = (id: any) => {
     if (localStorage.getItem("token")) {
-      setStore(
-        store.like_state
-          ? {
-              ...store,
-              like_state: !store.like_state,
-              like_count: store.like_count - 1
-            }
-          : {
-              ...store,
-              like_state: !store.like_state,
-              like_count: store.like_count + 1
-            }
-      );
       axios
         .post(`${API}/store/like/${id}`, "data", {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
-        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setStore(
+              store.like_state
+                ? {
+                    ...store,
+                    like_state: !store.like_state,
+                    like_count: store.like_count - 1
+                  }
+                : {
+                    ...store,
+                    like_state: !store.like_state,
+                    like_count: store.like_count + 1
+                  }
+            );
+            console.log("좋아요 통신이 완료되었습니다.", res);
+          }
+        })
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     } else {
       alert("로그인을 해주세요!");
@@ -88,8 +102,40 @@ export default function TodayRandom() {
   };
 
   useEffect(() => {
-    getRandomStore();
-  }, [getRandomStore]);
+    window.scrollTo(0, 0);
+    const store = getCookie("randomStore");
+
+    if (store) {
+      setStore(JSON.parse(store));
+      setClickedState(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    let restTimer = () => {
+      let expireTime = Number(getCookie("randomStoreExpireTime"));
+      let nowDate = new Date();
+      let nowNumber = nowDate.getTime();
+      let restTime = expireTime - nowNumber;
+
+      let hour = Math.floor((restTime / (1000 * 60 * 60)) % 24),
+        minute = Math.floor((restTime / (1000 * 60)) % 60);
+
+      setRestTime({ hour, minute });
+    };
+    if (againModal) {
+      restTimer();
+      setInterval(restTimer, 60000);
+    }
+  }, [againModal]);
+
+  useEffect(() => {
+    if (againModal) {
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "scroll";
+    }
+  }, [againModal]);
 
   return (
     <Container>
@@ -129,7 +175,8 @@ export default function TodayRandom() {
                   likeCount={store.like_count}
                   likeState={store.like_state}
                   changeLikedState={changeLikedState}
-                />{" "}
+                  type={"random"}
+                />
                 <VerticalText>가즈아</VerticalText>
               </Row>
               <div className="buttonSection">
@@ -146,11 +193,13 @@ export default function TodayRandom() {
               <Header>
                 첫번째 나온 것이 찐!
                 <br />이 집으로 가시죠 😋
-                <div className="sub">4시간 후에 다시하기 가능</div>
+                <div className="sub">
+                  {restTime.hour}시간 {restTime.minute}분 후에 다시하기 가능
+                </div>
               </Header>
             </div>
             <div className="buttons">
-              <Button onClick={() => setAgainModal(false)}>오케이!</Button>
+              <Button onClick={() => setAgainModal(false)}>먹으러가기!</Button>
             </div>
           </ModalInner>
         </ModalWrapper>
@@ -160,7 +209,8 @@ export default function TodayRandom() {
 }
 
 const Container = styled.div`
-  margin: 11rem auto 5rem;
+  font-family: "777Balsamtint";
+  margin: 11rem auto 2rem;
   width: 65rem;
 `;
 
@@ -191,12 +241,17 @@ const RandomComponent = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 3rem;
   }
 `;
 
 const Row = styled.div`
   display: flex;
   ${mixin.flexSet("space-evenly", "center", "row")}
+
+  img {
+    cursor: pointer;
+  }
 `;
 
 const VerticalText = styled.p`

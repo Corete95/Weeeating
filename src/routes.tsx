@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, COLORS } from "./styles";
-import { Footer } from "./components";
 import {
   Nav,
   MentorDetailContainer,
@@ -18,7 +17,6 @@ import {
   PostWriting,
   StoreDetail,
   StoreList,
-  ThemeList,
   TodayRandom
 } from "./pages";
 
@@ -47,13 +45,11 @@ class Routes extends React.Component {
               />
               <Route exact path="/store-detail/:id" component={StoreDetail} />
               <Route exact path="/store-list" component={StoreList} />
-              <Route exact path="/theme-list" component={ThemeList} />
               <Route exact path="/today-random" component={TodayRandom} />
               <Route exact path="/post-detail/:id" component={PostDetail} />
               <Route exact path="/post-list" component={PostList} />
               <Route exact path="/post-writing" component={PostWriting} />
             </Switch>
-            {/* <Footer /> */}
           </Router>
         </ThemeProvider>
       </React.Fragment>

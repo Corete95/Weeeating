@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import Pagination from "react-js-pagination";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { API } from "../config";
 import { mixin } from "../styles";
 import { EditCommentModal, DeleteCommentModal } from "../components";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
 
 declare global {
   interface Window {
@@ -20,6 +27,8 @@ interface UserData {
 }
 
 export default function StoreDetail(props: any) {
+  const dispatch = useDispatch();
+
   const [info, setInfo] = useState<UserData | any>({
     store_info: [
       {
@@ -36,19 +45,17 @@ export default function StoreDetail(props: any) {
     ]
   });
   const [currentComment, setCurrentComment] = useState<UserData | any>([]);
-  const [address, setAddress] = useState("");
-  const [items, setItems] = useState<UserData | any[]>([]);
-  const [like, setLike] = useState(false);
   const [commentText, setCommentText] = useState<UserData | any>({
     newComment: null,
     updatedComment: { id: null, content: "기존댓글~~~" }
   });
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-
-  // const userVerified = info.user.id === localStorage.getItem.user.id;
+  const [activePage, setActivePage] = useState<any>(1);
+  const [countComments, setCountComments] = useState(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (localStorage.getItem("token")) {
       axios
         .all([
@@ -65,11 +72,9 @@ export default function StoreDetail(props: any) {
         ])
         .then(
           axios.spread((res1, res2) => {
-            console.log("res1", res1);
             setInfo(res1.data);
-            setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data.comment_list);
+            setCountComments(res2.data.count_comments);
           })
         );
     } else {
@@ -80,11 +85,8 @@ export default function StoreDetail(props: any) {
         ])
         .then(
           axios.spread((res1, res2) => {
-            console.log("res1", res1);
             setInfo(res1.data);
-            setAddress(res1.data.store_info[0].address);
             setCurrentComment(res2.data.comment_list);
-            console.log("res2.data.comment_list", res2.data.comment_list);
           })
         );
     }
@@ -104,7 +106,6 @@ export default function StoreDetail(props: any) {
 
     let callback = (result: any, status: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        console.log(result);
         let coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
         let marker = new window.kakao.maps.Marker({
           map: map,
@@ -131,102 +132,96 @@ export default function StoreDetail(props: any) {
 
   const changeLikedState = () => {
     if (localStorage.getItem("token")) {
-      setInfo({
-        ...info,
-        like_count: Number(
-          info.like === false ? info.like_count + 1 : info.like_count - 1
-        ),
-        like: !info.like
-      });
       axios
         .post(`${API}/store/like/${props.match.params.id}`, "data", {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
-        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 좋아요 등록이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setInfo({
+              ...info,
+              like_count: Number(
+                info.like === false ? info.like_count + 1 : info.like_count - 1
+              ),
+              like: !info.like
+            });
+          }
+          console.log("좋아요 통신이 완료되었습니다.", res);
+        })
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
-      // setTimeout(
-      //   // 유저가 계속 하트 클릭할 경우 대비해서, 1초 뒤 통신하도록 변경 예정
-      //   axios.patch(`API${}`)
-      //     .then(res => console.log("좋아요 통신이 완료되었습니다.", res));
-      //     .catch(err => console.log("좋아요 통신이 완료되지 않았습니다.", err))
-      // , 1000)
     } else {
       alert("로그인을 해주세요!");
     }
   };
 
   const submitChangedComment = (crud: string, commentId: number) => {
-    if (crud === "INSERT") {
-      // location.reload와 해당 방법 사이 고민중..
-      // setCurrentComment([
-      //   {
-      //     comment: commentText.newComment,
-      //     created_at: "방금 전",
-      //     writer_name: "작성자"
-      //   },
-      //   ...currentComment
-      // ]);
-      axios
-        .post(
-          `${API}/store/detail/${props.match.params.id}/comment`,
-          JSON.stringify({
-            comment: commentText.newComment
-          }),
-          { headers: { Authorization: localStorage.getItem("token") } }
-        )
-        .then((res) => {
-          console.log(res);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
-    if (crud === "UPDATE") {
-      // setCurrentComment(
-      //   currentComment.map((comment: any) =>
-      //     comment.id === commentId
-      //       ? { ...comment, comment: commentText.updatedComment.content }
-      //       : comment
-      //   )
-      // );
-      setEditModal(false);
-
-      axios
-        .patch(
-          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
-          JSON.stringify({
-            comment: commentText.updatedComment.content
-          }),
-          { headers: { Authorization: localStorage.getItem("token") } }
-        )
-        .then((res) => {
-          console.log(res);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
-    if (crud === "DELETE") {
-      // setCurrentComment(
-      //   currentComment.filter(
-      //     (comment: any) => comment.id !== Number(commentText.updatedComment.id)
-      //   )
-      // );
-      setDeleteModal(false);
-      axios
-        .delete(
-          `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token")
+    if (localStorage.getItem("token")) {
+      if (crud === "INSERT") {
+        axios
+          .post(
+            `${API}/store/detail/${props.match.params.id}/comment`,
+            JSON.stringify({
+              comment: commentText.newComment
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            if (res.data.MESSAGE === "NEED_USER_NAME") {
+              alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+              dispatch(setFirstLogin(true));
+              dispatch(setSignupActive(true));
+            } else {
+              window.location.reload();
             }
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+      if (crud === "UPDATE") {
+        setEditModal(false);
+
+        axios
+          .patch(
+            `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+            JSON.stringify({
+              comment: commentText.updatedComment.content
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+      if (crud === "DELETE") {
+        setDeleteModal(false);
+        axios
+          .delete(
+            `${API}/store/detail/${props.match.params.id}/comment/${commentText.updatedComment.id}`,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token")
+              }
+            }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("Catched errors!!", err);
+          });
+      }
+    } else {
+      alert("로그인을 해주세요!");
     }
   };
 
@@ -242,6 +237,27 @@ export default function StoreDetail(props: any) {
     });
   };
 
+  const handlePageChange = (pageNumber: any) => {
+    axios
+      .get(
+        `${API}/store/detail/${props.match.params.id}/comment?offset=${
+          (pageNumber - 1) * 5
+        }`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        }
+      )
+      .then((res) => {
+        setCurrentComment(res.data.comment_list);
+      })
+      .catch((err) => {
+        console.log("Catched errors!!", err);
+      });
+
+    setActivePage(pageNumber);
+  };
   const handleDragStart = (e: any) => e.preventDefault();
 
   return (
@@ -294,9 +310,16 @@ export default function StoreDetail(props: any) {
       <CommentSection>
         <InputWrapper>
           <CommentDesc>댓글 입력</CommentDesc>
-          <form method="post">
-            <CommentInput>
+          <CommentInput>
+            <form>
               <Input
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    submitChangedComment("INSERT", 0);
+                    e.preventDefault();
+                  }
+                }}
+                maxLength={250}
                 onChange={(e) =>
                   setCommentText({ ...commentText, newComment: e.target.value })
                 }
@@ -305,8 +328,8 @@ export default function StoreDetail(props: any) {
               <SubmitBtn onClick={() => submitChangedComment("INSERT", 0)}>
                 확인
               </SubmitBtn>
-            </CommentInput>
-          </form>
+            </form>
+          </CommentInput>
         </InputWrapper>
         <CommentsWrapper>
           {currentComment &&
@@ -316,41 +339,61 @@ export default function StoreDetail(props: any) {
                 <div className="right">
                   <Content>{comment.comment}</Content>
                   <UploadTime>( {comment.created_at} )</UploadTime>
-                  {/* 작성자에게만 수정, 삭제가 노출되도록 변경 예정*/}
-                  {/* {userVerified && ( */}
-                  <ModifyBtn
-                    onClick={() => {
-                      setEditModal(true);
-                      setCommentText({
-                        ...commentText,
-                        updatedComment: {
-                          id: comment.id,
-                          content: comment.comment
-                        }
-                      });
-                    }}
-                  >
-                    수정
-                  </ModifyBtn>
-                  <ModifyBtn
-                    onClick={() => {
-                      setDeleteModal(true);
-                      setCommentText({
-                        ...commentText,
-                        updatedComment: {
-                          ...commentText.updatedComment,
-                          id: comment.id
-                        }
-                      });
-                    }}
-                  >
-                    삭제
-                  </ModifyBtn>
-                  {/* )} */}
+                  {comment.writer_id ===
+                    Number(localStorage.getItem("user_id_number")) && (
+                    <>
+                      <ModifyDiv>
+                        <p
+                          className="edit"
+                          onClick={() => {
+                            setEditModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                id: comment.id,
+                                content: comment.comment
+                              }
+                            });
+                          }}
+                        >
+                          수정
+                        </p>
+                        <p
+                          className="delete"
+                          onClick={() => {
+                            setDeleteModal(true);
+                            setCommentText({
+                              ...commentText,
+                              updatedComment: {
+                                ...commentText.updatedComment,
+                                id: comment.id
+                              }
+                            });
+                          }}
+                        >
+                          삭제
+                        </p>
+                      </ModifyDiv>
+                    </>
+                  )}
                 </div>
               </Comment>
             ))}
         </CommentsWrapper>
+        <PaginationCss>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={5}
+            totalItemsCount={countComments}
+            pageRangeDisplayed={5}
+            hideFirstLastPages
+            itemClassPrev={"prevPageText"}
+            itemClassNext={"nextPageText"}
+            prevPageText={"◀"}
+            nextPageText={"▶"}
+            onChange={handlePageChange}
+          />
+        </PaginationCss>
       </CommentSection>
       {editModal && (
         <EditCommentModal
@@ -374,7 +417,7 @@ export default function StoreDetail(props: any) {
 }
 
 const Container = styled.div`
-  margin: 10rem auto;
+  margin: 10rem auto 5rem auto;
   width: 65rem;
 `;
 
@@ -395,6 +438,7 @@ const Images = styled.div`
 `;
 
 const StoreDesc = styled.div`
+  font-family: "Bazzi";
   width: 32rem;
 `;
 
@@ -433,11 +477,12 @@ const Desc = styled.article`
   }
 
   .desc {
-    font-family: sans-serif;
+    font-family: "KOTRA_GOTHIC";
   }
 `;
 
 const Liked = styled.p`
+  font-size: 20px;
   margin-top: 1.5rem;
   display: flex;
   align-items: center;
@@ -467,6 +512,7 @@ const Map = styled.div`
 `;
 
 const CommentSection = styled.div`
+  font-family: "Bazzi";
   width: 65rem;
 `;
 
@@ -480,7 +526,7 @@ const InputWrapper = styled.div`
 const CommentDesc = styled.span`
   width: 5.5rem;
   margin-right: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 `;
 
 const CommentInput = styled.form`
@@ -488,7 +534,9 @@ const CommentInput = styled.form`
 `;
 
 const Input = styled.input`
-  padding: 0.5rem;
+  font-family: "Bazzi";
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  font-size: 1rem;
   outline: none;
   width: 59.5rem;
 `;
@@ -498,42 +546,117 @@ const SubmitBtn = styled.span`
   right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 `;
 
 const CommentsWrapper = styled.ul``;
 
-const Comment = styled.li`
+const Comment = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 0.7rem;
+  align-items: center;
 
   .right {
+    display: flex;
+    align-items: center;
     width: 59.5rem;
     line-height: 1.4rem;
   }
 `;
 
 const User = styled.span`
-  width: 5.5rem;
+  font-size: 1.0625rem;
+  width: 5.8rem;
   font-weight: 900;
-  border-right: 1px solid ${({ theme }) => theme.borderGray};
-  padding-right: 1rem;
+  border-right: 0.125rem solid black;
   margin-right: 1rem;
 `;
 
 const Content = styled.p`
+  width: 75%;
   display: inline;
+  word-break: break-all;
 `;
 
 const UploadTime = styled.span`
-  margin: 0 1rem;
+  margin: 0rem 0.1rem 0rem 0.9rem;
 `;
 
-const ModifyBtn = styled.button`
+const ModifyDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+
+  .edit {
+    width: 2.375rem;
+    margin-right: 0.5625rem;
+    border-right: 0.125rem solid black;
+    cursor: pointer;
+  }
+
+  .delete {
+    width: 1.625rem;
+    cursor: pointer;
+  }
+`;
+
+const ModifyBtn = styled.p`
   margin: 0 0.2rem;
   outline: none;
   font-size: 0.75em;
   font-weight: 700;
   cursor: pointer;
   background-color: white;
+`;
+
+const PaginationCss = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0rem 0rem 0rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 22px;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+  }
+
+  ul.pagination li a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+  }
+
+  ul.pagination li.active a {
+    color: #ffd966;
+  }
+  ul.pagination li.active {
+    font-weight: 600;
+    color: #ffd966;
+  }
+
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: #ffd966;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  ul.pagination li.prevPageText a,
+  ul.pagination li.nextPageText a {
+    color: #ffd966;
+  }
 `;

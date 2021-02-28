@@ -1,35 +1,24 @@
 @import "./MainPage.scss";
 
 .alcohol {
+  font-family: "Bazzi";
   margin-top: 7rem;
   margin-left: auto;
   margin-right: auto;
   height: 100%;
-  width: 90vw;
+  width: 85rem;
 
   .logoBox {
-    width: 400px;
-    height: 100px;
-    background-color: #f3f3f3;
-    .logoBox1 {
-      position: relative;
-      top: 19px;
-      left: 20px;
-      width: 400px;
-      height: 100px;
-      background-color: #d9d9d9;
-      text-align: center;
-      p {
-        padding-top: 10px;
-        font-size: 82px;
-        font-weight: 900;
-      }
+    margin-top: 10.625rem;
+    text-align: center;
+    img {
+      width: 38.125rem;
     }
   }
   .sojuDiv {
-    margin-top: 36px;
-    width: 250px;
-    height: 100px;
+    margin-top: 2.25rem;
+    width: 15.625rem;
+    height: 6.25rem;
 
     .sojuIcon {
       display: flex;
@@ -37,25 +26,25 @@
       height: 100%;
       align-items: center;
       img {
-        width: 50px;
-        height: 50px;
+        width: 3.125rem;
+        height: 3.125rem;
       }
       p {
-        font-size: 25px;
+        font-size: 1.5625rem;
       }
     }
     .sojuIcon:after {
       content: "";
       display: block;
       width: 4rem;
-      border-bottom: 2px solid black;
-      margin-left: 17px;
+      border-bottom: 0.125rem solid black;
+      margin-left: 1.0625rem;
     }
     .sojuIcon::before {
       content: "";
       display: block;
       width: 4rem;
-      border-bottom: 2px solid black;
+      border-bottom: 0.125rem solid black;
     }
   }
   .sojuListDiv {
@@ -66,9 +55,9 @@
   }
 
   .beerDiv {
-    margin-top: 36px;
-    width: 250px;
-    height: 100px;
+    margin-top: 2.25rem;
+    width: 15.625rem;
+    height: 6.25rem;
 
     .beerIcon {
       display: flex;
@@ -76,25 +65,25 @@
       height: 100%;
       align-items: center;
       img {
-        width: 50px;
-        height: 50px;
+        width: 3.125rem;
+        height: 3.125rem;
       }
       p {
-        font-size: 25px;
+        font-size: 1.48rem;
       }
     }
     .beerIcon:after {
       content: "";
       display: block;
       width: 4rem;
-      border-bottom: 2px solid black;
-      margin-left: 17px;
+      border-bottom: 0.125rem solid black;
+      margin-left: 1.0625rem;
     }
     .beerIcon::before {
       content: "";
       display: block;
       width: 4rem;
-      border-bottom: 2px solid black;
+      border-bottom: 0.125rem solid black;
     }
   }
   .beerListDiv {
@@ -106,9 +95,9 @@
 }
 
 .riceWineDiv {
-  margin-top: 36px;
-  width: 250px;
-  height: 100px;
+  margin-top: 2.25rem;
+  width: 15.625rem;
+  height: 6.25rem;
 
   .riceWineIcon {
     display: flex;
@@ -116,25 +105,25 @@
     height: 100%;
     align-items: center;
     img {
-      width: 50px;
-      height: 50px;
+      width: 3.125rem;
+      height: 3.125rem;
     }
     p {
-      font-size: 24px;
+      font-size: 1.5rem;
     }
   }
   .riceWineIcon:after {
     content: "";
     display: block;
-    width: 3.6rem;
-    border-bottom: 2px solid black;
-    margin-left: 17px;
+    width: 4rem;
+    border-bottom: 0.125rem solid black;
+    margin-left: 1.0625rem;
   }
   .riceWineIcon::before {
     content: "";
     display: block;
-    width: 3.6rem;
-    border-bottom: 2px solid black;
+    width: 4rem;
+    border-bottom: 0.125rem solid black;
   }
 }
 .riceWineDiv {

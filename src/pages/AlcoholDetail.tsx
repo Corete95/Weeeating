@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API } from "../config";
+import { useDispatch } from "react-redux";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 import axios from "axios";
 import StoreCard2 from "./childComponents/StoreCard2";
 import Slider from "react-slick";
@@ -10,9 +12,11 @@ import "slick-carousel/slick/slick-theme.css";
 interface UserData {
   alcoholData: any;
 }
-export default function AlcoholDetail({ match, props }: any) {
+export default function AlcoholDetail() {
   const [alcoholData, setAlcoholData] = useState<UserData | any>([]);
   const alcohol = "alcohol";
+  const dispatch = useDispatch();
+
   const setting = {
     dots: false,
     infinite: true,
@@ -40,8 +44,9 @@ export default function AlcoholDetail({ match, props }: any) {
     ),
     className: "slides"
   };
-  // 백엔드와 맞추기 위해 알콜 리스트 로직 작업
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (localStorage.getItem("token")) {
       axios
         .get(`${API}/store/list?tag=${alcohol}`, {
@@ -50,7 +55,6 @@ export default function AlcoholDetail({ match, props }: any) {
           }
         })
         .then((res) => {
-          console.log("123", res.data.store_list);
           setAlcoholData(res.data.store_list);
         });
     } else {
@@ -60,50 +64,56 @@ export default function AlcoholDetail({ match, props }: any) {
     }
   }, []);
 
-  const changeLikedState = (id: any) => {
+  const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {
-      setAlcoholData(
-        alcoholData?.map((data: any) => {
-          if (data.id === id) {
-            if (data.like_state) {
-              return {
-                ...data,
-                like_state: !data.like_state,
-                like_count: data.like_count - 1
-              };
-            } else {
-              return {
-                ...data,
-                like_state: !data.like_state,
-                like_count: data.like_count + 1
-              };
-            }
-          } else {
-            return data;
-          }
-        })
-      );
       axios
         .post(`${API}/store/like/${id}`, "data", {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
-        .then((res) => console.log("좋아요 통신이 완료되었습니다.", res))
+        .then((res) => {
+          if (res.data.MESSAGE === "NEED_USER_NAME") {
+            alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+            dispatch(setFirstLogin(true));
+            dispatch(setSignupActive(true));
+          } else {
+            setAlcoholData({
+              ...alcoholData,
+              [type]: alcoholData[type].map((data: any) => {
+                if (data.id === id) {
+                  if (data.like_state) {
+                    return {
+                      ...data,
+                      like_state: !data.like_state,
+                      like_count: data.like_count - 1
+                    };
+                  } else {
+                    return {
+                      ...data,
+                      like_state: !data.like_state,
+                      like_count: data.like_count + 1
+                    };
+                  }
+                } else {
+                  return data;
+                }
+              })
+            });
+            console.log("좋아요 통신이 완료되었습니다.", res);
+          }
+        })
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     } else {
       alert("로그인을 해주세요!");
     }
   };
-  console.log(alcoholData);
-  console.log(alcoholData.beer);
+
   return (
     <>
       <div className="alcohol">
         <div className="logoBox">
-          <div className="logoBox1">
-            <p>술과 함께</p>
-          </div>
+          <img src="./images/alcoholLogo.png" />
         </div>
         <div className="sojuDiv">
           <div className="sojuIcon">
@@ -119,6 +129,7 @@ export default function AlcoholDetail({ match, props }: any) {
                   <StoreCard2
                     id={alcohol.id}
                     name={alcohol.name}
+                    type={"soju"}
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
@@ -143,6 +154,7 @@ export default function AlcoholDetail({ match, props }: any) {
                   <StoreCard2
                     id={alcohol.id}
                     name={alcohol.name}
+                    type={"beer"}
                     image={alcohol.image}
                     likeCount={alcohol.like_count}
                     likeState={alcohol.like_state}
@@ -166,6 +178,7 @@ export default function AlcoholDetail({ match, props }: any) {
                 return (
                   <StoreCard2
                     id={alcohol.id}
+                    type={"makgeolli"}
                     name={alcohol.name}
                     image={alcohol.image}
                     likeCount={alcohol.like_count}

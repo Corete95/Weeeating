@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import wemeok from "../images/wemeoktalk_2.png";
-import { COLORS } from "../styles/themeColor";
-import PostReply from "../pages/childComponents/PostReply";
-import axios from "axios";
-import { API } from "../config";
-import ReactPaginate from "react-paginate";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { API } from "../config";
 import { EditCommentModal, DeleteCommentModal } from "../components";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 import ReactQuill from "react-quill"; // Typescript
+import axios from "axios";
+import Pagination from "react-js-pagination";
+import wemeok from "../images/wemeoktalk3.png";
+import PostReply from "../pages/childComponents/PostReply";
+import ReactHtmlParser from "react-html-parser";
 import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
+import "./PostDetail.scss";
 
 interface UserData {
   info: any;
@@ -20,22 +23,31 @@ export default function PostDetail({ match }: any) {
   const [posts, setPosts] = useState<any>([]);
   const [comments, setComments] = useState<any>([]);
   const [comment, setComment] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState<any>({ newTitle: null });
+  const [postTitle, setPostTitle] = useState<any>(null);
+  const [postContent, setPostContent] = useState<any>(null);
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState<any>(1);
   const [commentText, setCommentText] = useState<UserData | any>({
     newComment: null,
     updatedComment: { id: null, content: "기존댓글~~~" }
   });
-  const [currentComment, setCurrentComment] = useState<UserData | any>([]);
   const [activeInput, setActiveInput] = useState(false);
-  const [updatedPost, setUpdatedPost] = useState(posts[0]?.content);
+  const [countComments, setCountComments] = useState(0);
+  const [activePage, setActivePage] = useState<any>(1);
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, false] }],
+      ["bold", "italic", "underline", "strike"],
+      ["clean"]
+    ]
+  };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchPosts = async () => {
       await axios
         .get(`${API}/board/${match.params.id}`, {
@@ -44,98 +56,90 @@ export default function PostDetail({ match }: any) {
           }
         })
         .then((res) => {
-          console.log(res.data);
           setPosts(res.data.board_info);
           setComments(res.data.board_comments);
+          setCountComments(res.data.count_comments);
+          setTitle(res.data.board_info[0].title);
+          setPostContent(res.data.board_info[0].content);
         });
     };
     fetchPosts();
   }, [match.params.id]);
 
-  const onChangeComment = (e: any) => {
+  const onChangeComment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
 
-  let data = {
-    comment: comment
-  };
+  const submitChangedComment = (crud: string, commentId: number) => {
+    if (localStorage.getItem("token")) {
+      if (crud === "INSERT") {
+        axios
+          .post(
+            `${API}/board/${match.params.id}/comment`,
+            JSON.stringify({
+              comment
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            if (res.data.MESSAGE === "NEED_USER_NAME") {
+              alert("회원정보 입력 후 댓글 작성이 가능합니다.");
+              dispatch(setFirstLogin(true));
+              dispatch(setSignupActive(true));
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
 
-  const addComment = (): any => {
-    if (comment.length >= 1) {
-      setComments([
-        ...comments,
-        {
-          comment_content: comment,
-          comment_writer: "로그인된 사람",
-          comment_created_at: "방금 전"
-        }
-      ]);
-      setContent("");
-      axios
-        .post(`${API}/board/${match.params.id}/comment`, JSON.stringify(data), {
-          headers: {
-            Authorization: localStorage.getItem("token")
-          }
-        })
-        .then((res) => {
-          window.location.reload();
-        });
-    }
-  };
+      if (crud === "UPDATE") {
+        setEditModal(false);
 
-  const patchComment = (crud: string, comment_id: number) => {
-    console.log("댓글수정", comment_id);
-    setCurrentComment(
-      currentComment.map((comment: any) =>
-        comment.id === comment_id
-          ? { ...comment, comment: commentText.updatedComment.comment }
-          : comment
-      )
-    );
-    setEditModal(false);
+        axios
+          .patch(
+            `${API}/board/${match.params.id}/${commentId}`,
+            JSON.stringify({
+              comment: commentText.updatedComment.content
+            }),
+            { headers: { Authorization: localStorage.getItem("token") } }
+          )
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => console.log(err));
+      }
 
-    axios
-      .patch(
-        `${API}/board/${match.params.id}/${comment_id}`,
-        JSON.stringify({
-          // register 맞춘 후, Authorization: localStorage.getItem("token")으로 변경하기
-          comment: commentText.updatedComment.content
-        }),
-        { headers: { Authorization: localStorage.getItem("token") } }
-      )
-      .then((res) => {
-        console.log(res);
-        window.location.reload();
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const deleteComment = (comment_id: any): void => {
-    if (window.confirm("삭제?")) {
-      axios
-        .delete(`${API}/board/${match.params.id}/${comment_id}`, {
-          headers: {
-            Authorization: localStorage.getItem("token")
-          }
-        })
-        .then((res) => {
-          window.location.reload();
-        });
+      if (crud === "DELETE") {
+        setDeleteModal(false);
+        axios
+          .delete(`${API}/board/${match.params.id}/${commentId}`, {
+            headers: {
+              Authorization: localStorage.getItem("token")
+            }
+          })
+          .then((res) => {
+            window.location.reload();
+          })
+          .catch((err) => console.log(err));
+      }
+    } else {
+      alert("로그인을 해주세요!");
     }
   };
 
   const updateComment = (e: any) => {
     const { value } = e.target;
-    console.log("updateComment value", value);
 
     setCommentText({
       ...commentText,
       updatedComment: {
         ...commentText.updatedComment,
-        comment: value
+        content: value
       }
     });
-    window.location.reload();
   };
 
   const clickEdit = (comment: any) => {
@@ -144,32 +148,42 @@ export default function PostDetail({ match }: any) {
       ...commentText,
       updatedComment: {
         id: comment.comment_id,
-        comment: comment.comment_comment
+        content: comment.comment_content
       }
     });
   };
 
-  const contentResult = content.replace(/(<([^>]+)>)/gi, "")
-
-  const updatePost = (value:string) => {    
-    setContent(value);
-}
-  const patchPost = (): void => {
-    const data = {
-      title: posts[0].title,
-      content: contentResult
-    };
-
-    axios.patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
-      headers: {
-        Authorization: localStorage.getItem("token")
+  const clickDeleteComment = (commentId: any) => {
+    setDeleteModal(true);
+    setCommentText({
+      ...commentText,
+      updatedComment: {
+        ...commentText.updatedComment,
+        id: commentId
       }
     });
-    window.location.reload();
+  };
+
+  const patchPost = (): void => {
+    const data = {
+      title: postTitle,
+      content: postContent
+    };
+
+    axios
+      .patch(`${API}/board/${match.params.id}`, JSON.stringify(data), {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        window.location.reload();
+        setActiveInput(false);
+      });
   };
 
   const deletePost = (): void => {
-    if (window.confirm("삭제?")) {
+    if (window.confirm("게시물을 삭제하시겠습까?")) {
       axios
         .delete(`${API}/board/${match.params.id}`, {
           headers: {
@@ -184,217 +198,175 @@ export default function PostDetail({ match }: any) {
 
   const handlePageChange = (pageNumber: any) => {
     axios
-      .get(`${API}/board?offset=${(pageNumber - 1) * 5}`, {
+      .get(`${API}/board/${match.params.id}?offset=${(pageNumber - 1) * 5}`, {
         headers: {
           Authorization: localStorage.getItem("token")
         }
       })
       .then((res) => {
-        setPosts(res.data);
+        setComments(res.data.board_comments);
       });
-    setCurrentPage(pageNumber);
+    setActivePage(pageNumber);
+  };
+
+  const changePostTitle = (e: any) => {
+    const { value } = e.target;
+    setPostTitle(value);
+  };
+
+  const changePostContent = (html: any) => {
+    setPostContent(html);
   };
 
   return (
-    <Container>
-      <Img src={wemeok} alt="" />
-      <InnerContainer>
-        <ImgText>개발자 공유문화 잊지말자, 그러니까 맛집도 공유하자</ImgText>
-        <TitleContainer>
-          <TitleText>제목</TitleText>
-          <TitleInput>{posts[0]?.title}</TitleInput>
-        </TitleContainer>
-        <ContentContainer>
-          <Writer>{posts[0]?.writer}</Writer>
-          {activeInput ? (
-            <>
-            <QuillContainer>
-              <ReactQuill value={content} onChange={updatePost} />
-            </QuillContainer>
-              <Edit
-                onClick={() => {
-                  patchPost();
-                  setActiveInput(false);
-                }}
-              >
-                완료
-              </Edit>
-            </>
-          ) : (
-            <>
-              <Content>{posts[0]?.content}</Content>
-              <Edit onClick={deletePost}>삭제</Edit>
-              <Edit
-                onClick={() => {
-                  setActiveInput(true);
-                }}
-              >
-                수정
-              </Edit>
-            </>
-          )}
-        </ContentContainer>
-        <ReplyContainer>
-          <ReplyText>댓글</ReplyText>
-          <ReplyInput value={comment} onChange={onChangeComment}></ReplyInput>
-          <Button onClick={addComment}>등록</Button>
-        </ReplyContainer>
-        <PostReply
-          comments={comments}
-          match={match}
-          setEditModal={setEditModal}
-          clickEdit={clickEdit}
-          deleteComment={deleteComment}
-        ></PostReply>
-        <StyledPaginateContainer>
-          <ReactPaginate
-            pageCount={Math.ceil(posts.total_comment / 10)}
-            pageRangeDisplayed={5}
-            marginPagesDisplayed={0}
-            breakLabel={""}
-            previousLabel={"이전"}
-            nextLabel={"다음"}
-            onPageChange={handlePageChange}
-            containerClassName={"pagination-ul"}
-            activeClassName={"currentPage"}
-            previousClassName={"pageLabel-btn"}
-            nextClassName={"pageLabel-btn"}
-          />
-        </StyledPaginateContainer>
-      </InnerContainer>
+    <>
+      <div className="postDetail">
+        <div className="weMeokTalkLogo">
+          <img src={wemeok}></img>
+        </div>
+        <div className="weMeokTalkList">
+          <div className="listDiv">
+            {activeInput ? (
+              <>
+                <div className="editListDiv">
+                  <div className="writingTitle">
+                    <p>제목</p>
+                    <input
+                      type="text/html"
+                      value={postTitle}
+                      onChange={changePostTitle}
+                    ></input>
+                  </div>
+                  <div className="solidLine"></div>
+                  <div className="writerCreated">
+                    <p className="wirter">{posts[0]?.writer}</p>
+                    <p className="created">{posts[0]?.created_at}</p>
+                  </div>
+                  <div className="writingCenter">
+                    <p className="textBold">내용</p>
+                    <ReactQuill
+                      bounds={".quill"}
+                      theme={"snow"}
+                      value={postContent}
+                      onChange={changePostContent}
+                      modules={modules}
+                    />
+                  </div>
+                  <div className="writerButton">
+                    <button
+                      onClick={() => {
+                        patchPost();
+                      }}
+                    >
+                      수정
+                    </button>
+                  </div>
+                </div>
+                <div className="solidLine"></div>
+              </>
+            ) : (
+              <>
+                <div className="detailTitle">
+                  <p className="titleBold">제목</p>
+                  <p className="title">{posts[0]?.title}</p>
+                </div>
+                <div className="solidLine"></div>
+                <div className="writerCreated">
+                  <p className="wirter">{posts[0]?.writer}</p>
+                  <p className="created">{posts[0]?.created_at}</p>
+                </div>
+                <div
+                  className="contentDiv"
+                  dangerouslySetInnerHTML={{ __html: posts[0]?.content }}
+                />
+                {posts[0]?.writer_id ===
+                  Number(localStorage.getItem("user_id_number")) && (
+                  <>
+                    <div className="editDeleteDiv">
+                      <p
+                        className="edit"
+                        onClick={() => {
+                          setActiveInput(true);
+                          setPostTitle(posts[0]?.title);
+                        }}
+                      >
+                        수정
+                      </p>
+
+                      <p className="delete" onClick={deletePost}>
+                        삭제
+                      </p>
+                    </div>
+                  </>
+                )}
+                <div className="solidLine"></div>
+                <div className="commentsInputDiv">
+                  <p>댓글 ({countComments})</p>
+                  <input
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 13) {
+                        submitChangedComment("INSERT", 0);
+                        e.preventDefault();
+                      }
+                    }}
+                    maxLength={250}
+                    value={comment}
+                    onChange={onChangeComment}
+                  ></input>
+                  <span onClick={() => submitChangedComment("INSERT", 0)}>
+                    등록
+                  </span>
+                </div>
+                {comments?.map((comments: any) => {
+                  return (
+                    <PostReply
+                      comments={comments}
+                      id={comments.comment_id}
+                      writer={comments.comment_writer}
+                      content={comments.comment_content}
+                      created_at={comments.comment_created_at}
+                      writer_id={comments.comment_writer_id}
+                      clickEdit={clickEdit}
+                      clickDeleteComment={clickDeleteComment}
+                    />
+                  );
+                })}
+                <Pagination
+                  activePage={activePage}
+                  itemsCountPerPage={5}
+                  totalItemsCount={countComments}
+                  pageRangeDisplayed={5}
+                  hideFirstLastPages
+                  itemClassPrev={"prevPageText"}
+                  itemClassNext={"nextPageText"}
+                  prevPageText={"◀"}
+                  nextPageText={"▶"}
+                  onChange={handlePageChange}
+                />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
       {editModal && (
         <EditCommentModal
           editModal={editModal}
           setEditModal={setEditModal}
-          // 기존의 commentValue를 {commentText.updatedComment.content}에 setState한 후, 이를 아래처럼 넘겨주기
           updatedComment={commentText.updatedComment}
-          submitChangedComment={patchComment}
+          submitChangedComment={submitChangedComment}
           updateComment={updateComment}
         />
       )}
+
       {deleteModal && (
         <DeleteCommentModal
           deleteModal={deleteModal}
           setDeleteModal={setDeleteModal}
-          submitChangedComment={deleteComment}
+          submitChangedComment={submitChangedComment}
           commentId={commentText.updatedComment.id}
         />
       )}
-    </Container>
+    </>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-const InnerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  width: 45.2rem;
-  border: 4px solid ${COLORS.mainYellow};
-`;
-
-const Img = styled.img`
-  position: relative;
-  top: 1rem;
-  margin: 5rem 3.3rem 0 0;
-  width: 49rem;
-`;
-
-const ImgText = styled.p`
-  position: absolute;
-  top: 13rem;
-  z-index: 10;
-  font-size: 2rem;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding-bottom: 0.3rem;
-  width: 35rem;
-  height: 1.5rem;
-  border-bottom: 2px solid black;
-`;
-
-const TitleText = styled.p`
-  width: 2rem;
-  height: 1.5rem;
-`;
-
-const TitleInput = styled.p`
-  margin-left: 1rem;
-  width: 33rem;
-  height: 1.5rem;
-`;
-
-const Writer = styled.div`
-  text-align: right;
-`;
-
-const ContentContainer = styled.div`
-  margin: 2rem 0;
-  border-bottom: 2px solid black;
-`;
-
-const Content = styled.p`
-  width: 36rem;
-  height: 20rem;
-`;
-
-const ContentInput = styled.input`
-  width: 36rem;
-  height: 20rem;
-`;
-
-const ReplyContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding-bottom: 1.5rem;
-  width: 35rem;
-`;
-
-const ReplyText = styled.p`
-  width: 2rem;
-  height: 1.5rem;
-`;
-
-const ReplyInput = styled.input`
-  margin-left: 1rem;
-  width: 35rem;
-  height: 1.5rem;
-`;
-
-const Button = styled.button`
-  width: 4rem;
-  height: 2rem;
-  background: ${COLORS.mainYellow};
-`;
-
-const Edit = styled.button`
-  width: 4rem;
-  height: 2rem;
-  background: ${COLORS.mainYellow};
-  float: right;
-`;
-
-const StyledPaginateContainer = styled.div`
-  ul {
-    display: flex;
-  }
-`;
-
-const QuillContainer = styled.div`
-  height: 15rem;
-  width: 35rem;
-
-  .quill {
-    height: 10rem;
-  }
-`

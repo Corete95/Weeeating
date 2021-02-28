@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "image": "https://wecode.co.kr/static/media/kim-yeri.e5766bea.png",
+    "image": "https://i.ibb.co/MMzxhF0/8.png",
     "name": "김성태",
     "position": "Backend Developer",
     "store_id": 1,
@@ -10,7 +10,7 @@
   },
   {
     "id": 2,
-    "image": "https://wecode.co.kr/static/media/yang.0aac1edb.png",
+    "image": "https://i.ibb.co/b21LXQm/3.png",
     "name": "김예진",
     "position": "Backend Developer",
     "store_id": 40,
@@ -19,7 +19,7 @@
   },
   {
     "id": 3,
-    "image": "https://wecode.co.kr/static/media/son.1887ee25.png",
+    "image": "https://i.ibb.co/LPJ3T0P/5.png",
     "name": "김정현",
     "position": "Frontend Developer",
     "store_id": 41,
@@ -28,7 +28,7 @@
   },
   {
     "id": 4,
-    "image": "https://wecode.co.kr/static/media/lee-so.39e2a003.png",
+    "image": "https://i.ibb.co/yBdQWRc/4.png",
     "name": "백은진",
     "position": "Frontend Developer",
     "store_id": 58,
@@ -37,7 +37,7 @@
   },
   {
     "id": 5,
-    "image": "https://wecode.co.kr/static/media/gwan.c332a03c.png",
+    "image": "https://i.ibb.co/BPZ7YjY/7.png",
     "name": "신은선",
     "position": "Frontend Developer",
     "store_id": 32,
@@ -46,16 +46,16 @@
   },
   {
     "id": 6,
-    "image": "https://wecode.co.kr/static/media/park.2efd61a7.png",
+    "image": "https://i.ibb.co/JQTsNNL/6.png",
     "name": "전민승",
     "position": "Frontend Developer",
     "store_id": 4,
     "store": "잇쇼우",
-    "desc": "존맛탱구리~~"
+    "desc": "존맛탱구리~~~~~~~~~~~~"
   },
   {
     "id": 7,
-    "image": "https://wecode.co.kr/static/media/taeck.283abc8b.png",
+    "image": "https://i.ibb.co/3WwPG5W/2.png",
     "name": "허덕형",
     "position": "Frontend Developer",
     "store_id": 13,
@@ -64,7 +64,7 @@
   },
   {
     "id": 8,
-    "image": "https://wecode.co.kr/static/media/min.cfcc09ee.png",
+    "image": "https://i.ibb.co/VgGHfwZ/1.png",
     "name": "황채영",
     "position": "Backend Developer",
     "store_id": 51,
