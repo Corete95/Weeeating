@@ -41,7 +41,7 @@ export default function MainPage() {
     slidesToShow: 1,
     slidesToScroll: 1,
     focusOnSelect: true,
-    autoplay: false,
+    autoplay: true,
     autoplaySpeed: 2000
   };
 
