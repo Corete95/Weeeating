@@ -336,18 +336,20 @@ export default function PostDetail({ match }: any) {
                     />
                   );
                 })}
-                <Pagination
-                  activePage={activePage}
-                  itemsCountPerPage={5}
-                  totalItemsCount={countComments}
-                  pageRangeDisplayed={5}
-                  hideFirstLastPages
-                  itemClassPrev={"prevPageText"}
-                  itemClassNext={"nextPageText"}
-                  prevPageText={"◀"}
-                  nextPageText={"▶"}
-                  onChange={handlePageChange}
-                />
+                {countComments ? (
+                  <Pagination
+                    activePage={activePage}
+                    itemsCountPerPage={5}
+                    totalItemsCount={countComments}
+                    pageRangeDisplayed={5}
+                    hideFirstLastPages
+                    itemClassPrev={"prevPageText"}
+                    itemClassNext={"nextPageText"}
+                    prevPageText={"◀"}
+                    nextPageText={"▶"}
+                    onChange={handlePageChange}
+                  />
+                ) : null}
               </>
             )}
           </div>

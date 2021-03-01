@@ -72,6 +72,8 @@ export default function StoreDetail(props: any) {
         ])
         .then(
           axios.spread((res1, res2) => {
+            console.log("1", res1.data);
+            console.log("2", res2.data);
             setInfo(res1.data);
             setCurrentComment(res2.data.comment_list);
             setCountComments(res2.data.count_comments);
@@ -382,20 +384,22 @@ export default function StoreDetail(props: any) {
               </Comment>
             ))}
         </CommentsWrapper>
-        <PaginationCss>
-          <Pagination
-            activePage={activePage}
-            itemsCountPerPage={5}
-            totalItemsCount={countComments}
-            pageRangeDisplayed={5}
-            hideFirstLastPages
-            itemClassPrev={"prevPageText"}
-            itemClassNext={"nextPageText"}
-            prevPageText={"◀"}
-            nextPageText={"▶"}
-            onChange={handlePageChange}
-          />
-        </PaginationCss>
+        {countComments ? (
+          <PaginationCss>
+            <Pagination
+              activePage={activePage}
+              itemsCountPerPage={5}
+              totalItemsCount={countComments}
+              pageRangeDisplayed={5}
+              hideFirstLastPages
+              itemClassPrev={"prevPageText"}
+              itemClassNext={"nextPageText"}
+              prevPageText={"◀"}
+              nextPageText={"▶"}
+              onChange={handlePageChange}
+            />
+          </PaginationCss>
+        ) : null}
       </CommentSection>
       {editModal && (
         <EditCommentModal
