@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -14,6 +14,7 @@ import {
 export default function GoogleLoginComponent() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [displayGoogle, setDisplayGoogle] = useState(true);
 
   const responseGoogle = (response: any) => {
     const { accessToken } = response;
@@ -32,8 +33,9 @@ export default function GoogleLoginComponent() {
         if (res.data.FIRST_VISIT === true) {
           alert("기수와 이름을 입력한 후, 회원가입 버튼을 클릭해주세요!");
           dispatch(setFirstLogin(true));
-        //   dispatch(setSignupActive(true));
-        //   dispatch(setLoginActive(false));
+          setDisplayGoogle(false);
+          //   dispatch(setSignupActive(true));
+          //   dispatch(setLoginActive(false));
         } else {
           dispatch(setSignupActive(false));
           history.push("/");
@@ -46,7 +48,7 @@ export default function GoogleLoginComponent() {
       });
   };
 
-  return (
+  return displayGoogle ? (
     <Container>
       <GoogleLogin
         render={(renderProps) => (
@@ -55,17 +57,17 @@ export default function GoogleLoginComponent() {
             className="googleLogin"
             disabled={renderProps.disabled}
           >
-            구글로 로그인하기
+            구글로 회원가입하기
           </button>
         )}
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
-        buttonText="구글로 로그인하기"
+        buttonText="구글로 회원가입하기"
         onSuccess={responseGoogle}
         onFailure={(err) => console.log("Google Error", err)}
         cookiePolicy={"single_host_origin"}
       />
     </Container>
-  );
+  ) : null;
 }
 
 const Container = styled.div`
