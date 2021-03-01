@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { GoogleLoginComponent } from "./index";
+import { GoogleLoginComponent } from ".";
 
 interface IProps {
   handleChange: (e: any) => void;

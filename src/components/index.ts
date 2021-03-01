@@ -1,6 +1,7 @@
 export { default as DeleteCommentModal } from "./DeleteCommentModal";
 export { default as EditCommentModal } from "./EditCommentModal";
 export { default as GoogleLoginComponent } from "./GoogleLoginComponent";
+export { default as GoogleSignupComponent } from "./GoogleSignupComponent";
 export { default as Login } from "./Login";
 export { default as LoginForm } from "./LoginForm";
 export { default as Nav } from "./Nav";
