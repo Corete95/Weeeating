@@ -1,20 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { GoogleLogin } from "react-google-login";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { API } from "../config";
-import {
-  setSignupActive,
-  setLoginActive,
-  setFirstLogin
-} from "../store/actions";
+import { setSignupActive, setFirstLogin } from "../store/actions";
 
 export default function GoogleLoginComponent() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [displayGoogle, setDisplayGoogle] = useState(true);
+
+  const displayGoogle = useSelector(
+    ({ setFirstReducer }) => setFirstReducer.first
+  );
 
   const responseGoogle = (response: any) => {
     const { accessToken } = response;
@@ -33,9 +32,6 @@ export default function GoogleLoginComponent() {
         if (res.data.FIRST_VISIT === true) {
           alert("기수와 이름을 입력한 후, 회원가입 버튼을 클릭해주세요!");
           dispatch(setFirstLogin(true));
-          setDisplayGoogle(false);
-          //   dispatch(setSignupActive(true));
-          //   dispatch(setLoginActive(false));
         } else {
           dispatch(setSignupActive(false));
           history.push("/");
@@ -48,7 +44,7 @@ export default function GoogleLoginComponent() {
       });
   };
 
-  return displayGoogle ? (
+  return !displayGoogle ? (
     <Container>
       <GoogleLogin
         render={(renderProps) => (
@@ -57,11 +53,11 @@ export default function GoogleLoginComponent() {
             className="googleLogin"
             disabled={renderProps.disabled}
           >
-            구글로 회원가입하기
+            구글 회원가입
           </button>
         )}
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
-        buttonText="구글로 회원가입하기"
+        buttonText="구글 회원가입"
         onSuccess={responseGoogle}
         onFailure={(err) => console.log("Google Error", err)}
         cookiePolicy={"single_host_origin"}

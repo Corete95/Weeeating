@@ -55,11 +55,11 @@ export default function GoogleLoginComponent() {
             className="googleLogin"
             disabled={renderProps.disabled}
           >
-            구글로 로그인하기
+            구글 로그인
           </button>
         )}
         clientId="675033028389-t4ff8ilfoffg5f3pcrkrcg88tqvqisv7.apps.googleusercontent.com"
-        buttonText="구글로 로그인하기"
+        buttonText="구글 로그인"
         onSuccess={responseGoogle}
         onFailure={(err) => console.log("Google Error", err)}
         cookiePolicy={"single_host_origin"}
