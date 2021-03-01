@@ -72,7 +72,6 @@ export default function GoogleLoginComponent() {
 
 const Container = styled.div`
   font-family: sans-serif;
-  margin-top: 2em;
   margin-left: 0.7em;
   width: 28.6em;
   font-size: 1.15em;
@@ -88,11 +87,11 @@ const Container = styled.div`
     outline: none;
     border: 2px solid ${({ theme }) => theme.mainYellow};
     background-color: ${({ theme }) => theme.lightYellow};
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: black;
     width: 100%;
-    height: 100%;
+    height: 55px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -121,8 +121,8 @@ const InfoSection = styled.form`
 `;
 
 const BlockWrapper = styled.div<StateForStyle>`
-  margin: ${({ buttons }) => (buttons ? "5.7em 0 0" : "3em 0")};
-  height: 2.5em;
+  margin: ${({ buttons }) => (buttons ? "" : "3em 0")};
+  height: 2.1em;
   justify-content: space-between;
   display: flex;
   align-items: center;
@@ -150,9 +150,7 @@ const Input = styled.input<StateForStyle>`
 const Button = styled.input`
   outline: none;
   border: 2px solid ${({ theme }) => theme.mainYellow};
-  margin-top: 3em;
-  margin-left: 6.5rem;
-  width: 13em;
+  width: 28.6em;
   font-size: 1.15rem;
   font-weight: 700;
   display: flex;
