@@ -12,7 +12,6 @@ interface UserData {
 
 export default function StoreList() {
   const [storeList, setStoreList] = useState<UserData | any>([]);
-  const feather = "feather";
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,7 +24,6 @@ export default function StoreList() {
           }
         })
         .then((res) => {
-          console.log("res", res);
           setStoreList(res.data.store_list);
         });
     } else {

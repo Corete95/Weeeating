@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import { COLORS } from "../../styles/themeColor";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
-import { API } from "../../config";
 
 interface PostReplyData {
   id: number;
@@ -13,7 +10,7 @@ interface PostReplyData {
   comments: any;
   clickEdit: (comment: any) => void;
   clickDeleteComment: (comment: any) => void;
-  // submitChangedComment: (crud: string, commentId: number) => void
+
 }
 
 export default function PostReply({
@@ -25,7 +22,7 @@ export default function PostReply({
   comments,
   clickEdit,
   clickDeleteComment
-}: // submitChangedComment
+}: 
 PostReplyData) {
   const history = useHistory();
 

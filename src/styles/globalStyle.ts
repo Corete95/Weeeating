@@ -4,6 +4,8 @@ import reset from "styled-reset";
 export const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Yeon+Sung&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;500;600;700;800;900&display=swap');
+
   ${reset}
 
   body{
@@ -47,6 +49,13 @@ export const GlobalStyle = createGlobalStyle`
   font-style: normal;
 }
 
+//하나손글씨 (어바웃페이지)
+@font-face {
+  font-family: 'Hana_handwriting';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_05@1.0/Hana_handwriting.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
   * {
     box-sizing: border-box;

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { COLORS } from "../styles/themeColor";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { API } from "../config";
 import wemeok from "../images/wemeoktalk3.png";
 import axios from "axios";

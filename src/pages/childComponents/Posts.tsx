@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 interface PostData {
   id: string | number | null | undefined;
