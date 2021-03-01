@@ -34,7 +34,7 @@ export default function GoogleLoginComponent() {
           dispatch(setFirstLogin(true));
         } else {
           dispatch(setSignupActive(false));
-          history.push("/");
+          // history.push("/");
           alert("구글 회원가입 되었습니다.");
         }
       })

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { API } from "../config";
 import { useDispatch } from "react-redux";
-import { setSignupActive, setFirstLogin } from "../store/actions";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
 import StoreCard2 from "./childComponents/StoreCard2";
 import axios from "axios";
 import "./StoreList.scss";
@@ -74,6 +78,7 @@ export default function StoreList() {
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     } else {
       alert("로그인을 해주세요!");
+      dispatch(setLoginActive(true));
     }
   };
 

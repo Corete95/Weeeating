@@ -3,7 +3,11 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { API } from "../config";
 import { EditCommentModal, DeleteCommentModal } from "../components";
-import { setSignupActive, setFirstLogin } from "../store/actions";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
 import ReactQuill from "react-quill"; // Typescript
 import axios from "axios";
 import Pagination from "react-js-pagination";
@@ -127,6 +131,7 @@ export default function PostDetail({ match }: any) {
       }
     } else {
       alert("로그인을 해주세요!");
+      dispatch(setLoginActive(true));
     }
   };
 

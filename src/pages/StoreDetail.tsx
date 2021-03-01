@@ -157,6 +157,7 @@ export default function StoreDetail(props: any) {
         .catch((err) => console.log("좋아요 통신이 완료되지 않았습니다.", err));
     } else {
       alert("로그인을 해주세요!");
+      dispatch(setLoginActive(true));
     }
   };
 
@@ -222,6 +223,7 @@ export default function StoreDetail(props: any) {
       }
     } else {
       alert("로그인을 해주세요!");
+      dispatch(setLoginActive(true));
     }
   };
 

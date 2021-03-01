@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setSignupActive, setFirstLogin } from "../store/actions";
+import {
+  setSignupActive,
+  setLoginActive,
+  setFirstLogin
+} from "../store/actions";
 import { useHistory } from "react-router-dom";
 import { API } from "../config";
 import Posts from "./childComponents/Posts";
@@ -78,6 +82,7 @@ export default function App() {
         });
     } else {
       alert("로그인을 해주세요!");
+      dispatch(setLoginActive(true));
     }
   };
 
