@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { GoogleSignupComponent } from ".";
 
 interface IProps {
   handleChange: (e: any) => void;
@@ -10,6 +11,7 @@ interface IProps {
 interface StateForStyle {
   short?: boolean;
   needSpace?: boolean;
+  buttons?: boolean;
 }
 
 export default function SignupForm({ handleChange, submitSingup }: IProps) {
@@ -81,14 +83,17 @@ export default function SignupForm({ handleChange, submitSingup }: IProps) {
             onChange={handleChange}
           ></Input>
         </BlockWrapper>
-        <Button
-          type="submit"
-          value="회원가입"
-          className="button"
-          onSubmit={(event) =>
-            submitSingup(event, firstGoogle ? "login/google" : "login")
-          }
-        ></Button>
+        <BlockWrapper buttons>
+          <Button
+            type="submit"
+            value="회원가입"
+            className="button"
+            onSubmit={(event) =>
+              submitSingup(event, firstGoogle ? "login/google" : "login")
+            }
+          />
+          <GoogleSignupComponent />
+        </BlockWrapper>
       </InfoSection>
     </Container>
   );
@@ -115,10 +120,10 @@ const InfoSection = styled.form`
   height: 20em;
 `;
 
-const BlockWrapper = styled.div`
-  margin: 2em 0;
+const BlockWrapper = styled.div<StateForStyle>`
+  margin: ${({ buttons }) => (buttons ? "5.7em 0 0" : "3em 0")};
   height: 2.5em;
-
+  justify-content: space-between;
   display: flex;
   align-items: center;
   .button {
