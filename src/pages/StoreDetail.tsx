@@ -510,6 +510,7 @@ const Liked = styled.p`
 `;
 
 const MapSection = styled.div`
+  font-family: "Bazzi";
   margin-top: 4rem;
 `;
 
