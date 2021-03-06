@@ -8,7 +8,8 @@ import {
   setLoginActive,
   setFirstLogin
 } from "../store/actions";
-import ReactQuill from "react-quill"; // Typescript
+import ReactQuill, { Quill } from "react-quill";
+//import quillEmoji from "quill-emoji";
 import axios from "axios";
 import Pagination from "react-js-pagination";
 import wemeok from "../images/wemeoktalk3.png";
@@ -46,7 +47,8 @@ export default function PostDetail({ match }: any) {
     toolbar: [
       [{ header: [1, 2, 3, 4, false] }],
       ["bold", "italic", "underline", "strike"],
-      ["clean"]
+      ["clean"],
+      ["emoji"]
     ]
   };
 
