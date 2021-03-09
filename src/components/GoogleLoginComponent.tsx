@@ -36,8 +36,8 @@ export default function GoogleLoginComponent() {
           dispatch(setLoginActive(false));
         } else {
           dispatch(setLoginActive(false));
-          // history.push("/");
           alert("구글 로그인 되었습니다.");
+          window.location.reload();
         }
       })
       .catch((err: any) => {

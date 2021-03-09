@@ -75,7 +75,7 @@ export default function StoreList() {
     if (scrollTop + clientHeight >= scrollHeight && isLoading === false) {
       fetchMoreData();
     }
-  }, [isLoading]);
+  }, [fetchMoreData, isLoading]);
 
   useEffect(() => {
     getFetchData();
@@ -138,15 +138,15 @@ export default function StoreList() {
           <img src="./images/storelist.png"></img>
         </div>
         <div className="storeFood">
-          {storeList?.map((feather: any) => {
+          {storeList?.map((store: any) => {
             return (
               <StoreCard2
-                id={feather.id}
-                name={feather.name}
-                image={feather.image}
+                id={store.id}
+                name={store.name}
+                image={store.image}
                 type={"soju"}
-                likeCount={feather.like_count}
-                likeState={feather.like_state}
+                likeCount={store.like_count}
+                likeState={store.like_state}
                 changeLikedState={changeLikedState}
               />
             );
