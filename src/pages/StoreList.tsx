@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { API } from "../config";
 import { useDispatch } from "react-redux";
 import {
@@ -16,26 +16,75 @@ interface UserData {
 
 export default function StoreList() {
   const [storeList, setStoreList] = useState<UserData | any>([]);
+  const [item, setItem] = useState<UserData | any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  const fetchMoreData = async () => {
+    setIsLoading(true);
+    setStoreList(storeList.concat(item.slice(0, 20)));
+    setItem(item.slice(20));
+    setIsLoading(false);
+  };
+
+  const getFetchData = async () => {
     if (localStorage.getItem("token")) {
-      axios
+      await axios
         .get(`${API}/store/list`, {
           headers: {
             Authorization: localStorage.getItem("token")
           }
         })
         .then((res) => {
-          setStoreList(res.data.store_list);
+          let response = res.data.store_list;
+          setStoreList(response.slice(0, 20));
+          response = response.slice(20);
+          setItem(response);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
         });
     } else {
-      axios.get(`${API}/store/list`).then((res) => {
-        setStoreList(res.data.store_list);
-      });
+      await axios
+        .get(`${API}/store/list`)
+        .then((res) => {
+          let response = res.data.store_list;
+          setStoreList(response.slice(0, 20));
+          response = response.slice(20);
+          setItem(response);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
     }
+  };
+
+  const infiniteScroll = useCallback(() => {
+    let scrollHeight = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    let scrollTop = Math.max(
+      document.documentElement.scrollTop,
+      document.body.scrollTop
+    );
+    let clientHeight = document.documentElement.clientHeight;
+    scrollHeight -= 100;
+    if (scrollTop + clientHeight >= scrollHeight && isLoading === false) {
+      fetchMoreData();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    getFetchData();
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", infiniteScroll, true);
+    return () => window.removeEventListener("scroll", infiniteScroll, true);
+  }, [infiniteScroll]);
 
   const changeLikedState = (id: any, type: string) => {
     if (localStorage.getItem("token")) {
