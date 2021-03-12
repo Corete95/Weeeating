@@ -135,7 +135,6 @@ export default function StoreList() {
       dispatch(setLoginActive(true));
     }
   };
-  console.log("로딩", isLoading);
 
   return (
     <>
