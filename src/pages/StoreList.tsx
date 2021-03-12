@@ -22,8 +22,8 @@ export default function StoreList() {
 
   const fetchMoreData = async () => {
     setIsLoading(true);
-    setStoreList(storeList.concat(item.slice(0, 20)));
-    setItem(item.slice(20));
+    setStoreList(storeList.concat(item.slice(0, 15)));
+    setItem(item.slice(15));
     setIsLoading(false);
   };
 
@@ -37,8 +37,8 @@ export default function StoreList() {
         })
         .then((res) => {
           let response = res.data.store_list;
-          setStoreList(response.slice(0, 20));
-          response = response.slice(20);
+          setStoreList(response.slice(0, 15));
+          response = response.slice(15);
           setItem(response);
           setIsLoading(false);
         })
@@ -50,8 +50,8 @@ export default function StoreList() {
         .get(`${API}/store/list`)
         .then((res) => {
           let response = res.data.store_list;
-          setStoreList(response.slice(0, 20));
-          response = response.slice(20);
+          setStoreList(response.slice(0, 15));
+          response = response.slice(15);
           setItem(response);
           setIsLoading(false);
         })
@@ -73,9 +73,14 @@ export default function StoreList() {
     let clientHeight = document.documentElement.clientHeight;
     scrollHeight -= 100;
     if (scrollTop + clientHeight >= scrollHeight && isLoading === false) {
-      fetchMoreData();
+      setTimeout(() => {
+        fetchMoreData();
+        if (item < 1) {
+          setIsLoading(true);
+        }
+      }, 700);
     }
-  }, [fetchMoreData, isLoading]);
+  }, [fetchMoreData, isLoading, item]);
 
   useEffect(() => {
     getFetchData();
@@ -130,6 +135,7 @@ export default function StoreList() {
       dispatch(setLoginActive(true));
     }
   };
+  console.log("로딩", isLoading);
 
   return (
     <>
@@ -152,6 +158,7 @@ export default function StoreList() {
             );
           })}
         </div>
+        {isLoading ? null : <div className="loading">로딩중입니다.</div>}
       </div>
     </>
   );
