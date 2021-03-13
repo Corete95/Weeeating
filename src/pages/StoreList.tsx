@@ -78,7 +78,7 @@ export default function StoreList() {
         if (item < 1) {
           setIsLoading(true);
         }
-      }, 700);
+      }, 500);
     }
   }, [fetchMoreData, isLoading, item]);
 
