@@ -163,6 +163,7 @@ export default function TodayRandom() {
               <VerticalText>무얼먹을지</VerticalText>
               <span onClick={getRandomStore}>
                 <img
+                  className="checkImg"
                   width="350rem"
                   src="https://www.clickimagination.com/wp-content/uploads/2018/06/click-logo-01.png"
                 />
@@ -256,6 +257,9 @@ const Row = styled.div`
 
   img {
     cursor: pointer;
+  }
+  .checkImg:hover {
+    -webkit-transform: scale(1.1);
   }
 `;
 
