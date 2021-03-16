@@ -111,15 +111,10 @@ export default function PeoplePick({ info, TITLE }: IProps) {
                       </div>
                       <div className="storeDesc">{desc}</div>
                     </Desc>
-                    <MoreBtn>
-                      <span
-                        className="seeStoreInfo"
-                        onClick={() =>
-                          history.push(`/store-detail/${store_id}`)
-                        }
-                      >
-                        맛집 구경하기
-                      </span>
+                    <MoreBtn
+                      onClick={() => history.push(`/store-detail/${store_id}`)}
+                    >
+                      <span className="seeStoreInfo">맛집 구경하기</span>
                       <IoIosAddCircle className="btnIcon" />
                     </MoreBtn>
                   </CardEach>
@@ -245,6 +240,9 @@ const Desc = styled.section`
 `;
 
 const MoreBtn = styled.span`
+  &:hover {
+    -webkit-transform: scale(1.1);
+  }
   cursor: pointer;
   font-size: 1.2rem;
   margin: 2.5rem;
